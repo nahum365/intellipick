@@ -12,7 +12,8 @@ export function createInsightsBar() {
 export function updateInsightsBar(bar) {
   const picks = getAllPicks();
   const upsets = getUpsetAlerts();
-  const pickedCount = Object.keys(picks).length;
+  const r64Ids = new Set(matchupsData.matchups.map(m => m.id));
+  const pickedCount = Object.keys(picks).filter(id => r64Ids.has(id)).length;
   const total = matchupsData.matchups.length;
 
   // Count chalk picks
