@@ -21,8 +21,8 @@
       "recommendedPick": "tcu",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 55,
-      "tacticalAdvantage": "Historically, 8-vs-9 matchups are a near coin flip. TCU brings an elite defense (97.8 AdjD), a 75% cover rate as an underdog, and a massive coaching advantage. Sports Illustrated's Iain MacMillan officially picked TCU here, noting that Ohio State's 174th-ranked defensive efficiency is a glaring red flag against TCU's physical style."
+      "confidencePercentage": 66,
+      "tacticalAdvantage": "TCU brings an elite defense (97.8 AdjD), a 75% cover rate as an underdog, and a massive coaching advantage. Sports Illustrated's Iain MacMillan officially picked TCU here, noting that Ohio State's 174th-ranked defensive efficiency is a glaring red flag against TCU's physical style."
     },
     {
       "id": "east-5-12",
@@ -78,11 +78,11 @@
       "round": "First Round",
       "team1": { "id": "ucla", "name": "UCLA", "seed": 7 },
       "team2": { "id": "ucf", "name": "UCF", "seed": 10 },
-      "recommendedPick": "ucf",
+      "recommendedPick": "ucla",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 54,
-      "tacticalAdvantage": "UCF features an explosive offense averaging 81 points per game and plays a highly physical style. UCLA relies heavily on the production of Tyler Bilodeau but has battled uneven performances. Action Network's Dr. Nick Giffen specifically highlighted UCF over UCLA as a prime leverage spot where the market is undervaluing the Knights."
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "While UCF features an explosive offense, their defense fell off during Big 12 play. UCLA is getting healthy at the right time, heavily relying on the steady production of Tyler Bilodeau. Historical 7-seed dominance (60.3%) and UCLA's -5.5 point opening line make the Bruins the statistically sound pick."
     },
     {
       "id": "east-2-15",
@@ -117,7 +117,7 @@
       "recommendedPick": "utah-state",
       "category": "Statistical Favorite",
       "confidence": "Medium",
-      "confidencePercentage": 60,
+      "confidencePercentage": 68,
       "tacticalAdvantage": "Villanova is missing key rotation piece Matt Hodge and relies heavily on three-point variance. PoolGenius explicitly identified Utah State over Villanova as one of the best First-Round value picks, noting the Aggies are driven by their experienced backcourt and are actually a -1.5 point betting favorite despite the lower seed."
     },
     {
@@ -126,11 +126,11 @@
       "round": "First Round",
       "team1": { "id": "wisconsin", "name": "Wisconsin", "seed": 5 },
       "team2": { "id": "high-point", "name": "High Point", "seed": 12 },
-      "recommendedPick": "high-point",
-      "category": "Statistical Favorite",
-      "confidence": "Medium",
-      "confidencePercentage": 65,
-      "tacticalAdvantage": "High Point enters on a 14-game winning streak and thrives on offensive execution. Wisconsin ranks a vulnerable 177th nationally in opponent effective field goal percentage. Predictive models love No. 92 KenPom High Point's momentum to spring the outright upset, validating the classic 12-over-5 narrative."
+      "recommendedPick": "wisconsin",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 72,
+      "tacticalAdvantage": "While High Point enters on a long winning streak, Wisconsin's battle-tested Big Ten pedigree provides a massive strength-of-schedule advantage. Avoiding the trendy 12-seed trap here aligns with the 64.7% historical win rate of 5-seeds, supporting Wisconsin's -11.5 point betting line."
     },
     {
       "id": "west-4-13",
@@ -177,8 +177,8 @@
       "recommendedPick": "miami-fl",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 62,
-      "tacticalAdvantage": "Missouri dropped to the 10-line late in the season after struggling down the stretch. PoolGenius identified this as a coin-flip where the public is actually leaning Miami, aligning perfectly with Miami's No. 31 KenPom rating edging out Missouri's No. 52 rating."
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "Missouri dropped to the 10-line late in the season after struggling down the stretch. PoolGenius identified this as a matchup where Miami's No. 31 KenPom rating comfortably edges out Missouri's No. 52 rating, aligning with historical data that favors the 7-seed 60.3% of the time."
     },
     {
       "id": "west-2-15",
@@ -214,7 +214,7 @@
       "category": "Statistical Favorite / Sharp Money",
       "confidence": "Medium",
       "confidencePercentage": 68,
-      "tacticalAdvantage": "8-vs-9 matchups are historical 50/50 toss-ups, but Georgia leads the nation in fast-break points and boasts an elite +3.09 turnover margin. While SI's Kevin Sweeney likes Saint Louis' shooting, sharp money backs Georgia to exploit Saint Louis's 230th rank in offensive turnovers in a massive track meet."
+      "tacticalAdvantage": "8-vs-9 matchups are historical 50/50 toss-ups, but Georgia leads the nation in fast-break points and boasts an elite +3.09 turnover margin. Sharp money backs Georgia to exploit Saint Louis's 230th rank in offensive turnovers in a massive track meet."
     },
     {
       "id": "midwest-5-12",
@@ -225,7 +225,7 @@
       "recommendedPick": "akron",
       "category": "High-Conviction Upset",
       "confidence": "Medium",
-      "confidencePercentage": 60,
+      "confidencePercentage": 66,
       "tacticalAdvantage": "Texas Tech lost All-American forward JT Toppin, forcing them into a predictable offense. Akron ranks in the top fifteen nationally in shooting percentage. FanSided experts correctly point out that Texas Tech is ripe for an early exit given their battered roster, providing Akron a massive opening."
     },
     {
@@ -234,11 +234,11 @@
       "round": "First Round",
       "team1": { "id": "alabama", "name": "Alabama", "seed": 4 },
       "team2": { "id": "hofstra", "name": "Hofstra", "seed": 13 },
-      "recommendedPick": "hofstra",
-      "category": "High-Conviction Upset",
-      "confidence": "Medium",
-      "confidencePercentage": 55,
-      "tacticalAdvantage": "Sports Illustrated's Kevin Sweeney specifically highlighted this 13-over-4 upset, noting Hofstra's tremendous guard play (Cruz Davis and Preston Edmead) and massive 7-foot frontcourt that can exploit Alabama's 292nd-ranked defensive rebounding. Alabama is also missing guard Aden Holloway, compromising their spacing."
+      "recommendedPick": "alabama",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 82,
+      "tacticalAdvantage": "While Hofstra's slow pace is dangerous, Alabama's No. 18 KenPom ranking and volume three-point shooting make them statistically secure. 13-seeds only win 20.5% of the time, making Alabama the safe mathematical pick to advance."
     },
     {
       "id": "midwest-6-11",
@@ -273,7 +273,7 @@
       "recommendedPick": "santa-clara",
       "category": "Statistical Favorite",
       "confidence": "Medium",
-      "confidencePercentage": 60,
+      "confidencePercentage": 66,
       "tacticalAdvantage": "Kentucky struggles to score in half-court sets and is missing point guard Jaland Lowe. Sports Illustrated published that 'Santa Clara over Kentucky will be one of the most common upset picks,' noting the Wildcats' vulnerability to Santa Clara's 29.2 three-point attempts per game. The betting line opened remarkably tight with Kentucky favored by only -3.5 points."
     },
     {
@@ -309,7 +309,7 @@
       "recommendedPick": "iowa",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 56,
+      "confidencePercentage": 66,
       "tacticalAdvantage": "8-vs-9 matchups are notoriously close. Iowa brings strong March experience and is the slight betting favorite, heavily influenced by Clemson missing key rebounder Carter Welling to a torn ACL. A Reddit mega-guide specifically targeted Iowa advancing as a high-confidence metric play."
     },
     {
@@ -369,8 +369,8 @@
       "recommendedPick": "saint-marys",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 58,
-      "tacticalAdvantage": "A heavy stylistic clash: Saint Mary's dictates a slow, defensive slog and leads the nation with an 81% free-throw rate, while Texas A&M pushes a fast track meet. 7-seeds win roughly 60% of the time, aligning with Saint Mary's narrow odds."
+      "confidencePercentage": 66,
+      "tacticalAdvantage": "A heavy stylistic clash: Saint Mary's dictates a slow, defensive slog and leads the nation with an 81% free-throw rate, while Texas A&M pushes a fast track meet. 7-seeds win roughly 60% of the time, aligning with Saint Mary's narrow odds, making them the safer mathematical play."
     },
     {
       "id": "south-2-15",
