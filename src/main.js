@@ -93,7 +93,7 @@ function renderApp() {
   main.appendChild(bracketContainerEl);
 
   // Score panel
-  scorePanelEl = createScorePanel();
+  scorePanelEl = createScorePanel(() => rerender());
   main.appendChild(scorePanelEl);
 
   app.appendChild(main);

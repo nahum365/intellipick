@@ -1,14 +1,23 @@
 import { getAllPicks } from '../engine/picks.js';
 import { computeScore, computeChalkScore, computeRecommendedScore, getUpsetAlerts } from '../engine/scoring.js';
+import { cascadePick } from '../engine/propagation.js';
+import { getR64Matchup } from '../engine/propagation.js';
+import { openModal } from './modal.js';
+import { showTooltip, hideTooltip } from './tooltip.js';
+import teamsData from '../data/teams.json';
 
-export function createScorePanel() {
+function getTeamProfile(teamId) {
+  return teamsData.teams.find(t => t.id === teamId) || null;
+}
+
+export function createScorePanel(onPickChange) {
   const panel = document.createElement('div');
   panel.className = 'score-sidebar';
-  updateScorePanel(panel);
+  updateScorePanel(panel, onPickChange);
   return panel;
 }
 
-export function updateScorePanel(panel) {
+export function updateScorePanel(panel, onPickChange) {
   const picks = getAllPicks();
   const score = computeScore(picks);
   const chalk = computeChalkScore();
@@ -63,15 +72,91 @@ export function updateScorePanel(panel) {
       <div style="font-size:24px;font-weight:800;color:var(--upset)">${score.upsetCount}</div>
       <div style="font-size:11px;color:var(--text-secondary)">${upsets.length} upsets recommended</div>
     </div>
-
-    <div>
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Recommended Upsets</div>
-      ${upsets.map(u => `
-        <div style="font-size:11px;padding:4px 0;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center">
-          <span><strong>${u.team.seed}</strong> ${u.team.name} over <strong>${u.opponent.seed}</strong> ${u.opponent.name}</span>
-          <span style="font-size:9px;font-weight:700;color:var(--upset)">${u.confidencePercentage}%</span>
-        </div>
-      `).join('')}
-    </div>
   `;
+
+  // Build recommended upsets list with interactive elements
+  const upsetsSection = document.createElement('div');
+  const upsetsTitle = document.createElement('div');
+  upsetsTitle.style.cssText = 'font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px';
+  upsetsTitle.textContent = 'Recommended Upsets';
+  upsetsSection.appendChild(upsetsTitle);
+
+  for (const u of upsets) {
+    const isSelected = picks[u.matchupId] && picks[u.matchupId].id === u.team.id;
+    const matchup = getR64Matchup(u.matchupId);
+
+    const row = document.createElement('div');
+    row.style.cssText = 'font-size:11px;padding:4px 0;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:6px';
+
+    // Checkbox
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = isSelected;
+    checkbox.style.cssText = 'cursor:pointer;accent-color:var(--upset);flex-shrink:0';
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        cascadePick(u.matchupId, u.team);
+      } else {
+        // Pick the opponent instead (undo the upset)
+        cascadePick(u.matchupId, u.opponent);
+      }
+      if (onPickChange) onPickChange();
+    });
+    row.appendChild(checkbox);
+
+    // Team names with blurb tooltips
+    const label = document.createElement('span');
+    label.style.cssText = 'flex:1;min-width:0';
+
+    const teamSpan = document.createElement('span');
+    teamSpan.style.cssText = 'cursor:default';
+    teamSpan.innerHTML = `<strong>${u.team.seed}</strong> ${u.team.name}`;
+    const teamProfile = getTeamProfile(u.team.id);
+    if (teamProfile) {
+      teamSpan.style.cursor = 'pointer';
+      teamSpan.addEventListener('mouseenter', () => showTooltip(u.team, teamProfile, matchup, teamSpan));
+      teamSpan.addEventListener('mouseleave', () => hideTooltip());
+    }
+
+    const overSpan = document.createElement('span');
+    overSpan.textContent = ' over ';
+
+    const oppSpan = document.createElement('span');
+    oppSpan.style.cssText = 'cursor:default';
+    oppSpan.innerHTML = `<strong>${u.opponent.seed}</strong> ${u.opponent.name}`;
+    const oppProfile = getTeamProfile(u.opponent.id);
+    if (oppProfile) {
+      oppSpan.style.cursor = 'pointer';
+      oppSpan.addEventListener('mouseenter', () => showTooltip(u.opponent, oppProfile, matchup, oppSpan));
+      oppSpan.addEventListener('mouseleave', () => hideTooltip());
+    }
+
+    label.appendChild(teamSpan);
+    label.appendChild(overSpan);
+    label.appendChild(oppSpan);
+    row.appendChild(label);
+
+    // Confidence percentage
+    const confSpan = document.createElement('span');
+    confSpan.style.cssText = 'font-size:9px;font-weight:700;color:var(--upset);flex-shrink:0';
+    confSpan.textContent = `${u.confidencePercentage}%`;
+    row.appendChild(confSpan);
+
+    // Info button
+    if (matchup) {
+      const infoBtn = document.createElement('button');
+      infoBtn.style.cssText = 'background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:10px;color:var(--text-muted);padding:1px 5px;flex-shrink:0;line-height:1.2';
+      infoBtn.textContent = 'i';
+      infoBtn.title = 'View matchup details';
+      infoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModal(matchup);
+      });
+      row.appendChild(infoBtn);
+    }
+
+    upsetsSection.appendChild(row);
+  }
+
+  panel.appendChild(upsetsSection);
 }
