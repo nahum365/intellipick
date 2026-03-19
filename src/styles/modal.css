@@ -1,0 +1,253 @@
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.modal-overlay--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 800px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal__header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 1;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.modal__title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.modal__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+
+.modal__close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* Recommendation bar */
+.modal__recommendation {
+  padding: 12px 20px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.modal__rec-pick {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.modal__rec-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.modal__rec-badge--very-high {
+  background: var(--confidence-very-high-bg);
+  color: var(--confidence-very-high);
+}
+
+.modal__rec-badge--high {
+  background: var(--confidence-high-bg);
+  color: var(--confidence-high);
+}
+
+.modal__rec-badge--medium {
+  background: var(--confidence-medium-bg);
+  color: var(--confidence-medium);
+}
+
+.modal__rec-category {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Tactical analysis */
+.modal__tactical {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal__tactical-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.modal__tactical-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* Side-by-side team panels */
+.modal__teams {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.modal__team-panel {
+  padding: 16px 20px;
+  border-right: 1px solid var(--border);
+}
+
+.modal__team-panel:last-child {
+  border-right: none;
+}
+
+.modal__team-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary);
+}
+
+.modal__team-panel-seed {
+  font-size: 12px;
+  font-weight: 800;
+  background: var(--primary);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal__team-panel-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.modal__team-section {
+  margin-bottom: 12px;
+}
+
+.modal__team-section-title {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.modal__team-section-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.modal__team-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.modal__team-injury {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  font-size: 11px;
+}
+
+.modal__team-injury-status {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.modal__team-injury-status--out {
+  background: var(--confidence-low-bg);
+  color: var(--injury-out);
+}
+
+.modal__team-injury-status--doubtful {
+  background: var(--confidence-medium-bg);
+  color: var(--injury-doubtful);
+}
+
+.modal__team-player {
+  padding: 3px 0;
+  font-size: 11px;
+}
+
+.modal__team-player-name {
+  font-weight: 600;
+}
+
+.modal__team-player-note {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .modal__teams {
+    grid-template-columns: 1fr;
+  }
+
+  .modal__team-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}

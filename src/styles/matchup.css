@@ -1,0 +1,259 @@
+/* Matchup card */
+.matchup-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  min-width: 180px;
+}
+
+.matchup-card:hover {
+  box-shadow: var(--shadow);
+}
+
+/* Confidence border colors */
+.matchup-card--very-high { border-color: var(--confidence-very-high); }
+.matchup-card--high { border-color: var(--confidence-high); }
+.matchup-card--medium { border-color: var(--confidence-medium); }
+
+/* Upset category */
+.matchup-card--upset {
+  border-color: var(--upset);
+  background: var(--upset-bg);
+}
+
+/* Header badges */
+.matchup-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 6px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-light);
+  gap: 4px;
+  min-height: 22px;
+}
+
+.matchup-card__category {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.matchup-card__category--upset {
+  color: var(--upset);
+}
+
+.matchup-card__confidence-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.matchup-card__confidence-badge--very-high {
+  background: var(--confidence-very-high-bg);
+  color: var(--confidence-very-high);
+}
+
+.matchup-card__confidence-badge--high {
+  background: var(--confidence-high-bg);
+  color: var(--confidence-high);
+}
+
+.matchup-card__confidence-badge--medium {
+  background: var(--confidence-medium-bg);
+  color: var(--confidence-medium);
+}
+
+/* Team row */
+.team-row {
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--border-light);
+  position: relative;
+  min-height: 32px;
+}
+
+.team-row:last-of-type {
+  border-bottom: none;
+}
+
+.team-row:hover {
+  background: var(--primary-light);
+}
+
+.team-row--picked {
+  background: var(--picked-bg);
+  font-weight: 600;
+}
+
+.team-row--recommended {
+  /* subtle left indicator for recommended pick */
+}
+
+.team-row--empty {
+  cursor: default;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.team-row--empty:hover {
+  background: transparent;
+}
+
+.team-row__star {
+  color: #f59e0b;
+  font-size: 11px;
+  width: 12px;
+  flex-shrink: 0;
+}
+
+.team-row__seed {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.team-row__name {
+  flex: 1;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: inherit;
+}
+
+.team-row__record {
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.team-row__pct {
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+  min-width: 28px;
+  text-align: right;
+}
+
+.team-row__injuries {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.injury-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.injury-dot--out {
+  background: var(--injury-out);
+}
+
+.injury-dot--doubtful {
+  background: var(--injury-doubtful);
+}
+
+/* Pick check indicator */
+.team-row__check {
+  font-size: 11px;
+  color: var(--confidence-very-high);
+  flex-shrink: 0;
+}
+
+/* Footer */
+.matchup-card__footer {
+  padding: 3px 6px;
+  background: var(--bg);
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Probability bar */
+.prob-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border-light);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.prob-bar__fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.prob-bar__fill--very-high { background: var(--confidence-very-high); }
+.prob-bar__fill--high { background: var(--confidence-high); }
+.prob-bar__fill--medium { background: var(--confidence-medium); }
+
+.matchup-card__pct {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.matchup-card__info-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+
+.matchup-card__info-btn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Empty matchup card for later rounds */
+.matchup-card--empty {
+  border-style: dashed;
+  border-color: var(--border);
+  background: transparent;
+}
+
+.matchup-card--later-round .matchup-card__header {
+  display: none;
+}
+
+.matchup-card--later-round .matchup-card__footer {
+  display: none;
+}

@@ -1,0 +1,169 @@
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  z-index: 1000;
+  width: 360px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  font-size: 12px;
+}
+
+.tooltip--visible {
+  opacity: 1;
+}
+
+.tooltip__header {
+  padding: 12px 14px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.tooltip__team-name {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.tooltip__team-meta {
+  font-size: 11px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.tooltip__section {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.tooltip__section:last-child {
+  border-bottom: none;
+}
+
+.tooltip__section-title {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.tooltip__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.tooltip__label {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.tooltip__value {
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.tooltip__player {
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.tooltip__player:last-child {
+  border-bottom: none;
+}
+
+.tooltip__player-name {
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.tooltip__player-stats {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.tooltip__player-note {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.tooltip__injury {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+}
+
+.tooltip__injury-status {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.tooltip__injury-status--out {
+  background: var(--confidence-low-bg);
+  color: var(--injury-out);
+}
+
+.tooltip__injury-status--doubtful {
+  background: var(--confidence-medium-bg);
+  color: var(--injury-doubtful);
+}
+
+.tooltip__injury-detail {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.tooltip__badge-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.tooltip__badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.tooltip__badge--deep-run {
+  background: #f3e8ff;
+  color: var(--deep-run);
+}
+
+.tooltip__badge--fade {
+  background: var(--confidence-low-bg);
+  color: var(--fade);
+}
+
+.tooltip__text {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.tooltip__text--muted {
+  color: var(--text-secondary);
+}
+
+.tooltip__strength {
+  color: var(--confidence-very-high);
+}
+
+.tooltip__weakness {
+  color: var(--upset);
+}

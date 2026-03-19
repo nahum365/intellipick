@@ -1,0 +1,228 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6c757d;
+  --text-muted: #adb5bd;
+  --border: #dee2e6;
+  --border-light: #e9ecef;
+
+  --primary: #2563eb;
+  --primary-light: #dbeafe;
+  --primary-dark: #1d4ed8;
+
+  --confidence-very-high: #059669;
+  --confidence-very-high-bg: #d1fae5;
+  --confidence-high: #2563eb;
+  --confidence-high-bg: #dbeafe;
+  --confidence-medium: #d97706;
+  --confidence-medium-bg: #fef3c7;
+  --confidence-low: #dc2626;
+  --confidence-low-bg: #fee2e2;
+
+  --upset: #dc2626;
+  --upset-bg: #fef2f2;
+  --upset-border: #fca5a5;
+
+  --picked-bg: #eff6ff;
+  --picked-border: #2563eb;
+
+  --deep-run: #7c3aed;
+  --fade: #ef4444;
+
+  --injury-out: #dc2626;
+  --injury-doubtful: #d97706;
+
+  --radius: 8px;
+  --radius-sm: 4px;
+  --radius-lg: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.header__logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.header__logo span {
+  color: var(--text);
+}
+
+.header__controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn {
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+
+.btn:hover {
+  background: var(--bg);
+  border-color: var(--text-secondary);
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.btn--primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn--danger {
+  color: var(--upset);
+  border-color: var(--upset-border);
+}
+
+.btn--danger:hover {
+  background: var(--upset-bg);
+}
+
+/* Filter tabs */
+.filters {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.filters__tab {
+  padding: 10px 18px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: var(--font);
+}
+
+.filters__tab:hover {
+  color: var(--text);
+  background: var(--bg);
+}
+
+.filters__tab--active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.bracket-container {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+}
+
+/* Score sidebar */
+.score-sidebar {
+  width: 280px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  padding: 20px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* Insights bar */
+.insights-bar {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 10px 24px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 13px;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.insights-bar__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.insights-bar__badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.insights-bar__badge--upset {
+  background: var(--upset-bg);
+  color: var(--upset);
+}
+
+.insights-bar__badge--info {
+  background: var(--primary-light);
+  color: var(--primary);
+}
