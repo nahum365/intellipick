@@ -263,6 +263,15 @@
   display: none;
 }
 
+/* Restore header/footer when later-round matchup has prediction data */
+.matchup-card--has-prediction .matchup-card__header {
+  display: flex;
+}
+
+.matchup-card--has-prediction .matchup-card__footer {
+  display: flex;
+}
+
 /* Mobile: larger touch targets */
 @media (max-width: 768px) {
   .team-row {
