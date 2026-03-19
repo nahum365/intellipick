@@ -10,7 +10,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 99,
-      "tacticalAdvantage": "Duke enters as the overall No. 1 seed after a 32-2 season. Despite late-season injuries to Caleb Foster, the talent gap anchored by Cameron Boozer is too wide for Siena to overcome. Duke fits the optimal AI Intellipick profile with top-tier efficiency balance (No. 1 in KenPom) and carries a massive -27.5 betting spread to advance."
+      "tacticalAdvantage": "Duke enters as the overall No. 1 seed after a 32-2 season. Despite late-season injuries to Caleb Foster, the talent gap anchored by Cameron Boozer is too wide for Siena to overcome. This aligns with historical data, where 1-seeds win 99.3% of the time, easily supporting Duke's -27.5 point betting spread."
     },
     {
       "id": "east-8-9",
@@ -21,8 +21,8 @@
       "recommendedPick": "tcu",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 55,
-      "tacticalAdvantage": "Ohio State relies heavily on senior guard Bruce Thornton (124.3 AdjO), but TCU brings an elite defense (97.8 AdjD) and enters having won nine of their last 11 games. Ohio State is currently favored by a narrow -2.5 points, reflecting TCU's ability to drag efficient offenses into a grind."
+      "confidencePercentage": 52,
+      "tacticalAdvantage": "Historically, 8-vs-9 matchups are a near coin flip (9-seeds win 48.7%). Ohio State relies heavily on senior guard Bruce Thornton (124.3 AdjO), but TCU brings an elite defense (97.8 AdjD) and a 75% cover rate as an underdog. The tight -2.5 spread in Ohio State's favor makes TCU an appealing, albeit coin-flip, upset pick."
     },
     {
       "id": "east-5-12",
@@ -33,8 +33,8 @@
       "recommendedPick": "st-johns",
       "category": "Poisoned Value Trap (Avoid Upset)",
       "confidence": "High",
-      "confidencePercentage": 85,
-      "tacticalAdvantage": "Northern Iowa is utterly atrocious on the offensive glass, ranking 356th nationally. St. John's ranks 28th nationally in offensive rebounds and will overpower Northern Iowa with sheer athleticism. St. John's is favored by -9.5 points, supported by their No. 17 KenPom rank compared to Northern Iowa's No. 72 rating."
+      "confidencePercentage": 82,
+      "tacticalAdvantage": "While 12-seeds historically upset 5-seeds 35.3% of the time, this specific matchup is a trap. Northern Iowa is utterly atrocious on the offensive glass (356th nationally). St. John's ranks 28th nationally in offensive rebounds and will overpower them, validating their -10.5 point spread."
     },
     {
       "id": "east-4-13",
@@ -46,7 +46,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 85,
-      "tacticalAdvantage": "Kansas features potential top NBA pick Darryn Peterson, though minutes limits have been a concern. CBU is making its first NCAA tournament appearance in program history and relies on the fiery scoring of Dominique Daniels. Kansas is listed as a solid -12.5 favorite, boasting a No. 21 KenPom ranking."
+      "tacticalAdvantage": "Kansas features potential top NBA pick Darryn Peterson. CBU relies on Dominique Daniels but is making its first NCAA tournament appearance. Historically, 4-seeds win 79.5% of these matchups, and Kansas fits the mold as a comfortable -14.5 point favorite."
     },
     {
       "id": "east-6-11",
@@ -56,9 +56,9 @@
       "team2": { "id": "south-florida", "name": "South Florida", "seed": 11 },
       "recommendedPick": "south-florida",
       "category": "High-Conviction Upset",
-      "confidence": "Very High",
-      "confidencePercentage": 88,
-      "tacticalAdvantage": "Louisville is missing primary playmaker Mikel Brown Jr. due to a back injury. South Florida plays at a blistering pace and ranks second nationally in rebounds (43 per game). Louisville is favored by -7.5 but qualifies only as a fringe AI Intellipick, making the No. 47 KenPom ranked Bulls a highly viable upset."
+      "confidence": "High",
+      "confidencePercentage": 75,
+      "tacticalAdvantage": "Louisville is missing primary playmaker Mikel Brown Jr. South Florida plays at a blistering pace and ranks second nationally in rebounds (43 per game). Historically, 11-seeds only win 37.8% of the time, which tempers absolute certainty, but the stylistic matchup and tight -6.5 spread makes USF highly live."
     },
     {
       "id": "east-3-14",
@@ -70,7 +70,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 88,
-      "tacticalAdvantage": "Michigan State extended its Big Ten record to 28 consecutive NCAA Tournament appearances. They share the ball exceptionally well and face a Summit League champion in NDSU. The Spartans are -15.5 favorites and fit the AI Intellipick criteria with excellent top-tier efficiency balance."
+      "tacticalAdvantage": "Michigan State extended its Big Ten record to 28 consecutive NCAA Tournament appearances. They share the ball exceptionally well and face a Summit League champion in NDSU. 3-seeds historically win 85.3% of the time, and the Spartans' -16.5 spread reflects that dominance."
     },
     {
       "id": "east-7-10",
@@ -82,7 +82,7 @@
       "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 52,
-      "tacticalAdvantage": "UCF features an explosive offense averaging 81 points per game and plays a tough style. UCLA relies heavily on the production of Tyler Bilodeau and Donovan Dent but has battled uneven performances. UCLA is favored by -6.5, but UCF's No. 54 KenPom rating and explosiveness make them a dangerous opponent."
+      "tacticalAdvantage": "UCF features an explosive offense averaging 81 points per game and plays a tough style. UCLA relies heavily on Tyler Bilodeau but has battled uneven performances. 10-seeds historically win about 40% of the time, making this a risky upset, but UCF's relentless pace makes them an intriguing value play against a -5.5 spread."
     },
     {
       "id": "east-2-15",
@@ -94,7 +94,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 96,
-      "tacticalAdvantage": "Furman secured a No. 15 seed via the Southern Conference automatic bid and is a dangerous mid-major, but UConn under Dan Hurley is a dynastic mastermind with too much depth. UConn fits a fringe AI Intellipick profile due to a slightly slower pace, but oddsmakers heavily back them as -18.5 favorites."
+      "tacticalAdvantage": "Furman is a dangerous mid-major, but UConn under Dan Hurley is a dynastic mastermind with too much depth. 2-seeds boast a 93.6% historical win rate, and the Huskies command a massive -19.5 point spread."
     },
     {
       "id": "west-1-16",
@@ -106,7 +106,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 99,
-      "tacticalAdvantage": "Arizona opened the season with 23 straight wins and is the model's projected national champion, featuring top-five ranks in both offensive and defensive efficiency. Arizona fits the ideal AI Intellipick model, resulting in a staggering -29.5 point spread."
+      "tacticalAdvantage": "Arizona opened the season with 23 straight wins and is the model's projected national champion, featuring top-five ranks in both offensive and defensive efficiency. Historical 1-seed dominance (99.3%) secures this -29.5 spread."
     },
     {
       "id": "west-8-9",
@@ -118,7 +118,7 @@
       "category": "Statistical Favorite",
       "confidence": "Medium",
       "confidencePercentage": 60,
-      "tacticalAdvantage": "Villanova's offense is dangerously reliant on three-point variance, and they are missing rotation piece Matt Hodge. Utah State possesses a highly balanced offensive attack. Oddsmakers agree with this upset, installing No. 30 KenPom Utah State as a -1.5 point favorite over No. 33 KenPom Villanova."
+      "tacticalAdvantage": "Historical 8-vs-9 matchups are a toss-up, but Utah State possesses a highly balanced offensive attack against a Villanova squad overly reliant on three-point variance and missing Matt Hodge. Oddsmakers agree, installing the 9-seed Aggies as -1.5 point favorites."
     },
     {
       "id": "west-5-12",
@@ -128,9 +128,9 @@
       "team2": { "id": "high-point", "name": "High Point", "seed": 12 },
       "recommendedPick": "high-point",
       "category": "Statistical Favorite",
-      "confidence": "High",
-      "confidencePercentage": 75,
-      "tacticalAdvantage": "High Point enters on a fourteen-game winning streak and thrives on offensive execution. Wisconsin ranks 177th nationally in opponent effective field goal percentage. Wisconsin is favored by -12.5, but No. 92 KenPom High Point's momentum creates a statistical upset opportunity."
+      "confidence": "Medium",
+      "confidencePercentage": 65,
+      "tacticalAdvantage": "High Point enters on a 14-game winning streak and thrives on offensive execution, while Wisconsin ranks 177th in opponent effective FG%. Historically, 12-seeds win 35.3% of the time, so absolute conviction is dangerous, but High Point's momentum creates a strong statistical upset opportunity."
     },
     {
       "id": "west-4-13",
@@ -139,10 +139,10 @@
       "team1": { "id": "arkansas", "name": "Arkansas", "seed": 4 },
       "team2": { "id": "hawaii", "name": "Hawai'i", "seed": 13 },
       "recommendedPick": "hawaii",
-      "category": "Sharp Money Target",
-      "confidence": "Medium",
-      "confidencePercentage": 58,
-      "tacticalAdvantage": "Arkansas features standout freshman scorer Darius Acuff Jr. and won the SEC Tournament, but sharp money has heavily favored Hawai'i to cover the +15.5 spread. Arkansas ranks No. 15 in KenPom, but defensive vulnerabilities make the Rainbow Warriors an attractive target."
+      "category": "Sharp Money Target / Spread Play",
+      "confidence": "Low",
+      "confidencePercentage": 42,
+      "tacticalAdvantage": "Arkansas won the SEC Tournament, but sharp money heavily favors Hawai'i to cover the +15.5 spread. 13-seeds historically win only ~20% of the time, so predicting an outright upset is highly speculative, but Hawai'i can exploit Arkansas's defensive lapses to keep it close."
     },
     {
       "id": "west-6-11",
@@ -154,7 +154,7 @@
       "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 54,
-      "tacticalAdvantage": "Texas advanced to the Round of 64 after a gritty win over NC State in the First Four, carrying momentum into a clash against BYU's acclaimed freshman AJ Dybantsa. Texas holds the momentum, while No. 23 KenPom BYU attempts to overcome the loss of key rotation piece Richie Saunders."
+      "tacticalAdvantage": "Texas advanced out of the First Four with momentum. BYU attempts to overcome the loss of key rotation piece Richie Saunders. While 11-seeds historically win 37.8% of the time, BYU's injuries make this a prime spot for Texas to overperform."
     },
     {
       "id": "west-3-14",
@@ -166,7 +166,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 92,
-      "tacticalAdvantage": "Gonzaga secured a No. 3 seed but is considered less dominant than classic Bulldogs teams. They face Conference USA representative Kennesaw State. Gonzaga remains an elite AI Intellipick with top efficiency ratings, making them massive -18.5 point favorites."
+      "tacticalAdvantage": "Gonzaga secured a No. 3 seed and boasts elite efficiency. While considered less dominant than classic Bulldogs teams, historical 3-seed dominance (85.3%) and a -18.5 point spread support them comfortably advancing over Kennesaw State."
     },
     {
       "id": "west-7-10",
@@ -178,7 +178,7 @@
       "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 62,
-      "tacticalAdvantage": "Missouri dropped to the 10-line late in the season after struggling down the stretch, drawing a tough, battle-tested ACC opponent in Miami. Miami is favored by -2.5 and holds the edge in analytics with a No. 31 KenPom rating compared to Missouri's No. 52."
+      "tacticalAdvantage": "Missouri dropped to the 10-line after struggling down the stretch, drawing a battle-tested ACC opponent. Miami holds the edge in analytics (No. 31 KenPom vs No. 52), aligning with the historical 60% win rate for 7-seeds."
     },
     {
       "id": "west-2-15",
@@ -190,7 +190,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 96,
-      "tacticalAdvantage": "Purdue enters at 27-8 after winning the Big Ten Tournament, facing tournament first-timer and Atlantic Sun champion Queens. Purdue's No. 8 KenPom rating makes them overwhelming -23.5 point favorites."
+      "tacticalAdvantage": "Purdue enters at 27-8 after winning the Big Ten Tournament. 2-seeds boast a 93.6% historical win rate against 15-seeds, making Purdue's No. 8 KenPom rating an overwhelming advantage."
     },
     {
       "id": "midwest-1-16",
@@ -202,7 +202,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 97,
-      "tacticalAdvantage": "Howard advanced out of the First Four, but Michigan boasts the country's most efficient defense (No. 1 AdjD), anchored by 7-foot-7 rim protector Aday Mara. Michigan fits the perfect AI Intellipick profile, ensuring an immense talent mismatch."
+      "tacticalAdvantage": "Michigan boasts the country's most efficient defense (No. 1 AdjD), anchored by 7-foot-7 rim protector Aday Mara. This aligns perfectly with the 99.3% historical win rate of 1-seeds."
     },
     {
       "id": "midwest-8-9",
@@ -212,9 +212,9 @@
       "team2": { "id": "saint-louis", "name": "Saint Louis", "seed": 9 },
       "recommendedPick": "georgia",
       "category": "Statistical Favorite / Sharp Money",
-      "confidence": "High",
-      "confidencePercentage": 78,
-      "tacticalAdvantage": "Georgia leads the nation in fast-break points (19.9 per game). Sharp money heavily backs Georgia due to Saint Louis ranking 230th in offensive turnovers. Georgia is favored by -1.5 points, driven by extreme tempo numbers."
+      "confidence": "Medium",
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "8-vs-9 matchups are historical 50/50 toss-ups, but Georgia leads the nation in fast-break points and boasts an elite +3.09 turnover margin. Sharp money backs Georgia to exploit Saint Louis's 230th rank in offensive turnovers."
     },
     {
       "id": "midwest-5-12",
@@ -223,10 +223,10 @@
       "team1": { "id": "texas-tech", "name": "Texas Tech", "seed": 5 },
       "team2": { "id": "akron", "name": "Akron", "seed": 12 },
       "recommendedPick": "akron",
-      "category": "High-Conviction Upset",
-      "confidence": "High",
-      "confidencePercentage": 74,
-      "tacticalAdvantage": "Texas Tech lost star forward JT Toppin to a torn ACL, forcing them into a predictable, perimeter-reliant offense. Akron ranks in the top fifteen nationally in both two-point and three-point percentage. Texas Tech is favored by -8.5, but No. 64 KenPom Akron makes this a prime upset target."
+      "category": "Value Underdog",
+      "confidence": "Medium",
+      "confidencePercentage": 55,
+      "tacticalAdvantage": "Texas Tech lost star forward JT Toppin, forcing them into a predictable offense. Akron ranks in the top fifteen nationally in shooting percentage. While 12-seeds historically win only 35.3% of the time, Toppin's absence provides Akron a strong opening."
     },
     {
       "id": "midwest-4-13",
@@ -235,10 +235,10 @@
       "team1": { "id": "alabama", "name": "Alabama", "seed": 4 },
       "team2": { "id": "hofstra", "name": "Hofstra", "seed": 13 },
       "recommendedPick": "hofstra",
-      "category": "High-Conviction Upset",
-      "confidence": "High",
-      "confidencePercentage": 70,
-      "tacticalAdvantage": "Alabama lost guard Aden Holloway to an indefinite suspension, severely compromising their perimeter spacing. Hofstra plays at a glacial pace (334th nationally) and utilizes a massive frontcourt to exploit Alabama's 292nd-ranked defensive rebounding. Alabama is a -10.5 favorite, but stylistic mismatches favor Hofstra."
+      "category": "Value Underdog",
+      "confidence": "Low",
+      "confidencePercentage": 45,
+      "tacticalAdvantage": "Alabama lost guard Aden Holloway, compromising perimeter spacing. Hofstra plays at a glacial pace to exploit Alabama's poor defensive rebounding. However, 13-seeds historically win just over 20% of the time, so while the stylistic matchup screams upset, history demands tempered expectations."
     },
     {
       "id": "midwest-6-11",
@@ -250,7 +250,7 @@
       "category": "Poisoned Value Trap (Avoid Upset)",
       "confidence": "High",
       "confidencePercentage": 86,
-      "tacticalAdvantage": "Miami (OH) built a 31-1 record on an artificially inflated, weak schedule. Tennessee is battle-tested, healthy, and will overwhelm Miami with SEC-tier speed and length. Tennessee ranks No. 16 in KenPom, providing a stark reality check for the MAC champion."
+      "tacticalAdvantage": "Miami (OH) built a 31-1 record on a weak schedule. While 11-seeds are trendy upset picks (winning 37.8% historically), Tennessee is battle-tested, healthy, and will overwhelm Miami with SEC-tier speed and a 44.7% offensive rebounding rate."
     },
     {
       "id": "midwest-3-14",
@@ -262,7 +262,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 88,
-      "tacticalAdvantage": "Virginia secured a No. 3 seed with their trademark pack-line defense and will look to suffocate the Horizon League champion. Virginia qualifies as a fringe AI Intellipick with elite efficiency numbers, driving their status as -17.5 point favorites."
+      "tacticalAdvantage": "Virginia secured a No. 3 seed with their trademark pack-line defense and will suffocate the Horizon League champion. 3-seeds historically win 85.3% of matchups, supporting Virginia's -17.5 spread."
     },
     {
       "id": "midwest-7-10",
@@ -273,8 +273,8 @@
       "recommendedPick": "santa-clara",
       "category": "Statistical Favorite",
       "confidence": "Medium",
-      "confidencePercentage": 65,
-      "tacticalAdvantage": "Kentucky struggles to score in half-court sets and is missing point guard Jaland Lowe (shoulder injury). Santa Clara is well-positioned structurally. Kentucky is narrowly favored by -2.5 points, leaving room for No. 35 KenPom Santa Clara to strike."
+      "confidencePercentage": 60,
+      "tacticalAdvantage": "Kentucky struggles to score in half-court sets and is missing point guard Jaland Lowe. 10-seeds historically win 39.7% of the time, making this generally risky, but Kentucky being favored by only -3.5 points signals extreme vulnerability against Santa Clara's outside shooting."
     },
     {
       "id": "midwest-2-15",
@@ -286,7 +286,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 95,
-      "tacticalAdvantage": "Iowa State relies on the interior dominance of Audi Crooks and boasts incredible defensive metrics. Tennessee State represents the Ohio Valley Conference auto-bid. Iowa State matches the exact AI Intellipick criteria with elite defense, commanding a massive -23.5 spread."
+      "tacticalAdvantage": "Iowa State relies on interior dominance and boasts incredible defensive metrics. The historical 93.6% win rate for 2-seeds against 15-seeds easily validates the Cyclones' -23.5 point spread."
     },
     {
       "id": "south-1-16",
@@ -298,7 +298,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 97,
-      "tacticalAdvantage": "Florida is the defending national champion and won the SEC regular-season title. Prairie View advanced out of the First Four, but the talent gap is massive. Florida is an elite No. 4 in KenPom and a fringe AI Intellipick, assuring a blowout victory."
+      "tacticalAdvantage": "Florida is the defending national champion and won the SEC regular-season title. The massive talent gap perfectly aligns with the 99.3% historical win rate of 1-seeds."
     },
     {
       "id": "south-8-9",
@@ -309,8 +309,8 @@
       "recommendedPick": "iowa",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 58,
-      "tacticalAdvantage": "Expected to be a severe clash of slow-paced styles. The betting total opened at a first-round low of 129 points. Iowa brings strong March experience. Iowa is a slight -1.5 favorite, heavily influenced by Clemson missing key rebounder Carter Welling."
+      "confidencePercentage": 56,
+      "tacticalAdvantage": "8-vs-9 matchups are notoriously close (9-seeds win 48.7%). Iowa brings strong March experience and opened as a slight -1.5 point favorite, heavily influenced by Clemson missing key rebounder Carter Welling to a torn ACL."
     },
     {
       "id": "south-5-12",
@@ -321,8 +321,8 @@
       "recommendedPick": "vanderbilt",
       "category": "Poisoned Value Trap (Avoid Upset)",
       "confidence": "High",
-      "confidencePercentage": 85,
-      "tacticalAdvantage": "Vanderbilt is severely underseeded, ranking 12th nationally in KenPom. Vanderbilt shoots 79% from the free-throw line and features physical forwards equipped to exploit McNeese's poor defensive rebounding. Vanderbilt is a -10.5 favorite and qualifies as a fringe AI Intellipick."
+      "confidencePercentage": 81,
+      "tacticalAdvantage": "Vanderbilt is severely underseeded (12th in KenPom) and shoots 79% from the free-throw line. While 12-seeds secure upsets roughly 35% of the time, Vanderbilt's physical forwards are perfectly equipped to exploit McNeese's poor defensive rebounding, avoiding the trap."
     },
     {
       "id": "south-4-13",
@@ -331,10 +331,10 @@
       "team1": { "id": "nebraska", "name": "Nebraska", "seed": 4 },
       "team2": { "id": "troy", "name": "Troy", "seed": 13 },
       "recommendedPick": "troy",
-      "category": "High-Conviction Upset",
-      "confidence": "Medium",
-      "confidencePercentage": 64,
-      "tacticalAdvantage": "Nebraska heavily regressed late in the season and struggles against elite interior physicality. Troy consistently limits shot volume and efficiency at the basket through elite rim protection. Nebraska is favored by -13.5, but their late-season metrics expose vulnerabilities."
+      "category": "Value Underdog / Spread Play",
+      "confidence": "Low",
+      "confidencePercentage": 38,
+      "tacticalAdvantage": "Nebraska heavily regressed late in the season, and Troy limits shot efficiency at the basket. However, historically, 13-seeds only win 20.5% of First Round matchups. While Troy is highly live to cover the 13.5-point spread, predicting an outright upset here requires tempering expectations given historical precedent."
     },
     {
       "id": "south-6-11",
@@ -343,10 +343,10 @@
       "team1": { "id": "north-carolina", "name": "North Carolina", "seed": 6 },
       "team2": { "id": "vcu", "name": "VCU", "seed": 11 },
       "recommendedPick": "vcu",
-      "category": "High-Conviction Upset",
-      "confidence": "Very High",
-      "confidencePercentage": 92,
-      "tacticalAdvantage": "UNC lost interior enforcer Caleb Wilson to a season-ending hand fracture. VCU's relentless ball pressure is designed to disrupt half-court sets, exploiting UNC's compromised frontcourt. UNC is only favored by -1.5 points as No. 45 KenPom VCU holds a high statistical probability for the upset."
+      "category": "Value Underdog",
+      "confidence": "Medium",
+      "confidencePercentage": 62,
+      "tacticalAdvantage": "UNC lost interior enforcer Caleb Wilson. VCU's relentless ball pressure will disrupt half-court sets. Historically, 11-seeds win 37.8% of the time, but Oddsmakers see the vulnerability, opening UNC as a minuscule -1.5 point favorite."
     },
     {
       "id": "south-3-14",
@@ -357,8 +357,8 @@
       "recommendedPick": "illinois",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 92,
-      "tacticalAdvantage": "Illinois possesses the country's most productive attack. Penn arrives hot off an overtime thriller to win the Ivy League tournament under coach Fran McCaffery, but faces a massive talent deficit. Illinois sits at No. 7 in KenPom, justifying their enormous -20.5 point spread."
+      "confidencePercentage": 87,
+      "tacticalAdvantage": "Illinois possesses the country's most productive attack. Penn arrives hot, but faces a massive talent deficit. 3-seeds win 85.3% of the time, safely validating Illinois's -20.5 point spread."
     },
     {
       "id": "south-7-10",
@@ -369,8 +369,8 @@
       "recommendedPick": "saint-marys",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 60,
-      "tacticalAdvantage": "A heavy stylistic clash: Saint Mary's dictates a slow, defensive slog and leads the nation with an 81% free-throw rate, while Texas A&M pushes a fast track meet. Saint Mary's is a -2.5 favorite and a fringe AI Intellipick."
+      "confidencePercentage": 58,
+      "tacticalAdvantage": "A heavy stylistic clash: Saint Mary's dictates a slow slog, while Texas A&M pushes a fast track meet. 7-seeds win roughly 60% of the time, aligning with Saint Mary's narrow -1.5 point spread."
     },
     {
       "id": "south-2-15",
@@ -382,7 +382,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 96,
-      "tacticalAdvantage": "Houston was placed in the South Region, setting up a highly motivated run toward a potential regional final in their hometown at the Toyota Center. Houston ranks No. 5 in KenPom and supports a -19.5 point spread."
+      "tacticalAdvantage": "Houston was placed in the South Region, setting up a highly motivated run. With 2-seeds winning 93.6% of the time, Houston's No. 5 KenPom ranking easily supports their -19.5 spread."
     }
   ]
 }
