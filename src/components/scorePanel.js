@@ -1,6 +1,7 @@
 import { getAllPicks } from '../engine/picks.js';
 import { computeScore, computeChalkScore, computeRecommendedScore, getUpsetAlerts } from '../engine/scoring.js';
 import { cascadePick, getR64Matchup, getRegionR64Matchups, getValidBracketIds } from '../engine/propagation.js';
+import { getFetchStatus } from '../engine/liveScores.js';
 import { openModal } from './modal.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
 import teamsData from '../data/teams.json';
@@ -22,6 +23,44 @@ function resolveR32GeneratedId(canonicalId, region) {
     }
   }
   return null;
+}
+
+function timeAgo(ts) {
+  if (!ts) return null;
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 10) return 'just now';
+  if (diff < 60) return `${diff}s ago`;
+  const mins = Math.floor(diff / 60);
+  if (mins < 60) return `${mins}m ago`;
+  return `${Math.floor(mins / 60)}h ago`;
+}
+
+function buildFetchStatusHtml(compact) {
+  const s = getFetchStatus();
+  const loading = s.espnLoading || s.polymarketLoading;
+
+  if (loading) {
+    const spinner = '<span class="fetch-status__spinner"></span>';
+    if (compact) {
+      return `<span class="fetch-status fetch-status--compact">${spinner}<span class="fetch-status__text">Loading scores&hellip;</span></span>`;
+    }
+    const items = [];
+    if (s.espnLoading) items.push('ESPN');
+    if (s.polymarketLoading) items.push('Polymarket');
+    return `<div class="fetch-status">${spinner}<span class="fetch-status__text">Loading ${items.join(' &amp; ')} info&hellip;</span></div>`;
+  }
+
+  // Not loading — show freshness
+  const parts = [];
+  if (s.espnLastLoaded) parts.push(`ESPN ${timeAgo(s.espnLastLoaded)}`);
+  if (s.polymarketLastLoaded) parts.push(`Polymarket ${timeAgo(s.polymarketLastLoaded)}`);
+  if (parts.length === 0) return '';
+
+  const text = parts.join(compact ? ' · ' : ', ');
+  if (compact) {
+    return `<span class="fetch-status fetch-status--compact fetch-status--done"><span class="fetch-status__text">${text}</span></span>`;
+  }
+  return `<div class="fetch-status fetch-status--done"><span class="fetch-status__text">${text}</span></div>`;
 }
 
 // Track collapsed state across re-renders
@@ -55,6 +94,7 @@ export function updateScorePanel(panel, onPickChange) {
   const anchorStats = document.createElement('div');
   anchorStats.className = 'score-sidebar__anchor-stats';
   if (!sidebarCollapsed) anchorStats.style.display = 'none';
+  const mobileStatusHtml = buildFetchStatusHtml(true);
   anchorStats.innerHTML = `
     <span class="score-sidebar__anchor-stat">
       <span class="score-sidebar__anchor-stat-value">${pickedCount}</span>
@@ -68,6 +108,7 @@ export function updateScorePanel(panel, onPickChange) {
       <span class="score-sidebar__anchor-stat-value" style="color:var(--upset)">${score.upsetCount}</span>
       <span class="score-sidebar__anchor-stat-label">upsets</span>
     </span>
+    ${mobileStatusHtml}
   `;
   panel.appendChild(anchorStats);
 
@@ -172,6 +213,12 @@ export function updateScorePanel(panel, onPickChange) {
       <div style="font-size:11px;color:var(--text-secondary)">${upsets.length} upsets recommended</div>
     </div>
   `;
+  // Fetch status indicator (desktop)
+  const statusContainer = document.createElement('div');
+  statusContainer.className = 'fetch-status-container';
+  statusContainer.innerHTML = buildFetchStatusHtml(false);
+  content.appendChild(statusContainer);
+
   body.appendChild(content);
 
   // Build recommended upsets list, grouped by round

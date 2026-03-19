@@ -81,6 +81,14 @@ const scoreMap = new Map();
 const listeners = [];
 let pollIntervalId = null;
 
+// Fetch status tracking
+const fetchStatus = {
+  espnLoading: false,
+  polymarketLoading: false,
+  espnLastLoaded: null,
+  polymarketLastLoaded: null,
+};
+
 function normalizeStatus(espnStatus) {
   if (!espnStatus || !espnStatus.type) return 'scheduled';
   const name = espnStatus.type.name || espnStatus.type.state;
@@ -176,6 +184,11 @@ function getMatchupTeamOrder(matchupId) {
 }
 
 function processEvents(events) {
+  // Preserve existing odds across ESPN refreshes
+  const prevOdds = new Map();
+  for (const [id, entry] of scoreMap) {
+    if (entry.odds) prevOdds.set(id, entry.odds);
+  }
   scoreMap.clear();
 
   for (const event of events) {
@@ -210,7 +223,7 @@ function processEvents(events) {
       period,
       team1Score,
       team2Score,
-      odds: null,
+      odds: prevOdds.get(matchupId) || null,
     });
   }
 }
@@ -255,14 +268,48 @@ function matchPolymarketEvent(eventTitle) {
   return null;
 }
 
+// Parse outcome/price pairs from a Polymarket market object.
+// The Gamma API may return outcomes as:
+//   (a) tokens: [{outcome, price}, ...]
+//   (b) outcomes: ["Team A","Team B"] + outcomePrices: '["0.65","0.35"]'
+function parseMarketOutcomes(market) {
+  // Format (a): tokens array with per-token price
+  const tokens = market.tokens;
+  if (Array.isArray(tokens) && tokens.length >= 2 && typeof tokens[0] === 'object') {
+    return tokens.map(t => ({
+      name: t.outcome || t.value || '',
+      price: parseFloat(t.price ?? t.lastTradePrice ?? 0),
+    }));
+  }
+
+  // Format (b): parallel outcomes + outcomePrices arrays
+  const outcomes = market.outcomes;
+  let prices = market.outcomePrices;
+  if (Array.isArray(outcomes) && prices) {
+    if (typeof prices === 'string') {
+      try { prices = JSON.parse(prices); } catch { return []; }
+    }
+    if (Array.isArray(prices) && outcomes.length === prices.length) {
+      return outcomes.map((name, i) => ({
+        name: String(name),
+        price: parseFloat(prices[i]) || 0,
+      }));
+    }
+  }
+
+  return [];
+}
+
 async function fetchPolymarketOdds() {
+  fetchStatus.polymarketLoading = true;
+  notifyListeners();
   try {
     // Fetch active CBB events from Polymarket Gamma API via CORS proxy
     const targetUrl = 'https://gamma-api.polymarket.com/events?active=true&closed=false&tag=cbb&limit=100';
     // Try multiple CORS proxies in case one is down
     const proxies = [
-      'https://corsproxy.io/?' + encodeURIComponent(targetUrl),
       'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl),
+      'https://corsproxy.io/?' + encodeURIComponent(targetUrl),
     ];
     let res = null;
     for (const proxyUrl of proxies) {
@@ -288,12 +335,11 @@ async function fetchPolymarketOdds() {
       const markets = event.markets || [];
       if (markets.length === 0) continue;
 
-      // The main market should be the moneyline (which team wins)
       const market = markets[0];
-      const tokens = market.tokens || market.outcomes || [];
-      if (tokens.length < 2) continue;
+      const parsed = parseMarketOutcomes(market);
+      if (parsed.length < 2) continue;
 
-      // Figure out which token corresponds to which team
+      // Figure out which outcome corresponds to which team
       const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
       const team1EspnName = TEAM_ID_TO_ESPN[team1Id] || '';
       const team2EspnName = TEAM_ID_TO_ESPN[team2Id] || '';
@@ -301,10 +347,9 @@ async function fetchPolymarketOdds() {
       let team1Prob = null;
       let team2Prob = null;
 
-      for (const token of tokens) {
-        const outcomeName = normalizeForMatch(token.outcome || token.value || '');
-        const price = parseFloat(token.price || token.lastTradePrice || 0);
+      for (const { name, price } of parsed) {
         if (price <= 0 || price >= 1) continue;
+        const outcomeName = normalizeForMatch(name);
 
         if (normalizeForMatch(team1EspnName).includes(outcomeName) ||
             outcomeName.includes(normalizeForMatch(team1EspnName))) {
@@ -329,8 +374,11 @@ async function fetchPolymarketOdds() {
         };
       }
     }
+    fetchStatus.polymarketLastLoaded = Date.now();
   } catch {
     // Silent failure — odds are a nice-to-have
+  } finally {
+    fetchStatus.polymarketLoading = false;
   }
 }
 
@@ -347,15 +395,20 @@ async function fetchScores() {
   const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${dateStr}&groups=50&limit=365`;
 
   // Fetch ESPN scores first, notify immediately so scores appear fast
+  fetchStatus.espnLoading = true;
+  notifyListeners();
   try {
     const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
       processEvents(data.events || []);
-      notifyListeners();
+      fetchStatus.espnLastLoaded = Date.now();
     }
   } catch {
     // Silent failure — bracket works without scores
+  } finally {
+    fetchStatus.espnLoading = false;
+    notifyListeners();
   }
 
   // Fetch Polymarket odds separately — slower, non-blocking
@@ -376,6 +429,10 @@ export function stopPolling() {
 
 export function getScoreForMatchup(matchupId) {
   return scoreMap.get(matchupId) || null;
+}
+
+export function getFetchStatus() {
+  return { ...fetchStatus };
 }
 
 export function onScoresUpdate(callback) {
