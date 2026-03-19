@@ -1,6 +1,6 @@
 import matchupsData from '../data/matchups.json';
 import { getAllPicks } from './picks.js';
-import { getR64Matchup, getGeneratedMatchup, getRoundIndex } from './propagation.js';
+import { getR64Matchup, getGeneratedMatchup, getRoundIndex, getRegionR64Matchups, REGIONS } from './propagation.js';
 
 // Compute bracket score as geometric mean of confidence percentages for picked games
 export function computeScore(picks) {
@@ -82,10 +82,35 @@ export function computeRecommendedScore() {
 // Smart fill: return picks following all recommendations
 export function getSmartFillPicks() {
   const picks = {};
+
+  // Pass 1: fill R64 picks
   for (const m of matchupsData.matchups) {
-    const team = m.recommendedPick === m.team1.id ? m.team1 : m.team2;
-    picks[m.id] = team;
+    if (m.round === 'First Round') {
+      const team = m.recommendedPick === m.team1.id ? m.team1 : m.team2;
+      picks[m.id] = team;
+    }
   }
+
+  // Pass 2: fill R32 picks using R64 winners and R32 prediction data
+  for (const region of REGIONS) {
+    const r64s = getRegionR64Matchups(region);
+    for (let pos = 0; pos < 4; pos++) {
+      const winnerA = picks[r64s[pos * 2]];
+      const winnerB = picks[r64s[pos * 2 + 1]];
+      if (!winnerA || !winnerB) continue;
+
+      const lo = Math.min(winnerA.seed, winnerB.seed);
+      const hi = Math.max(winnerA.seed, winnerB.seed);
+      const canonicalId = `${region.toLowerCase()}-${lo}-${hi}`;
+      const r32Data = matchupsData.matchups.find(m => m.id === canonicalId);
+
+      if (r32Data && r32Data.recommendedPick) {
+        const team = r32Data.recommendedPick === r32Data.team1.id ? r32Data.team1 : r32Data.team2;
+        picks[`${region.toLowerCase()}-r2-${pos}`] = team;
+      }
+    }
+  }
+
   return picks;
 }
 
