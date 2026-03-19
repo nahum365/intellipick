@@ -1,10 +1,13 @@
 import teamsData from '../data/teams.json';
 import { getPick } from '../engine/picks.js';
 import { cascadePick } from '../engine/propagation.js';
-import { getScoreForMatchup } from '../engine/liveScores.js';
+import { getScoreForMatchup, onScoresUpdate } from '../engine/liveScores.js';
 
 let overlayEl = null;
 let currentOnPickChange = null;
+let currentMatchup = null;
+let currentOptions = null;
+let unsubScoreUpdate = null;
 
 function getTeamProfile(teamId) {
   return teamsData.teams.find(t => t.id === teamId) || null;
@@ -258,7 +261,40 @@ function ensureOverlay() {
 export function openModal(matchup, options = {}) {
   const { scrollToTeamId, onPickChange } = options;
   currentOnPickChange = onPickChange || null;
+  currentMatchup = matchup;
+  currentOptions = options;
   const overlay = ensureOverlay();
+
+  // Subscribe to live score updates so the modal refreshes
+  if (unsubScoreUpdate) unsubScoreUpdate();
+  unsubScoreUpdate = onScoresUpdate(() => {
+    if (currentMatchup && overlayEl && overlayEl.classList.contains('modal-overlay--visible')) {
+      // Re-render the scoreboard section in-place
+      const scoreboardContainer = overlayEl.querySelector('.modal__scoreboard');
+      if (scoreboardContainer) {
+        const freshScore = getScoreForMatchup(currentMatchup.id);
+        const newHtml = buildScoreboardHtml(currentMatchup, freshScore);
+        if (newHtml) {
+          scoreboardContainer.outerHTML = newHtml;
+        } else {
+          scoreboardContainer.remove();
+        }
+      }
+      // Also update odds that might not have been present on first open
+      if (!overlayEl.querySelector('.modal__scoreboard')) {
+        const freshScore = getScoreForMatchup(currentMatchup.id);
+        const newHtml = buildScoreboardHtml(currentMatchup, freshScore);
+        if (newHtml) {
+          const recEl = overlayEl.querySelector('.modal__recommendation');
+          const tactEl = overlayEl.querySelector('.modal__tactical');
+          const insertBefore = tactEl || overlayEl.querySelector('.modal__teams');
+          if (insertBefore) {
+            insertBefore.insertAdjacentHTML('beforebegin', newHtml);
+          }
+        }
+      }
+    }
+  });
 
   const recTeam = matchup.recommendedPick === matchup.team1?.id ? matchup.team1 : matchup.team2;
   const confClass = confidenceClass(matchup.confidence);
@@ -346,5 +382,11 @@ export function closeModal() {
   if (overlayEl) {
     overlayEl.classList.remove('modal-overlay--visible');
     document.removeEventListener('keydown', handleEscape);
+  }
+  currentMatchup = null;
+  currentOptions = null;
+  if (unsubScoreUpdate) {
+    unsubScoreUpdate();
+    unsubScoreUpdate = null;
   }
 }
