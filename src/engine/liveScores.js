@@ -184,10 +184,15 @@ function getMatchupTeamOrder(matchupId) {
 }
 
 function processEvents(events) {
-  // Preserve existing odds across ESPN refreshes
+  // Preserve existing odds and Polymarket-only entries across ESPN refreshes
   const prevOdds = new Map();
+  const polymarketOnlyEntries = new Map();
   for (const [id, entry] of scoreMap) {
     if (entry.odds) prevOdds.set(id, entry.odds);
+    // Keep entries that were created solely for Polymarket odds (scheduled, no ESPN data)
+    if (entry.odds && entry.status === 'scheduled') {
+      polymarketOnlyEntries.set(id, entry);
+    }
   }
   scoreMap.clear();
 
@@ -226,6 +231,13 @@ function processEvents(events) {
       odds: prevOdds.get(matchupId) || null,
     });
   }
+
+  // Restore Polymarket-only entries that ESPN didn't cover
+  for (const [id, entry] of polymarketOnlyEntries) {
+    if (!scoreMap.has(id)) {
+      scoreMap.set(id, entry);
+    }
+  }
 }
 
 // Convert Polymarket probability (0-1) to American odds
@@ -239,6 +251,7 @@ function probToAmericanOdds(prob) {
 
 // Normalize team name for fuzzy matching with Polymarket event titles
 function normalizeForMatch(name) {
+  if (!name || typeof name !== 'string') return '';
   return name.toLowerCase()
     .replace(/['']/g, '')
     .replace(/\./g, '')
@@ -328,8 +341,18 @@ async function fetchPolymarketOdds() {
       if (!result) continue;
 
       const { matchupId, teamIds } = result;
+      // Create a scoreMap entry if ESPN hasn't populated one yet
+      if (!scoreMap.has(matchupId)) {
+        scoreMap.set(matchupId, {
+          status: 'scheduled',
+          clock: '',
+          period: 0,
+          team1Score: 0,
+          team2Score: 0,
+          odds: null,
+        });
+      }
       const existing = scoreMap.get(matchupId);
-      if (!existing) continue;
 
       // Extract market prices from the event's markets
       const markets = event.markets || [];
