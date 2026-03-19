@@ -1,6 +1,6 @@
 import matchupsData from '../data/matchups.json';
 import { getAllPicks } from './picks.js';
-import { getR64Matchup } from './propagation.js';
+import { getR64Matchup, getGeneratedMatchup, getRoundIndex } from './propagation.js';
 
 // Compute bracket score as geometric mean of confidence percentages for picked games
 export function computeScore(picks) {
@@ -14,8 +14,15 @@ export function computeScore(picks) {
       const conf = isRecommended ? r64.confidencePercentage : (100 - r64.confidencePercentage);
       pickedMatchups.push({ matchupId, confidence: conf, round: 'First Round' });
     } else {
-      // Later rounds: use a default confidence of 50% (no prediction data)
-      pickedMatchups.push({ matchupId, confidence: 50, round: 'Later' });
+      // Later rounds: check if prediction data is available
+      const generated = getRoundIndex(matchupId) > 0 ? getGeneratedMatchup(matchupId) : null;
+      if (generated && generated.confidencePercentage && generated.recommendedPick) {
+        const isRecommended = generated.recommendedPick === team.id;
+        const conf = isRecommended ? generated.confidencePercentage : (100 - generated.confidencePercentage);
+        pickedMatchups.push({ matchupId, confidence: conf, round: generated.round || 'Later' });
+      } else {
+        pickedMatchups.push({ matchupId, confidence: 50, round: 'Later' });
+      }
     }
   }
 
