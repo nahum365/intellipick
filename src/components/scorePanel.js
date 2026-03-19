@@ -14,7 +14,7 @@ export function updateScorePanel(panel) {
   const chalk = computeChalkScore();
   const recommended = computeRecommendedScore();
   const upsets = getUpsetAlerts();
-  const totalGames = 32; // R64 only for now
+  const totalGames = 63; // Full bracket: 32+16+8+4+2+1
 
   const pickedCount = Object.keys(picks).length;
   const pct = pickedCount > 0 ? score.overall.toFixed(1) : '--';
