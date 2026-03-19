@@ -34,16 +34,16 @@ export function updateScorePanel(panel, onPickChange) {
 
   panel.innerHTML = '';
 
-  // Mobile anchor bar: compact stats + grabber
-  const anchor = document.createElement('div');
-  anchor.className = 'score-sidebar__anchor' + (sidebarCollapsed ? '' : ' score-sidebar__anchor--open');
+  const isMobile = () => window.innerWidth <= 768;
 
+  // Mobile anchor stats (hidden on desktop via CSS, hidden when shelf open)
   const anchorStats = document.createElement('div');
   anchorStats.className = 'score-sidebar__anchor-stats';
+  if (!sidebarCollapsed) anchorStats.style.display = 'none';
   anchorStats.innerHTML = `
     <span class="score-sidebar__anchor-stat">
       <span class="score-sidebar__anchor-stat-value">${pickedCount}</span>
-      <span class="score-sidebar__anchor-stat-label">/${totalGames}</span>
+      <span class="score-sidebar__anchor-stat-label">/ ${totalGames} picked</span>
     </span>
     <span class="score-sidebar__anchor-stat">
       <span class="score-sidebar__anchor-stat-value" style="color:var(--primary)">${pct}${pickedCount > 0 ? '%' : ''}</span>
@@ -54,31 +54,31 @@ export function updateScorePanel(panel, onPickChange) {
       <span class="score-sidebar__anchor-stat-label">upsets</span>
     </span>
   `;
-  anchor.appendChild(anchorStats);
+  panel.appendChild(anchorStats);
 
-  const grabber = document.createElement('div');
-  grabber.className = 'score-sidebar__grabber';
-  grabber.innerHTML = '<span class="score-sidebar__grabber-bar"></span>';
-  anchor.appendChild(grabber);
-
-  panel.appendChild(anchor);
-
-  // Body wrapper — JS shelf animation
+  // Body wrapper — JS shelf animation on mobile, always visible on desktop
   const body = document.createElement('div');
   body.className = 'score-sidebar__body';
 
-  // Set initial collapsed state immediately (no animation on first render)
-  if (sidebarCollapsed) {
+  // On mobile, set initial collapsed state (no animation on first render)
+  if (isMobile() && sidebarCollapsed) {
     body.style.height = '0px';
     body.style.overflow = 'hidden';
   }
 
+  // Grabber (below body — animates to bottom when shelf opens)
+  const grabber = document.createElement('div');
+  grabber.className = 'score-sidebar__grabber';
+  grabber.innerHTML = '<span class="score-sidebar__grabber-bar"></span>';
+
   // Toggle with slide animation
-  anchor.addEventListener('click', () => {
+  grabber.addEventListener('click', () => {
+    if (!isMobile()) return;
     sidebarCollapsed = !sidebarCollapsed;
-    anchor.classList.toggle('score-sidebar__anchor--open', !sidebarCollapsed);
 
     if (sidebarCollapsed) {
+      // Show stats
+      anchorStats.style.display = '';
       // Collapse: animate from current height to 0
       const h = body.scrollHeight;
       body.style.height = h + 'px';
@@ -87,6 +87,8 @@ export function updateScorePanel(panel, onPickChange) {
       body.style.height = '0px';
       body.style.overflow = 'hidden';
     } else {
+      // Hide stats
+      anchorStats.style.display = 'none';
       // Expand: animate from 0 to scrollHeight, capped at 60vh
       const maxH = window.innerHeight * 0.6;
       const targetH = Math.min(body.scrollHeight, maxH);
@@ -102,6 +104,11 @@ export function updateScorePanel(panel, onPickChange) {
       };
       body.addEventListener('transitionend', onEnd);
     }
+  });
+
+  // Also allow tapping anchor stats to open
+  anchorStats.addEventListener('click', () => {
+    if (isMobile() && sidebarCollapsed) grabber.click();
   });
 
   // Score content
@@ -262,4 +269,5 @@ export function updateScorePanel(panel, onPickChange) {
 
   body.appendChild(upsetsSection);
   panel.appendChild(body);
+  panel.appendChild(grabber);
 }
