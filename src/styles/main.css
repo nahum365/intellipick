@@ -281,73 +281,66 @@ body {
     z-index: 99;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     max-height: calc(100vh - 49px);
-    overflow-y: auto;
   }
 
   /* Spacer to push content below the fixed sidebar anchor */
   .main-content {
-    margin-top: 40px;
+    margin-top: 52px;
   }
 
-  /* Compact anchor strip */
-  .score-sidebar__anchor {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    padding: 6px 0 2px;
-    flex-wrap: wrap;
-  }
-
+  /* Anchor stats strip */
   .score-sidebar__anchor-stats {
     display: flex;
-    gap: 12px;
+    gap: 16px;
     align-items: baseline;
+    justify-content: center;
+    padding: 10px 0 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .score-sidebar__anchor-stat {
     display: flex;
     align-items: baseline;
-    gap: 2px;
+    gap: 3px;
   }
 
   .score-sidebar__anchor-stat-value {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 800;
   }
 
   .score-sidebar__anchor-stat-label {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--text-muted);
     font-weight: 600;
   }
 
+  /* Grabber — always visible, sits below body */
   .score-sidebar__grabber {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 2px 0 4px;
+    padding: 4px 0 6px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .score-sidebar__grabber-bar {
     display: block;
-    width: 28px;
-    height: 3px;
-    border-radius: 1.5px;
+    width: 32px;
+    height: 4px;
+    border-radius: 2px;
     background: var(--border);
-    transition: background 0.2s;
+    transition: background 0.15s;
   }
 
-  .score-sidebar__anchor:active .score-sidebar__grabber-bar,
-  .score-sidebar__anchor--open .score-sidebar__grabber-bar {
-    background: var(--text-muted);
+  .score-sidebar__grabber:active .score-sidebar__grabber-bar {
+    background: var(--primary);
   }
 
-  /* Body: hidden by default, height animated via JS */
+  /* Body: height animated via JS */
   .score-sidebar__body {
-    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -378,9 +371,12 @@ body {
   }
 }
 
-/* Hide sidebar anchor on desktop */
+/* Hide mobile shelf controls on desktop */
 @media (min-width: 769px) {
-  .score-sidebar__anchor {
+  .score-sidebar__anchor-stats {
+    display: none;
+  }
+  .score-sidebar__grabber {
     display: none;
   }
 }
