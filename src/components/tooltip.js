@@ -5,6 +5,7 @@ function ensureTooltip() {
   if (tooltipEl) return tooltipEl;
   tooltipEl = document.createElement('div');
   tooltipEl.className = 'tooltip';
+  tooltipEl.addEventListener('mouseleave', () => hideTooltip());
   document.body.appendChild(tooltipEl);
   return tooltipEl;
 }
