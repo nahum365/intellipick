@@ -10,6 +10,9 @@ function getTeamProfile(teamId) {
   return teamsData.teams.find(t => t.id === teamId) || null;
 }
 
+// Track collapsed state across re-renders
+let sidebarCollapsed = true;
+
 export function createScorePanel(onPickChange) {
   const panel = document.createElement('div');
   panel.className = 'score-sidebar';
@@ -29,7 +32,37 @@ export function updateScorePanel(panel, onPickChange) {
   const pct = pickedCount > 0 ? score.overall.toFixed(1) : '--';
   const delta = pickedCount > 0 ? (score.overall - chalk.overall).toFixed(1) : '--';
 
-  panel.innerHTML = `
+  panel.innerHTML = '';
+
+  // Mobile toggle header
+  const toggle = document.createElement('div');
+  toggle.className = 'score-sidebar__toggle';
+
+  const toggleLabel = document.createElement('span');
+  toggleLabel.className = 'score-sidebar__toggle-label';
+  toggleLabel.textContent = `Score & Insights \u2014 ${pct}${pickedCount > 0 ? '%' : ''}`;
+
+  const toggleIcon = document.createElement('span');
+  toggleIcon.className = 'score-sidebar__toggle-icon' + (sidebarCollapsed ? '' : ' score-sidebar__toggle-icon--open');
+  toggleIcon.textContent = '\u25BC';
+
+  toggle.appendChild(toggleLabel);
+  toggle.appendChild(toggleIcon);
+  panel.appendChild(toggle);
+
+  // Body wrapper (collapsible on mobile)
+  const body = document.createElement('div');
+  body.className = 'score-sidebar__body' + (sidebarCollapsed ? ' score-sidebar__body--collapsed' : '');
+
+  toggle.addEventListener('click', () => {
+    sidebarCollapsed = !sidebarCollapsed;
+    body.classList.toggle('score-sidebar__body--collapsed', sidebarCollapsed);
+    toggleIcon.classList.toggle('score-sidebar__toggle-icon--open', !sidebarCollapsed);
+  });
+
+  // Score content
+  const content = document.createElement('div');
+  content.innerHTML = `
     <div style="margin-bottom:20px">
       <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Bracket Score</div>
       <div style="font-size:32px;font-weight:800;color:var(--primary)">${pct}${pickedCount > 0 ? '%' : ''}</div>
@@ -73,6 +106,7 @@ export function updateScorePanel(panel, onPickChange) {
       <div style="font-size:11px;color:var(--text-secondary)">${upsets.length} upsets recommended</div>
     </div>
   `;
+  body.appendChild(content);
 
   // Build recommended upsets list with interactive elements
   const upsetsSection = document.createElement('div');
@@ -86,18 +120,19 @@ export function updateScorePanel(panel, onPickChange) {
     const matchup = getR64Matchup(u.matchupId);
 
     const row = document.createElement('div');
+    row.className = 'upset-row';
     row.style.cssText = 'font-size:11px;padding:4px 0;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:6px';
 
     // Checkbox
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = isSelected;
+    checkbox.className = 'upset-row__checkbox';
     checkbox.style.cssText = 'cursor:pointer;accent-color:var(--upset);flex-shrink:0';
     checkbox.addEventListener('change', () => {
       if (checkbox.checked) {
         cascadePick(u.matchupId, u.team);
       } else {
-        // Pick the opponent instead (undo the upset)
         cascadePick(u.matchupId, u.opponent);
       }
       if (onPickChange) onPickChange();
@@ -145,6 +180,7 @@ export function updateScorePanel(panel, onPickChange) {
     // Info button
     if (matchup) {
       const infoBtn = document.createElement('button');
+      infoBtn.className = 'upset-row__info-btn';
       infoBtn.style.cssText = 'background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:10px;color:var(--text-muted);padding:1px 5px;flex-shrink:0;line-height:1.2';
       infoBtn.textContent = 'i';
       infoBtn.title = 'View matchup details';
@@ -158,5 +194,6 @@ export function updateScorePanel(panel, onPickChange) {
     upsetsSection.appendChild(row);
   }
 
-  panel.appendChild(upsetsSection);
+  body.appendChild(upsetsSection);
+  panel.appendChild(body);
 }

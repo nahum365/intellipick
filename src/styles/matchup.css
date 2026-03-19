@@ -257,3 +257,36 @@
 .matchup-card--later-round .matchup-card__footer {
   display: none;
 }
+
+/* Mobile: larger touch targets */
+@media (max-width: 768px) {
+  .team-row {
+    padding: 8px 8px;
+    min-height: 44px;
+    gap: 6px;
+  }
+
+  .team-row__name {
+    font-size: 12px;
+  }
+
+  .team-row__seed {
+    font-size: 11px;
+    width: 20px;
+  }
+
+  .matchup-card__info-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+
+  .matchup-card__header {
+    padding: 4px 8px;
+    min-height: 28px;
+  }
+
+  .matchup-card__footer {
+    padding: 4px 8px;
+  }
+}

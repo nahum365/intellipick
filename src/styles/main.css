@@ -64,6 +64,14 @@ body {
   flex-direction: column;
 }
 
+/* Desktop: lock to viewport so sidebar + insights bar stay visible */
+@media (min-width: 769px) {
+  #app {
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
 /* Header */
 .header {
   background: var(--surface);
@@ -171,6 +179,7 @@ body {
   flex: 1;
   display: flex;
   overflow: hidden;
+  min-height: 0;
 }
 
 .bracket-container {
@@ -225,4 +234,150 @@ body {
 .insights-bar__badge--info {
   background: var(--primary-light);
   color: var(--primary);
+}
+
+/* ============================
+   Mobile layout (<= 768px)
+   ============================ */
+@media (max-width: 768px) {
+  /* Header: compact for mobile */
+  .header {
+    padding: 10px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header__logo {
+    font-size: 17px;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+
+  /* Filter tabs: scrollable, touch-friendly */
+  .filters {
+    padding: 0 12px;
+    position: sticky;
+    top: 49px; /* below header */
+    z-index: 99;
+    background: var(--surface);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filters__tab {
+    padding: 10px 14px;
+    font-size: 13px;
+    min-height: 40px;
+  }
+
+  /* Main content: stack vertically, allow page scroll */
+  .main-content {
+    flex-direction: column;
+    overflow: visible;
+    flex: none;
+  }
+
+  /* Bracket: full width, scroll horizontally */
+  .bracket-container {
+    flex: none;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Sidebar: full width panel below bracket */
+  .score-sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding: 16px;
+    overflow-y: visible;
+  }
+
+  /* Collapsible sidebar toggle */
+  .score-sidebar__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .score-sidebar__toggle-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--primary);
+  }
+
+  .score-sidebar__toggle-icon {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+
+  .score-sidebar__toggle-icon--open {
+    transform: rotate(180deg);
+  }
+
+  .score-sidebar__body {
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .score-sidebar__body--collapsed {
+    max-height: 0 !important;
+  }
+
+  /* Upset rows: touch-friendly */
+  .upset-row {
+    padding: 8px 0 !important;
+    min-height: 40px;
+    font-size: 12px !important;
+  }
+
+  .upset-row__checkbox {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+  }
+
+  .upset-row__info-btn {
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 13px !important;
+    padding: 4px 8px !important;
+    border-radius: 6px !important;
+  }
+
+  /* Insights bar: sticky bottom */
+  .insights-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 98;
+    padding: 8px 12px;
+    gap: 12px;
+    font-size: 12px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .insights-bar__badge {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+}
+
+/* Hide sidebar toggle on desktop */
+@media (min-width: 769px) {
+  .score-sidebar__toggle {
+    display: none;
+  }
 }
