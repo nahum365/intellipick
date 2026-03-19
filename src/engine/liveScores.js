@@ -259,16 +259,33 @@ function normalizeForMatch(name) {
     .trim();
 }
 
+// Build a list of all name variants for each team for Polymarket matching
+const TEAM_MATCH_NAMES = {};
+for (const [teamId, espnName] of Object.entries(TEAM_ID_TO_ESPN)) {
+  const names = new Set();
+  names.add(normalizeForMatch(espnName));
+  // Add the slug form (e.g. "north-carolina" -> "north carolina")
+  names.add(teamId.replace(/-/g, ' '));
+  // Common short forms
+  if (espnName.includes(' St')) names.add(normalizeForMatch(espnName.replace(' St', ' State')));
+  if (espnName.includes('State')) names.add(normalizeForMatch(espnName.replace(' State', ' St')));
+  TEAM_MATCH_NAMES[teamId] = [...names].filter(n => n.length >= 3);
+}
+
 // Try to match a Polymarket event to an internal matchup by checking if both team
-// shortNames appear in the event title
+// names appear in the event title
 function matchPolymarketEvent(eventTitle) {
   const normalized = normalizeForMatch(eventTitle);
+  if (!normalized) return null;
+
   const matched = [];
 
-  for (const [teamId, espnName] of Object.entries(TEAM_ID_TO_ESPN)) {
-    const teamNorm = normalizeForMatch(espnName);
-    if (normalized.includes(teamNorm)) {
-      matched.push(teamId);
+  for (const [teamId, nameVariants] of Object.entries(TEAM_MATCH_NAMES)) {
+    for (const variant of nameVariants) {
+      if (normalized.includes(variant)) {
+        matched.push(teamId);
+        break;
+      }
     }
   }
 
@@ -313,32 +330,64 @@ function parseMarketOutcomes(market) {
   return [];
 }
 
+async function fetchViaProxy(targetUrl) {
+  const proxies = [
+    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl),
+    'https://corsproxy.io/?' + encodeURIComponent(targetUrl),
+  ];
+  for (const proxyUrl of proxies) {
+    try {
+      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+      if (r.ok) return r;
+    } catch { continue; }
+  }
+  return null;
+}
+
 async function fetchPolymarketOdds() {
   fetchStatus.polymarketLoading = true;
   notifyListeners();
   try {
-    // Fetch active CBB events from Polymarket Gamma API via CORS proxy
-    const targetUrl = 'https://gamma-api.polymarket.com/events?active=true&closed=false&tag=cbb&limit=100';
-    // Try multiple CORS proxies in case one is down
-    const proxies = [
-      'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl),
-      'https://corsproxy.io/?' + encodeURIComponent(targetUrl),
+    // Try multiple tag variations for NCAA basketball on Polymarket Gamma API.
+    // The correct tag may vary — try several and also a broad fallback.
+    const tagVariants = [
+      'ncaa-basketball', 'march-madness', 'ncaa', 'college-basketball', 'cbb', 'basketball',
     ];
-    let res = null;
-    for (const proxyUrl of proxies) {
+    const base = 'https://gamma-api.polymarket.com/events?active=true&closed=false&limit=100';
+
+    // Fire all tag queries in parallel, plus a broad tagless search
+    const fetches = [
+      ...tagVariants.map(tag => fetchViaProxy(`${base}&tag=${tag}`)),
+      fetchViaProxy(`${base}`),  // broad fallback — no tag filter
+    ];
+    const responses = await Promise.all(fetches);
+
+    // Collect all unique events by id
+    const seenIds = new Set();
+    const allEvents = [];
+    for (const res of responses) {
+      if (!res) continue;
       try {
-        const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(5000) });
-        if (r.ok) { res = r; break; }
+        const data = await res.json();
+        if (!Array.isArray(data)) continue;
+        for (const event of data) {
+          if (!seenIds.has(event.id)) {
+            seenIds.add(event.id);
+            allEvents.push(event);
+          }
+        }
       } catch { continue; }
     }
-    if (!res) return;
-    const events = await res.json();
-    if (!Array.isArray(events)) return;
+    const events = allEvents;
+    console.log(`[Polymarket] Fetched ${events.length} events, checking for NCAA matchups...`);
 
+    let matchedCount = 0;
     for (const event of events) {
       const title = event.title || '';
       const result = matchPolymarketEvent(title);
       if (!result) continue;
+      matchedCount++;
+      console.log(`[Polymarket] Matched: "${title}" -> ${result.matchupId}`);
 
       const { matchupId, teamIds } = result;
       // Create a scoreMap entry if ESPN hasn't populated one yet
@@ -364,8 +413,15 @@ async function fetchPolymarketOdds() {
 
       // Figure out which outcome corresponds to which team
       const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
-      const team1EspnName = TEAM_ID_TO_ESPN[team1Id] || '';
-      const team2EspnName = TEAM_ID_TO_ESPN[team2Id] || '';
+      const team1Names = TEAM_MATCH_NAMES[team1Id] || [];
+      const team2Names = TEAM_MATCH_NAMES[team2Id] || [];
+
+      function outcomeMatchesTeam(outcomeName, teamNames) {
+        for (const variant of teamNames) {
+          if (outcomeName.includes(variant) || variant.includes(outcomeName)) return true;
+        }
+        return false;
+      }
 
       let team1Prob = null;
       let team2Prob = null;
@@ -373,12 +429,11 @@ async function fetchPolymarketOdds() {
       for (const { name, price } of parsed) {
         if (price <= 0 || price >= 1) continue;
         const outcomeName = normalizeForMatch(name);
+        if (!outcomeName) continue;
 
-        if (normalizeForMatch(team1EspnName).includes(outcomeName) ||
-            outcomeName.includes(normalizeForMatch(team1EspnName))) {
+        if (outcomeMatchesTeam(outcomeName, team1Names)) {
           team1Prob = price;
-        } else if (normalizeForMatch(team2EspnName).includes(outcomeName) ||
-                   outcomeName.includes(normalizeForMatch(team2EspnName))) {
+        } else if (outcomeMatchesTeam(outcomeName, team2Names)) {
           team2Prob = price;
         }
       }
@@ -397,9 +452,10 @@ async function fetchPolymarketOdds() {
         };
       }
     }
+    console.log(`[Polymarket] Done. Matched ${matchedCount} events to bracket matchups.`);
     fetchStatus.polymarketLastLoaded = Date.now();
-  } catch {
-    // Silent failure — odds are a nice-to-have
+  } catch (err) {
+    console.warn('[Polymarket] Fetch error:', err);
   } finally {
     fetchStatus.polymarketLoading = false;
   }
