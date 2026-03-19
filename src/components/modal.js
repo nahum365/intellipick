@@ -1,6 +1,9 @@
 import teamsData from '../data/teams.json';
+import { getPick } from '../engine/picks.js';
+import { cascadePick } from '../engine/propagation.js';
 
 let overlayEl = null;
+let currentOnPickChange = null;
 
 function getTeamProfile(teamId) {
   return teamsData.teams.find(t => t.id === teamId) || null;
@@ -14,15 +17,22 @@ function confidenceClass(confidence) {
   return 'medium';
 }
 
-function buildTeamPanel(team, profile) {
+function buildTeamPanel(team, profile, matchup) {
   if (!team) return '<div class="modal__team-panel"><p style="color:var(--text-muted)">TBD</p></div>';
 
-  let html = '<div class="modal__team-panel">';
+  const currentPick = getPick(matchup.id);
+  const isPicked = currentPick && currentPick.id === team.id;
 
-  // Header
+  let html = `<div class="modal__team-panel" data-team-id="${team.id}">`;
+
+  // Header with pick checkbox
   html += `<div class="modal__team-panel-header">
     <span class="modal__team-panel-seed">${team.seed}</span>
     <span class="modal__team-panel-name">${profile ? profile.name : team.name}</span>
+    <label class="modal__pick-toggle">
+      <input type="checkbox" class="modal__pick-checkbox" data-matchup-id="${matchup.id}" data-team-id="${team.id}" ${isPicked ? 'checked' : ''}>
+      <span class="modal__pick-label">${isPicked ? 'Picked' : 'Pick'}</span>
+    </label>
   </div>`;
 
   // Meta
@@ -31,10 +41,19 @@ function buildTeamPanel(team, profile) {
     if (profile.record) meta.push(profile.record);
     if (profile.conference) meta.push(profile.conference);
     if (profile.kenpomRank) meta.push(`KenPom #${profile.kenpomRank}`);
+    if (profile.barttovikRank) meta.push(`BartTorvik #${profile.barttovikRank}`);
   }
   if (meta.length) html += `<div class="modal__team-meta">${meta.join(' \u00B7 ')}</div>`;
 
   if (profile) {
+    // Championship odds
+    if (profile.championshipOdds) {
+      html += `<div class="modal__team-section">
+        <div class="modal__team-section-title">Championship Odds</div>
+        <div class="modal__team-section-text">${profile.championshipOdds} (${profile.championshipImpliedPct}%)</div>
+      </div>`;
+    }
+
     // Efficiency
     if (profile.offenseEfficiency) {
       html += `<div class="modal__team-section">
@@ -108,6 +127,14 @@ function buildTeamPanel(team, profile) {
         <div class="modal__team-section-text">${profile.blurb}</div>
       </div>`;
     }
+
+    // Badges
+    const badges = [];
+    if (profile.deepRunWatch) badges.push('<span class="modal__badge modal__badge--deep-run">DEEP RUN WATCH</span>');
+    if (profile.fadeAlert) badges.push('<span class="modal__badge modal__badge--fade">FADE ALERT</span>');
+    if (badges.length) {
+      html += `<div class="modal__team-section"><div class="modal__badge-row">${badges.join('')}</div></div>`;
+    }
   } else {
     html += '<div class="modal__team-section"><div class="modal__team-section-text" style="color:var(--text-muted)">No detailed profile available.</div></div>';
   }
@@ -127,7 +154,9 @@ function ensureOverlay() {
   return overlayEl;
 }
 
-export function openModal(matchup) {
+export function openModal(matchup, options = {}) {
+  const { scrollToTeamId, onPickChange } = options;
+  currentOnPickChange = onPickChange || null;
   const overlay = ensureOverlay();
 
   const recTeam = matchup.recommendedPick === matchup.team1?.id ? matchup.team1 : matchup.team2;
@@ -156,16 +185,49 @@ export function openModal(matchup) {
       <div class="modal__tactical-text">${matchup.tacticalAdvantage}</div>
     </div>` : ''}
     <div class="modal__teams">
-      ${buildTeamPanel(matchup.team1, profile1)}
-      ${buildTeamPanel(matchup.team2, profile2)}
+      ${buildTeamPanel(matchup.team1, profile1, matchup)}
+      ${buildTeamPanel(matchup.team2, profile2, matchup)}
     </div>
   </div>`;
 
   // Close button
   overlay.querySelector('.modal__close').addEventListener('click', closeModal);
 
+  // Wire up pick checkboxes
+  const teams = { [matchup.team1?.id]: matchup.team1, [matchup.team2?.id]: matchup.team2 };
+  overlay.querySelectorAll('.modal__pick-checkbox').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const teamId = cb.dataset.teamId;
+      const matchupId = cb.dataset.matchupId;
+      const team = teams[teamId];
+      if (team) {
+        cascadePick(matchupId, team);
+        // Update both checkboxes and labels
+        overlay.querySelectorAll('.modal__pick-checkbox').forEach(otherCb => {
+          const isThisTeam = otherCb.dataset.teamId === teamId;
+          otherCb.checked = isThisTeam;
+          const label = otherCb.nextElementSibling;
+          if (label) label.textContent = isThisTeam ? 'Picked' : 'Pick';
+        });
+        if (currentOnPickChange) currentOnPickChange();
+      }
+    });
+  });
+
   // Show
-  requestAnimationFrame(() => overlay.classList.add('modal-overlay--visible'));
+  requestAnimationFrame(() => {
+    overlay.classList.add('modal-overlay--visible');
+
+    // Scroll to the requested team panel
+    if (scrollToTeamId) {
+      const panel = overlay.querySelector(`.modal__team-panel[data-team-id="${scrollToTeamId}"]`);
+      if (panel) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        panel.classList.add('modal__team-panel--highlighted');
+        setTimeout(() => panel.classList.remove('modal__team-panel--highlighted'), 1500);
+      }
+    }
+  });
 
   // Escape key
   document.addEventListener('keydown', handleEscape);

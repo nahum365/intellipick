@@ -134,19 +134,29 @@ export function createMatchupCard(matchup, onPickMade) {
       row.appendChild(check);
     }
 
-    // Click to pick
+    // Click behavior: on mobile open modal, on desktop pick
+    const isMobile = () => window.innerWidth <= 768;
+
     row.addEventListener('click', (e) => {
       e.stopPropagation();
-      cascadePick(matchup.id, team);
-      if (onPickMade) onPickMade();
+      if (isMobile()) {
+        openModal(matchup, { scrollToTeamId: team.id, onPickChange: onPickMade });
+      } else {
+        cascadePick(matchup.id, team);
+        if (onPickMade) onPickMade();
+      }
     });
 
-    // Hover for tooltip
+    // Hover for tooltip (desktop only)
     row.addEventListener('mouseenter', (e) => {
-      showTooltip(team, profile, matchup, e.currentTarget);
+      if (!isMobile()) {
+        showTooltip(team, profile, matchup, e.currentTarget);
+      }
     });
     row.addEventListener('mouseleave', () => {
-      hideTooltip();
+      if (!isMobile()) {
+        hideTooltip();
+      }
     });
 
     return row;

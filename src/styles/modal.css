@@ -240,6 +240,69 @@
   font-style: italic;
 }
 
+/* Pick toggle in team panel header */
+.modal__pick-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.modal__pick-checkbox {
+  accent-color: var(--primary);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.modal__pick-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.modal__pick-checkbox:checked + .modal__pick-label {
+  color: var(--primary);
+}
+
+/* Badges */
+.modal__badge-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modal__badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.modal__badge--deep-run {
+  background: #7c3aed20;
+  color: #7c3aed;
+}
+
+.modal__badge--fade {
+  background: var(--confidence-low-bg);
+  color: var(--upset);
+}
+
+/* Highlight animation for scroll-to-team */
+.modal__team-panel--highlighted {
+  animation: modal-highlight-pulse 1.5s ease-out;
+}
+
+@keyframes modal-highlight-pulse {
+  0% { background: var(--primary-light); }
+  100% { background: transparent; }
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .modal__teams {
@@ -249,5 +312,14 @@
   .modal__team-panel {
     border-right: none;
     border-bottom: 1px solid var(--border);
+  }
+
+  .modal__pick-checkbox {
+    width: 22px;
+    height: 22px;
+  }
+
+  .modal__pick-label {
+    font-size: 13px;
   }
 }

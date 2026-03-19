@@ -143,14 +143,26 @@ export function updateScorePanel(panel, onPickChange) {
     const label = document.createElement('span');
     label.style.cssText = 'flex:1;min-width:0';
 
+    const isMobile = () => window.innerWidth <= 768;
+
     const teamSpan = document.createElement('span');
     teamSpan.style.cssText = 'cursor:default';
     teamSpan.innerHTML = `<strong>${u.team.seed}</strong> ${u.team.name}`;
     const teamProfile = getTeamProfile(u.team.id);
     if (teamProfile) {
       teamSpan.style.cursor = 'pointer';
-      teamSpan.addEventListener('mouseenter', () => showTooltip(u.team, teamProfile, matchup, teamSpan));
-      teamSpan.addEventListener('mouseleave', () => hideTooltip());
+      teamSpan.addEventListener('mouseenter', () => {
+        if (!isMobile()) showTooltip(u.team, teamProfile, matchup, teamSpan);
+      });
+      teamSpan.addEventListener('mouseleave', () => {
+        if (!isMobile()) hideTooltip();
+      });
+      teamSpan.addEventListener('click', (e) => {
+        if (isMobile() && matchup) {
+          e.stopPropagation();
+          openModal(matchup, { scrollToTeamId: u.team.id, onPickChange: onPickChange });
+        }
+      });
     }
 
     const overSpan = document.createElement('span');
@@ -162,8 +174,18 @@ export function updateScorePanel(panel, onPickChange) {
     const oppProfile = getTeamProfile(u.opponent.id);
     if (oppProfile) {
       oppSpan.style.cursor = 'pointer';
-      oppSpan.addEventListener('mouseenter', () => showTooltip(u.opponent, oppProfile, matchup, oppSpan));
-      oppSpan.addEventListener('mouseleave', () => hideTooltip());
+      oppSpan.addEventListener('mouseenter', () => {
+        if (!isMobile()) showTooltip(u.opponent, oppProfile, matchup, oppSpan);
+      });
+      oppSpan.addEventListener('mouseleave', () => {
+        if (!isMobile()) hideTooltip();
+      });
+      oppSpan.addEventListener('click', (e) => {
+        if (isMobile() && matchup) {
+          e.stopPropagation();
+          openModal(matchup, { scrollToTeamId: u.opponent.id, onPickChange: onPickChange });
+        }
+      });
     }
 
     label.appendChild(teamSpan);
