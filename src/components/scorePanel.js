@@ -1,5 +1,5 @@
 import { getAllPicks } from '../engine/picks.js';
-import { computeScore, computeChalkScore, computeRecommendedScore, getUpsetAlerts } from '../engine/scoring.js';
+import { computeScore, getUpsetAlerts } from '../engine/scoring.js';
 import { cascadePick, getR64Matchup, getRegionR64Matchups, getValidBracketIds } from '../engine/propagation.js';
 import { getFetchStatus } from '../engine/liveScores.js';
 import { openModal } from './modal.js';
@@ -76,15 +76,12 @@ export function createScorePanel(onPickChange) {
 export function updateScorePanel(panel, onPickChange) {
   const picks = getAllPicks();
   const score = computeScore(picks);
-  const chalk = computeChalkScore();
-  const recommended = computeRecommendedScore();
   const upsets = getUpsetAlerts();
   const validIds = getValidBracketIds();
   const totalGames = validIds.length; // 63: 32+16+8+4+2+1
 
   const pickedCount = validIds.filter(id => picks[id]).length;
   const pct = pickedCount > 0 ? score.overall.toFixed(1) : '--';
-  const delta = pickedCount > 0 ? (score.overall - chalk.overall).toFixed(1) : '--';
 
   panel.innerHTML = '';
 
@@ -169,7 +166,15 @@ export function updateScorePanel(panel, onPickChange) {
 
   // Score content
   const content = document.createElement('div');
-  content.innerHTML = `
+
+  // Fetch status indicator (desktop) — at the top
+  const statusContainer = document.createElement('div');
+  statusContainer.className = 'fetch-status-container';
+  statusContainer.innerHTML = buildFetchStatusHtml(false);
+  content.appendChild(statusContainer);
+
+  const innerHtml = document.createElement('div');
+  innerHtml.innerHTML = `
     <div style="margin-bottom:20px">
       <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Bracket Score</div>
       <div style="font-size:32px;font-weight:800;color:var(--primary)">${pct}${pickedCount > 0 ? '%' : ''}</div>
@@ -189,35 +194,12 @@ export function updateScorePanel(panel, onPickChange) {
     </div>
 
     <div style="margin-bottom:16px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Comparison</div>
-      <div style="font-size:12px;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-light)">
-        <span style="color:var(--text-secondary)">All Chalk</span>
-        <span style="font-weight:600">${chalk.overall.toFixed(1)}%</span>
-      </div>
-      <div style="font-size:12px;display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-light)">
-        <span style="color:var(--text-secondary)">Recommended</span>
-        <span style="font-weight:600">${recommended.overall.toFixed(1)}%</span>
-      </div>
-      <div style="font-size:12px;display:flex;justify-content:space-between;padding:4px 0">
-        <span style="color:var(--text-secondary)">Your Bracket</span>
-        <span style="font-weight:700;color:var(--primary)">${pct}${pickedCount > 0 ? '%' : ''}</span>
-      </div>
-      ${pickedCount > 0 ? `<div style="font-size:11px;margin-top:6px;color:${parseFloat(delta) >= 0 ? 'var(--confidence-very-high)' : 'var(--upset)'}">
-        ${parseFloat(delta) >= 0 ? '\u25B2' : '\u25BC'} ${Math.abs(parseFloat(delta)).toFixed(1)}% vs chalk
-      </div>` : ''}
-    </div>
-
-    <div style="margin-bottom:16px">
       <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Upset Picks</div>
       <div style="font-size:24px;font-weight:800;color:var(--upset)">${score.upsetCount}</div>
       <div style="font-size:11px;color:var(--text-secondary)">${upsets.length} upsets recommended</div>
     </div>
   `;
-  // Fetch status indicator (desktop)
-  const statusContainer = document.createElement('div');
-  statusContainer.className = 'fetch-status-container';
-  statusContainer.innerHTML = buildFetchStatusHtml(false);
-  content.appendChild(statusContainer);
+  content.appendChild(innerHtml);
 
   body.appendChild(content);
 
