@@ -14,10 +14,15 @@ function padRight(str, len) {
   return str.length >= len ? str : str + ' '.repeat(len - str.length);
 }
 
+// Collect matchup data into a row with two team lines + pick
+function matchupRow(team1Label, team2Label, pick) {
+  return { team1: team1Label, team2: 'vs ' + team2Label, pick: pick || '--' };
+}
+
 // Build structured bracket text as a table
 export function generateBracketText() {
   const picks = getAllPicks();
-  const rows = []; // { matchup, pick }
+  const rows = []; // { team1, team2, pick } or { section } or { subsection }
 
   for (const region of REGIONS) {
     rows.push({ section: `${region.toUpperCase()} REGION` });
@@ -30,10 +35,7 @@ export function generateBracketText() {
       const m = getR64Matchup(r64Ids[i]);
       if (!m) continue;
       const winner = picks[r64Ids[i]];
-      rows.push({
-        matchup: `${teamLabel(m.team1)} vs ${teamLabel(m.team2)}`,
-        pick: winner ? teamLabel(winner) : '--',
-      });
+      rows.push(matchupRow(teamLabel(m.team1), teamLabel(m.team2), winner ? teamLabel(winner) : null));
     }
 
     // R32
@@ -44,10 +46,7 @@ export function generateBracketText() {
       const winner = picks[id];
       const t1 = gen && gen.team1 ? teamLabel(gen.team1) : 'TBD';
       const t2 = gen && gen.team2 ? teamLabel(gen.team2) : 'TBD';
-      rows.push({
-        matchup: `${t1} vs ${t2}`,
-        pick: winner ? teamLabel(winner) : '--',
-      });
+      rows.push(matchupRow(t1, t2, winner ? teamLabel(winner) : null));
     }
 
     // S16
@@ -58,10 +57,7 @@ export function generateBracketText() {
       const winner = picks[id];
       const t1 = gen && gen.team1 ? teamLabel(gen.team1) : 'TBD';
       const t2 = gen && gen.team2 ? teamLabel(gen.team2) : 'TBD';
-      rows.push({
-        matchup: `${t1} vs ${t2}`,
-        pick: winner ? teamLabel(winner) : '--',
-      });
+      rows.push(matchupRow(t1, t2, winner ? teamLabel(winner) : null));
     }
 
     // E8
@@ -71,12 +67,7 @@ export function generateBracketText() {
     const e8Winner = picks[e8Id];
     const e8t1 = e8 && e8.team1 ? teamLabel(e8.team1) : 'TBD';
     const e8t2 = e8 && e8.team2 ? teamLabel(e8.team2) : 'TBD';
-    rows.push({
-      matchup: `${e8t1} vs ${e8t2}`,
-      pick: e8Winner ? teamLabel(e8Winner) : '--',
-    });
-
-    rows.push({ blank: true });
+    rows.push(matchupRow(e8t1, e8t2, e8Winner ? teamLabel(e8Winner) : null));
   }
 
   // Final Four
@@ -87,13 +78,8 @@ export function generateBracketText() {
     const winner = picks[id];
     const t1 = gen && gen.team1 ? teamLabel(gen.team1) : 'TBD';
     const t2 = gen && gen.team2 ? teamLabel(gen.team2) : 'TBD';
-    rows.push({
-      matchup: `${t1} vs ${t2}`,
-      pick: winner ? teamLabel(winner) : '--',
-    });
+    rows.push(matchupRow(t1, t2, winner ? teamLabel(winner) : null));
   }
-
-  rows.push({ blank: true });
 
   // Championship
   rows.push({ section: 'CHAMPIONSHIP' });
@@ -101,40 +87,35 @@ export function generateBracketText() {
   const champWinner = picks['championship'];
   const ct1 = champGen && champGen.team1 ? teamLabel(champGen.team1) : 'TBD';
   const ct2 = champGen && champGen.team2 ? teamLabel(champGen.team2) : 'TBD';
-  rows.push({
-    matchup: `${ct1} vs ${ct2}`,
-    pick: champWinner ? teamLabel(champWinner) : '--',
-  });
+  rows.push(matchupRow(ct1, ct2, champWinner ? teamLabel(champWinner) : null));
 
   if (champWinner) {
-    rows.push({ blank: true });
     rows.push({ section: `CHAMPION: ${teamLabel(champWinner)}` });
   }
 
-  // Compute column widths
-  let matchupWidth = 'Matchup'.length;
-  let pickWidth = 'Pick'.length;
+  // Compute column widths from individual lines, not combined matchup strings
+  let col1Width = 'Matchup'.length;
+  let col2Width = 'Pick'.length;
   for (const r of rows) {
-    if (r.matchup) matchupWidth = Math.max(matchupWidth, r.matchup.length);
-    if (r.pick) pickWidth = Math.max(pickWidth, r.pick.length);
+    if (r.team1) {
+      col1Width = Math.max(col1Width, r.team1.length, r.team2.length);
+      col2Width = Math.max(col2Width, r.pick.length);
+    }
+    if (r.subsection) col1Width = Math.max(col1Width, r.subsection.length);
   }
 
-  const totalWidth = matchupWidth + pickWidth + 7; // "| " + " | " + " |"
-  const sep = '+' + '-'.repeat(matchupWidth + 2) + '+' + '-'.repeat(pickWidth + 2) + '+';
+  const totalWidth = col1Width + col2Width + 7; // "| " + " | " + " |"
+  const sep = '+' + '-'.repeat(col1Width + 2) + '+' + '-'.repeat(col2Width + 2) + '+';
 
   const lines = [];
   lines.push('INTELLIPICK BRACKET EXPORT');
   lines.push('');
-
-  // Table header
   lines.push(sep);
-  lines.push(`| ${padRight('Matchup', matchupWidth)} | ${padRight('Pick', pickWidth)} |`);
+  lines.push(`| ${padRight('Matchup', col1Width)} | ${padRight('Pick', col2Width)} |`);
   lines.push(sep);
 
   for (const r of rows) {
-    if (r.blank) {
-      lines.push(sep);
-    } else if (r.section) {
+    if (r.section) {
       const label = ` ${r.section} `;
       const pad = totalWidth - label.length;
       const left = Math.floor(pad / 2);
@@ -142,13 +123,14 @@ export function generateBracketText() {
       lines.push('|' + '-'.repeat(left) + label + '-'.repeat(right) + '|');
       lines.push(sep);
     } else if (r.subsection) {
-      lines.push(`| ${padRight(r.subsection, matchupWidth)} | ${padRight('', pickWidth)} |`);
-    } else if (r.matchup) {
-      lines.push(`| ${padRight(r.matchup, matchupWidth)} | ${padRight(r.pick, pickWidth)} |`);
+      lines.push(`| ${padRight(r.subsection, col1Width)} | ${padRight('', col2Width)} |`);
+      lines.push(sep);
+    } else if (r.team1) {
+      lines.push(`| ${padRight(r.team1, col1Width)} | ${padRight(r.pick, col2Width)} |`);
+      lines.push(`| ${padRight(r.team2, col1Width)} | ${padRight('', col2Width)} |`);
+      lines.push(sep);
     }
   }
-
-  lines.push(sep);
 
   return lines.join('\n');
 }
