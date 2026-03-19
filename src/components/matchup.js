@@ -42,6 +42,11 @@ export function createMatchupCard(matchup, onPickMade) {
   if (isUpset) classes += ' matchup-card--upset';
   else if (confClass) classes += ` matchup-card--${confClass}`;
 
+  // Live game shimmer
+  if (hasScore && (liveScore.status === 'live' || liveScore.status === 'halftime')) {
+    classes += ' matchup-card--live';
+  }
+
   // Prediction result styling for final games
   if (hasScore && liveScore.status === 'final' && matchup.recommendedPick) {
     const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;

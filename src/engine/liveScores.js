@@ -201,30 +201,6 @@ function processEvents(events) {
     const team1Score = parseInt(compForTeam1?.score ?? '0', 10);
     const team2Score = parseInt(compForTeam2?.score ?? '0', 10);
 
-    // Extract odds
-    let odds = null;
-    const oddsData = comp.odds?.[0];
-    if (oddsData) {
-      odds = {
-        spreadText: oddsData.details || '',
-        overUnder: oddsData.overUnder ? String(oddsData.overUnder) : '',
-        moneyline1: null,
-        moneyline2: null,
-      };
-      // Try to extract moneylines from the odds data
-      if (oddsData.homeTeamOdds && oddsData.awayTeamOdds) {
-        // Figure out which is team1 vs team2
-        const homeTeamId = findTeamId({ team: comp.competitors?.find(c => c.homeAway === 'home')?.team || {} });
-        if (homeTeamId === team1Id) {
-          odds.moneyline1 = formatMoneyline(oddsData.homeTeamOdds?.moneyLine);
-          odds.moneyline2 = formatMoneyline(oddsData.awayTeamOdds?.moneyLine);
-        } else {
-          odds.moneyline1 = formatMoneyline(oddsData.awayTeamOdds?.moneyLine);
-          odds.moneyline2 = formatMoneyline(oddsData.homeTeamOdds?.moneyLine);
-        }
-      }
-    }
-
     const period = event.status?.period || 0;
     const clock = event.status?.displayClock || '';
 
@@ -234,18 +210,120 @@ function processEvents(events) {
       period,
       team1Score,
       team2Score,
-      odds,
+      odds: null,
     });
   }
 }
 
-function formatMoneyline(ml) {
-  if (ml == null) return null;
-  return ml > 0 ? `+${ml}` : String(ml);
+// Convert Polymarket probability (0-1) to American odds
+function probToAmericanOdds(prob) {
+  if (prob == null || prob <= 0 || prob >= 1) return null;
+  if (prob >= 0.5) {
+    return String(Math.round(-100 * prob / (1 - prob)));
+  }
+  return '+' + Math.round(100 * (1 - prob) / prob);
+}
+
+// Normalize team name for fuzzy matching with Polymarket event titles
+function normalizeForMatch(name) {
+  return name.toLowerCase()
+    .replace(/['']/g, '')
+    .replace(/\./g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Try to match a Polymarket event to an internal matchup by checking if both team
+// shortNames appear in the event title
+function matchPolymarketEvent(eventTitle) {
+  const normalized = normalizeForMatch(eventTitle);
+  const matched = [];
+
+  for (const [teamId, espnName] of Object.entries(TEAM_ID_TO_ESPN)) {
+    const teamNorm = normalizeForMatch(espnName);
+    if (normalized.includes(teamNorm)) {
+      matched.push(teamId);
+    }
+  }
+
+  if (matched.length === 2) {
+    const matchupId = findMatchupIdForTeams(matched[0], matched[1]);
+    if (matchupId) {
+      return { matchupId, teamIds: matched };
+    }
+  }
+  return null;
+}
+
+async function fetchPolymarketOdds() {
+  try {
+    // Fetch active CBB events from Polymarket Gamma API
+    const url = 'https://gamma-api.polymarket.com/events?active=true&closed=false&tag=cbb&limit=100';
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const events = await res.json();
+    if (!Array.isArray(events)) return;
+
+    for (const event of events) {
+      const title = event.title || '';
+      const result = matchPolymarketEvent(title);
+      if (!result) continue;
+
+      const { matchupId, teamIds } = result;
+      const existing = scoreMap.get(matchupId);
+      if (!existing) continue;
+
+      // Extract market prices from the event's markets
+      const markets = event.markets || [];
+      if (markets.length === 0) continue;
+
+      // The main market should be the moneyline (which team wins)
+      const market = markets[0];
+      const tokens = market.tokens || market.outcomes || [];
+      if (tokens.length < 2) continue;
+
+      // Figure out which token corresponds to which team
+      const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
+      const team1EspnName = TEAM_ID_TO_ESPN[team1Id] || '';
+      const team2EspnName = TEAM_ID_TO_ESPN[team2Id] || '';
+
+      let team1Prob = null;
+      let team2Prob = null;
+
+      for (const token of tokens) {
+        const outcomeName = normalizeForMatch(token.outcome || token.value || '');
+        const price = parseFloat(token.price || token.lastTradePrice || 0);
+        if (price <= 0 || price >= 1) continue;
+
+        if (normalizeForMatch(team1EspnName).includes(outcomeName) ||
+            outcomeName.includes(normalizeForMatch(team1EspnName))) {
+          team1Prob = price;
+        } else if (normalizeForMatch(team2EspnName).includes(outcomeName) ||
+                   outcomeName.includes(normalizeForMatch(team2EspnName))) {
+          team2Prob = price;
+        }
+      }
+
+      // If we only found one, infer the other
+      if (team1Prob && !team2Prob) team2Prob = 1 - team1Prob;
+      if (team2Prob && !team1Prob) team1Prob = 1 - team2Prob;
+
+      if (team1Prob && team2Prob) {
+        existing.odds = {
+          source: 'Polymarket',
+          team1Prob: Math.round(team1Prob * 100),
+          team2Prob: Math.round(team2Prob * 100),
+          moneyline1: probToAmericanOdds(team1Prob),
+          moneyline2: probToAmericanOdds(team2Prob),
+        };
+      }
+    }
+  } catch {
+    // Silent failure — odds are a nice-to-have
+  }
 }
 
 async function fetchScores() {
-  // Fetch today's scores; also fetch yesterday and tomorrow to catch games near midnight
   const today = new Date();
   const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
 
@@ -256,11 +334,16 @@ async function fetchScores() {
     if (!res.ok) return;
     const data = await res.json();
     processEvents(data.events || []);
-    for (const cb of listeners) {
-      try { cb(); } catch {}
-    }
   } catch {
     // Silent failure — bracket works without scores
+  }
+
+  // Fetch odds from Polymarket (separate, non-blocking)
+  await fetchPolymarketOdds();
+
+  // Notify listeners after both fetches complete
+  for (const cb of listeners) {
+    try { cb(); } catch {}
   }
 }
 
