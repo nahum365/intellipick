@@ -34,30 +34,44 @@ export function updateScorePanel(panel, onPickChange) {
 
   panel.innerHTML = '';
 
-  // Mobile toggle header
-  const toggle = document.createElement('div');
-  toggle.className = 'score-sidebar__toggle';
+  // Mobile anchor bar: shows key stats + grabber to reveal full sidebar
+  const anchor = document.createElement('div');
+  anchor.className = 'score-sidebar__anchor';
 
-  const toggleLabel = document.createElement('span');
-  toggleLabel.className = 'score-sidebar__toggle-label';
-  toggleLabel.textContent = `Score & Insights \u2014 ${pct}${pickedCount > 0 ? '%' : ''}`;
+  const anchorStats = document.createElement('div');
+  anchorStats.className = 'score-sidebar__anchor-stats';
+  anchorStats.innerHTML = `
+    <span class="score-sidebar__anchor-stat">
+      <span class="score-sidebar__anchor-stat-value">${pickedCount}</span>
+      <span class="score-sidebar__anchor-stat-label">/ ${totalGames} picked</span>
+    </span>
+    <span class="score-sidebar__anchor-stat">
+      <span class="score-sidebar__anchor-stat-value" style="color:var(--primary)">${pct}${pickedCount > 0 ? '%' : ''}</span>
+      <span class="score-sidebar__anchor-stat-label">score</span>
+    </span>
+    <span class="score-sidebar__anchor-stat">
+      <span class="score-sidebar__anchor-stat-value" style="color:var(--upset)">${score.upsetCount}</span>
+      <span class="score-sidebar__anchor-stat-label">upsets</span>
+    </span>
+  `;
+  anchor.appendChild(anchorStats);
 
-  const toggleIcon = document.createElement('span');
-  toggleIcon.className = 'score-sidebar__toggle-icon' + (sidebarCollapsed ? '' : ' score-sidebar__toggle-icon--open');
-  toggleIcon.textContent = '\u25BC';
+  const grabber = document.createElement('div');
+  grabber.className = 'score-sidebar__grabber';
+  grabber.innerHTML = '<span class="score-sidebar__grabber-bar"></span>';
+  anchor.appendChild(grabber);
 
-  toggle.appendChild(toggleLabel);
-  toggle.appendChild(toggleIcon);
-  panel.appendChild(toggle);
+  panel.appendChild(anchor);
 
   // Body wrapper (collapsible on mobile)
   const body = document.createElement('div');
   body.className = 'score-sidebar__body' + (sidebarCollapsed ? ' score-sidebar__body--collapsed' : '');
 
-  toggle.addEventListener('click', () => {
+  // Toggle on grabber/anchor click
+  anchor.addEventListener('click', () => {
     sidebarCollapsed = !sidebarCollapsed;
     body.classList.toggle('score-sidebar__body--collapsed', sidebarCollapsed);
-    toggleIcon.classList.toggle('score-sidebar__toggle-icon--open', !sidebarCollapsed);
+    anchor.classList.toggle('score-sidebar__anchor--open', !sidebarCollapsed);
   });
 
   // Score content
