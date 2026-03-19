@@ -39,11 +39,14 @@ export function computeScore(picks) {
     };
   }
 
-  // Count upsets (picks against recommended)
+  // Count upsets (picked team is the lower seed)
   let upsetCount = 0;
   for (const [matchupId, team] of Object.entries(picks)) {
     const r64 = getR64Matchup(matchupId);
-    if (r64 && r64.recommendedPick !== team.id) upsetCount++;
+    if (r64) {
+      const opponent = r64.team1.id === team.id ? r64.team2 : r64.team1;
+      if (team.seed > opponent.seed) upsetCount++;
+    }
   }
 
   return { overall, count: pickedMatchups.length, breakdown, upsetCount };
