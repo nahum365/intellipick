@@ -1,12 +1,14 @@
 import matchupsData from '../data/matchups.json';
 import { getAllPicks } from './picks.js';
-import { getR64Matchup, getGeneratedMatchup, getRoundIndex, getRegionR64Matchups, REGIONS } from './propagation.js';
+import { getR64Matchup, getGeneratedMatchup, getRoundIndex, getRegionR64Matchups, getValidBracketIds, REGIONS } from './propagation.js';
 
 // Compute bracket score as geometric mean of confidence percentages for picked games
 export function computeScore(picks) {
   const pickedMatchups = [];
+  const validIds = new Set(getValidBracketIds());
 
   for (const [matchupId, team] of Object.entries(picks)) {
+    if (!validIds.has(matchupId)) continue; // skip stale canonical R32 IDs
     const r64 = getR64Matchup(matchupId);
     if (r64) {
       // For R64 matchups, use the confidence percentage

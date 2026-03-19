@@ -158,6 +158,16 @@ body {
   background: var(--primary-dark);
 }
 
+.btn--secondary {
+  background: var(--bg-secondary);
+  border-color: var(--border);
+}
+
+.btn--secondary:hover {
+  background: var(--bg);
+  border-color: var(--text-secondary);
+}
+
 .btn--danger {
   color: var(--upset);
   border-color: var(--upset-border);

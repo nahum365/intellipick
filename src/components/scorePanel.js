@@ -1,6 +1,6 @@
 import { getAllPicks } from '../engine/picks.js';
 import { computeScore, computeChalkScore, computeRecommendedScore, getUpsetAlerts } from '../engine/scoring.js';
-import { cascadePick, getR64Matchup, getRegionR64Matchups } from '../engine/propagation.js';
+import { cascadePick, getR64Matchup, getRegionR64Matchups, getValidBracketIds } from '../engine/propagation.js';
 import { openModal } from './modal.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
 import teamsData from '../data/teams.json';
@@ -40,9 +40,10 @@ export function updateScorePanel(panel, onPickChange) {
   const chalk = computeChalkScore();
   const recommended = computeRecommendedScore();
   const upsets = getUpsetAlerts();
-  const totalGames = 63; // Full bracket: 32+16+8+4+2+1
+  const validIds = getValidBracketIds();
+  const totalGames = validIds.length; // 63: 32+16+8+4+2+1
 
-  const pickedCount = Object.keys(picks).length;
+  const pickedCount = validIds.filter(id => picks[id]).length;
   const pct = pickedCount > 0 ? score.overall.toFixed(1) : '--';
   const delta = pickedCount > 0 ? (score.overall - chalk.overall).toFixed(1) : '--';
 
