@@ -1,6 +1,7 @@
 import teamsData from '../data/teams.json';
 import { getPick } from '../engine/picks.js';
 import { cascadePick } from '../engine/propagation.js';
+import { getScoreForMatchup } from '../engine/liveScores.js';
 
 let overlayEl = null;
 let currentOnPickChange = null;
@@ -143,6 +144,86 @@ function buildTeamPanel(team, profile, matchup) {
   return html;
 }
 
+function buildScoreboardHtml(matchup, liveScore) {
+  if (!liveScore || liveScore.status === 'scheduled') return '';
+
+  let statusLabel, statusClass;
+  if (liveScore.status === 'live') {
+    const periodLabel = liveScore.period > 2 ? 'OT' : liveScore.period === 1 ? '1st Half' : '2nd Half';
+    statusLabel = `${liveScore.clock} - ${periodLabel}`;
+    statusClass = 'live';
+  } else if (liveScore.status === 'halftime') {
+    statusLabel = 'Halftime';
+    statusClass = 'halftime';
+  } else {
+    statusLabel = 'Final';
+    statusClass = 'final';
+  }
+
+  const t1Leading = liveScore.team1Score > liveScore.team2Score;
+  const t2Leading = liveScore.team2Score > liveScore.team1Score;
+  const t1Name = matchup.team1?.name || 'TBD';
+  const t2Name = matchup.team2?.name || 'TBD';
+  const t1Seed = matchup.team1?.seed || '';
+  const t2Seed = matchup.team2?.seed || '';
+
+  let oddsHtml = '';
+  if (liveScore.odds) {
+    const o = liveScore.odds;
+    const items = [];
+    if (o.spreadText) items.push(`<span class="modal__odds-item"><span class="modal__odds-label">Spread:</span> ${o.spreadText}</span>`);
+    if (o.overUnder) items.push(`<span class="modal__odds-item"><span class="modal__odds-label">O/U:</span> ${o.overUnder}</span>`);
+    if (o.moneyline1 && o.moneyline2) {
+      items.push(`<span class="modal__odds-item"><span class="modal__odds-label">ML:</span> ${t1Name} ${o.moneyline1} / ${t2Name} ${o.moneyline2}</span>`);
+    }
+    if (items.length) {
+      oddsHtml = `<div class="modal__odds">${items.join('')}</div>`;
+    }
+  }
+
+  let predictionHtml = '';
+  if (matchup.recommendedPick) {
+    const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;
+    const recScore = recIsTeam1 ? liveScore.team1Score : liveScore.team2Score;
+    const oppScore = recIsTeam1 ? liveScore.team2Score : liveScore.team1Score;
+    const recName = recIsTeam1 ? t1Name : t2Name;
+
+    if (liveScore.status === 'final') {
+      const correct = recScore > oppScore;
+      predictionHtml = `<div class="modal__prediction-result modal__prediction-result--${correct ? 'correct' : 'incorrect'}">
+        IntelliPick picked ${recName} — ${correct ? 'Correct!' : 'Incorrect'}
+      </div>`;
+    } else {
+      const status = recScore > oppScore ? 'winning' : recScore < oppScore ? 'losing' : 'tied';
+      const label = recScore > oppScore ? 'currently winning' : recScore < oppScore ? 'currently losing' : 'currently tied';
+      predictionHtml = `<div class="modal__prediction-result modal__prediction-result--${status}">
+        IntelliPick's pick (${recName}) is ${label}
+      </div>`;
+    }
+  }
+
+  return `<div class="modal__scoreboard">
+    <div class="modal__scoreboard-status modal__scoreboard-status--${statusClass}">
+      ${statusClass === 'live' ? '<span class="modal__live-dot"></span>' : ''}
+      ${statusLabel}
+    </div>
+    <div class="modal__scoreboard-scores">
+      <div class="modal__scoreboard-team ${t1Leading ? 'modal__scoreboard-team--leading' : ''}">
+        <span class="modal__scoreboard-seed">${t1Seed}</span>
+        <span class="modal__scoreboard-name">${t1Name}</span>
+        <span class="modal__scoreboard-pts">${liveScore.team1Score}</span>
+      </div>
+      <div class="modal__scoreboard-team ${t2Leading ? 'modal__scoreboard-team--leading' : ''}">
+        <span class="modal__scoreboard-seed">${t2Seed}</span>
+        <span class="modal__scoreboard-name">${t2Name}</span>
+        <span class="modal__scoreboard-pts">${liveScore.team2Score}</span>
+      </div>
+    </div>
+    ${oddsHtml}
+    ${predictionHtml}
+  </div>`;
+}
+
 function ensureOverlay() {
   if (overlayEl) return overlayEl;
   overlayEl = document.createElement('div');
@@ -170,6 +251,9 @@ export function openModal(matchup, options = {}) {
     title = `(${matchup.team1.seed}) ${matchup.team1.name} vs (${matchup.team2.seed}) ${matchup.team2.name}`;
   }
 
+  const liveScore = getScoreForMatchup(matchup.id);
+  const scoreboardHtml = buildScoreboardHtml(matchup, liveScore);
+
   overlay.innerHTML = `<div class="modal">
     <div class="modal__header">
       <span class="modal__title">${title}</span>
@@ -180,6 +264,7 @@ export function openModal(matchup, options = {}) {
       ${matchup.confidence ? `<span class="modal__rec-badge modal__rec-badge--${confClass}">${matchup.confidence} (${matchup.confidencePercentage}%)</span>` : ''}
       ${matchup.category ? `<span class="modal__rec-category">${matchup.category}</span>` : ''}
     </div>` : ''}
+    ${scoreboardHtml}
     ${matchup.tacticalAdvantage ? `<div class="modal__tactical">
       <div class="modal__tactical-title">Matchup Analysis</div>
       <div class="modal__tactical-text">${matchup.tacticalAdvantage}</div>

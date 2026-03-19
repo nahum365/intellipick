@@ -3,6 +3,7 @@ import { getPick } from '../engine/picks.js';
 import { cascadePick, getRoundIndex } from '../engine/propagation.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
 import { openModal } from './modal.js';
+import { getScoreForMatchup } from '../engine/liveScores.js';
 
 function getTeamProfile(teamId) {
   return teamsData.teams.find(t => t.id === teamId) || null;
@@ -31,12 +32,25 @@ export function createMatchupCard(matchup, onPickMade) {
   const confClass = confidenceClass(matchup.confidence);
   const isUpset = isUpsetCategory(matchup.category);
 
+  const liveScore = hasTeams ? getScoreForMatchup(matchup.id) : null;
+  const hasScore = liveScore && liveScore.status !== 'scheduled';
+
   let classes = 'matchup-card';
   if (isLaterRound) classes += ' matchup-card--later-round';
   if (isLaterRound && hasPrediction) classes += ' matchup-card--has-prediction';
   if (!hasAnyTeam) classes += ' matchup-card--empty';
   if (isUpset) classes += ' matchup-card--upset';
   else if (confClass) classes += ` matchup-card--${confClass}`;
+
+  // Prediction result styling for final games
+  if (hasScore && liveScore.status === 'final' && matchup.recommendedPick) {
+    const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;
+    const recWon = recIsTeam1
+      ? liveScore.team1Score > liveScore.team2Score
+      : liveScore.team2Score > liveScore.team1Score;
+    classes += recWon ? ' matchup-card--pick-correct' : ' matchup-card--pick-incorrect';
+  }
+
   card.className = classes;
 
   // Header (any round with prediction data)
@@ -98,8 +112,18 @@ export function createMatchupCard(matchup, onPickMade) {
     name.textContent = team.name;
     row.appendChild(name);
 
-    // Record
-    if (profile && profile.record) {
+    // Live score
+    if (hasScore) {
+      const scoreEl = document.createElement('span');
+      const pts = isTop ? liveScore.team1Score : liveScore.team2Score;
+      const otherPts = isTop ? liveScore.team2Score : liveScore.team1Score;
+      scoreEl.className = 'team-row__score' + (pts > otherPts ? ' team-row__score--leading' : '');
+      scoreEl.textContent = pts;
+      row.appendChild(scoreEl);
+    }
+
+    // Record (hide when scores are showing to save space)
+    if (!hasScore && profile && profile.record) {
       const record = document.createElement('span');
       record.className = 'team-row__record';
       record.textContent = profile.record;
@@ -119,8 +143,8 @@ export function createMatchupCard(matchup, onPickMade) {
       row.appendChild(injuries);
     }
 
-    // Confidence percentage
-    if (hasPrediction) {
+    // Confidence percentage (hidden when live scores are showing)
+    if (hasPrediction && !hasScore) {
       const pct = document.createElement('span');
       pct.className = 'team-row__pct';
       const teamPct = isRecommended ? matchup.confidencePercentage : (100 - matchup.confidencePercentage);
@@ -178,6 +202,29 @@ export function createMatchupCard(matchup, onPickMade) {
 
   card.appendChild(renderTeamRow(matchup.team1, true));
   card.appendChild(renderTeamRow(matchup.team2, false));
+
+  // Live game status bar
+  if (hasScore && (liveScore.status === 'live' || liveScore.status === 'halftime')) {
+    const statusEl = document.createElement('div');
+    statusEl.className = 'matchup-card__live-status';
+    const dot = document.createElement('span');
+    dot.className = 'matchup-card__live-dot';
+    statusEl.appendChild(dot);
+    const label = document.createElement('span');
+    if (liveScore.status === 'halftime') {
+      label.textContent = 'HALF';
+    } else {
+      const periodLabel = liveScore.period > 2 ? 'OT' : liveScore.period === 1 ? '1H' : '2H';
+      label.textContent = `${liveScore.clock} ${periodLabel}`;
+    }
+    statusEl.appendChild(label);
+    card.appendChild(statusEl);
+  } else if (hasScore && liveScore.status === 'final') {
+    const statusEl = document.createElement('div');
+    statusEl.className = 'matchup-card__final-status';
+    statusEl.textContent = 'FINAL';
+    card.appendChild(statusEl);
+  }
 
   // Footer with probability bar and info button (any round with prediction data)
   if (hasPrediction) {

@@ -272,6 +272,93 @@
   display: flex;
 }
 
+/* Live score on team row */
+.team-row__score {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  min-width: 22px;
+  text-align: right;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.team-row__score--leading {
+  color: var(--text);
+  font-weight: 800;
+}
+
+/* Live game status bar */
+.matchup-card__live-status {
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: var(--upset);
+  background: var(--upset-bg);
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.matchup-card__live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--upset);
+  animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.matchup-card__final-status {
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--bg);
+  border-top: 1px solid var(--border-light);
+}
+
+/* Prediction result indicators on card */
+.matchup-card--pick-correct {
+  border-color: var(--confidence-very-high) !important;
+}
+
+.matchup-card--pick-incorrect {
+  border-color: var(--upset) !important;
+}
+
+.matchup-card__prediction-badge {
+  padding: 1px 5px;
+  font-size: 8px;
+  font-weight: 800;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.matchup-card__prediction-badge--correct {
+  background: var(--confidence-very-high-bg);
+  color: var(--confidence-very-high);
+}
+
+.matchup-card__prediction-badge--incorrect {
+  background: var(--confidence-low-bg);
+  color: var(--upset);
+}
+
 /* Mobile: larger touch targets */
 @media (max-width: 768px) {
   .team-row {
