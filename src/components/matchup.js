@@ -134,19 +134,17 @@ export function createMatchupCard(matchup, onPickMade) {
       row.appendChild(check);
     }
 
-    // Pick checkbox (mobile only, hidden on desktop via CSS)
-    const mobileCheckbox = document.createElement('input');
-    mobileCheckbox.type = 'checkbox';
-    mobileCheckbox.checked = isPicked;
-    mobileCheckbox.className = 'team-row__mobile-checkbox';
-    mobileCheckbox.addEventListener('click', (e) => {
+    // Pick toggle button (mobile only, hidden on desktop via CSS)
+    const pickBtn = document.createElement('button');
+    pickBtn.className = 'team-row__pick-btn' + (isPicked ? ' team-row__pick-btn--active' : '');
+    pickBtn.textContent = isPicked ? '\u2713' : '';
+    pickBtn.setAttribute('aria-label', isPicked ? 'Selected' : 'Select');
+    pickBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-    });
-    mobileCheckbox.addEventListener('change', () => {
       cascadePick(matchup.id, team);
       if (onPickMade) onPickMade();
     });
-    row.appendChild(mobileCheckbox);
+    row.appendChild(pickBtn);
 
     // Click behavior: on mobile open modal, on desktop pick
     const isMobile = () => window.innerWidth <= 768;

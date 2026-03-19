@@ -64,11 +64,38 @@ body {
   flex-direction: column;
 }
 
-/* Desktop: lock to viewport so sidebar + insights bar stay visible */
+/* Desktop: lock to viewport, sidebar beside bracket */
 @media (min-width: 769px) {
   #app {
     height: 100vh;
     overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr 280px;
+  }
+
+  .header {
+    grid-column: 1 / -1;
+  }
+
+  .main-content {
+    grid-column: 1;
+    grid-row: 2;
+    overflow: hidden;
+  }
+
+  .bracket-container {
+    height: 100%;
+  }
+
+  .score-sidebar {
+    grid-column: 2;
+    grid-row: 2;
+    width: auto;
+  }
+
+  .insights-bar {
+    grid-column: 1 / -1;
   }
 }
 
@@ -143,7 +170,6 @@ body {
 /* Main content */
 .main-content {
   flex: 1;
-  display: flex;
   overflow: hidden;
   min-height: 0;
 }
@@ -154,7 +180,7 @@ body {
   padding: 24px;
 }
 
-/* Score sidebar */
+/* Score sidebar — desktop: right column inside .main-content via CSS order */
 .score-sidebar {
   width: 280px;
   background: var(--surface);
@@ -163,6 +189,7 @@ body {
   overflow-y: auto;
   flex-shrink: 0;
 }
+
 
 /* Insights bar */
 .insights-bar {
@@ -240,77 +267,88 @@ body {
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Sidebar: full width panel below bracket */
+  /* Sidebar: fixed shelf below header */
   .score-sidebar {
     width: 100%;
     border-left: none;
-    border-top: 1px solid var(--border);
-    padding: 16px;
-    overflow-y: visible;
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    overflow: hidden;
+    position: fixed;
+    top: 49px;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-height: calc(100vh - 49px);
+    overflow-y: auto;
   }
 
-  /* Mobile anchor bar */
+  /* Spacer to push content below the fixed sidebar anchor */
+  .main-content {
+    margin-top: 40px;
+  }
+
+  /* Compact anchor strip */
   .score-sidebar__anchor {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: 12px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    padding: 10px 0 4px;
+    padding: 6px 0 2px;
+    flex-wrap: wrap;
   }
 
   .score-sidebar__anchor-stats {
     display: flex;
-    gap: 16px;
-    justify-content: center;
-    width: 100%;
+    gap: 12px;
+    align-items: baseline;
   }
 
   .score-sidebar__anchor-stat {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 2px;
   }
 
   .score-sidebar__anchor-stat-value {
-    font-size: 18px;
+    font-size: 13px;
     font-weight: 800;
   }
 
   .score-sidebar__anchor-stat-label {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-muted);
     font-weight: 600;
   }
 
   .score-sidebar__grabber {
-    padding: 8px 0 2px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 2px 0 4px;
   }
 
   .score-sidebar__grabber-bar {
     display: block;
-    width: 36px;
-    height: 4px;
-    border-radius: 2px;
+    width: 28px;
+    height: 3px;
+    border-radius: 1.5px;
     background: var(--border);
     transition: background 0.2s;
   }
 
-  .score-sidebar__anchor:active .score-sidebar__grabber-bar {
-    background: var(--primary);
-  }
-
+  .score-sidebar__anchor:active .score-sidebar__grabber-bar,
   .score-sidebar__anchor--open .score-sidebar__grabber-bar {
     background: var(--text-muted);
   }
 
+  /* Body: hidden by default, height animated via JS */
   .score-sidebar__body {
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-  }
-
-  .score-sidebar__body--collapsed {
-    max-height: 0 !important;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Upset rows: touch-friendly */
@@ -334,21 +372,9 @@ body {
     border-radius: 6px !important;
   }
 
-  /* Insights bar: sticky bottom */
+  /* Hide insights bar on mobile — anchor bar replaces it */
   .insights-bar {
-    position: sticky;
-    bottom: 0;
-    z-index: 98;
-    padding: 8px 12px;
-    gap: 12px;
-    font-size: 12px;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .insights-bar__badge {
-    padding: 3px 8px;
-    font-size: 11px;
+    display: none;
   }
 }
 

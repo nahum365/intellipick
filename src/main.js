@@ -60,6 +60,9 @@ function renderApp() {
   header.appendChild(controls);
   app.appendChild(header);
 
+  // Score panel (on mobile renders as a sticky shelf below header)
+  scorePanelEl = createScorePanel(() => rerender());
+
   // Main content
   const main = document.createElement('div');
   main.className = 'main-content';
@@ -71,10 +74,10 @@ function renderApp() {
   bracketContainerEl.appendChild(bracket);
   main.appendChild(bracketContainerEl);
 
-  // Score panel
-  scorePanelEl = createScorePanel(() => rerender());
-  main.appendChild(scorePanelEl);
-
+  // On desktop, sidebar goes inside main-content (right column)
+  // On mobile, it goes between header and main (sticky shelf)
+  // We always place it before main; CSS handles the layout difference
+  app.appendChild(scorePanelEl);
   app.appendChild(main);
 
   // Insights bar

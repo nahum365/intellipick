@@ -34,16 +34,16 @@ export function updateScorePanel(panel, onPickChange) {
 
   panel.innerHTML = '';
 
-  // Mobile anchor bar: shows key stats + grabber to reveal full sidebar
+  // Mobile anchor bar: compact stats + grabber
   const anchor = document.createElement('div');
-  anchor.className = 'score-sidebar__anchor';
+  anchor.className = 'score-sidebar__anchor' + (sidebarCollapsed ? '' : ' score-sidebar__anchor--open');
 
   const anchorStats = document.createElement('div');
   anchorStats.className = 'score-sidebar__anchor-stats';
   anchorStats.innerHTML = `
     <span class="score-sidebar__anchor-stat">
       <span class="score-sidebar__anchor-stat-value">${pickedCount}</span>
-      <span class="score-sidebar__anchor-stat-label">/ ${totalGames} picked</span>
+      <span class="score-sidebar__anchor-stat-label">/${totalGames}</span>
     </span>
     <span class="score-sidebar__anchor-stat">
       <span class="score-sidebar__anchor-stat-value" style="color:var(--primary)">${pct}${pickedCount > 0 ? '%' : ''}</span>
@@ -63,15 +63,45 @@ export function updateScorePanel(panel, onPickChange) {
 
   panel.appendChild(anchor);
 
-  // Body wrapper (collapsible on mobile)
+  // Body wrapper — JS shelf animation
   const body = document.createElement('div');
-  body.className = 'score-sidebar__body' + (sidebarCollapsed ? ' score-sidebar__body--collapsed' : '');
+  body.className = 'score-sidebar__body';
 
-  // Toggle on grabber/anchor click
+  // Set initial collapsed state immediately (no animation on first render)
+  if (sidebarCollapsed) {
+    body.style.height = '0px';
+    body.style.overflow = 'hidden';
+  }
+
+  // Toggle with slide animation
   anchor.addEventListener('click', () => {
     sidebarCollapsed = !sidebarCollapsed;
-    body.classList.toggle('score-sidebar__body--collapsed', sidebarCollapsed);
     anchor.classList.toggle('score-sidebar__anchor--open', !sidebarCollapsed);
+
+    if (sidebarCollapsed) {
+      // Collapse: animate from current height to 0
+      const h = body.scrollHeight;
+      body.style.height = h + 'px';
+      body.offsetHeight; // force reflow
+      body.style.transition = 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      body.style.height = '0px';
+      body.style.overflow = 'hidden';
+    } else {
+      // Expand: animate from 0 to scrollHeight, capped at 60vh
+      const maxH = window.innerHeight * 0.6;
+      const targetH = Math.min(body.scrollHeight, maxH);
+      body.style.transition = 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      body.style.height = targetH + 'px';
+      body.style.overflow = 'hidden';
+      const onEnd = () => {
+        body.removeEventListener('transitionend', onEnd);
+        if (!sidebarCollapsed) {
+          body.style.height = targetH + 'px';
+          body.style.overflowY = 'auto';
+        }
+      };
+      body.addEventListener('transitionend', onEnd);
+    }
   });
 
   // Score content
