@@ -11,6 +11,7 @@ import { copyBracketToClipboard, downloadBracketText } from './components/export
 import { createBracket } from './components/bracket.js';
 import { createScorePanel, updateScorePanel } from './components/scorePanel.js';
 import { createInsightsBar, updateInsightsBar } from './components/insightsBar.js';
+import { startPolling, onScoresUpdate } from './engine/liveScores.js';
 const app = document.getElementById('app');
 
 // Load saved picks (clean up stale canonical IDs)
@@ -163,3 +164,7 @@ function rerender() {
 
 // Initial render
 renderApp();
+
+// Start live score polling
+startPolling();
+onScoresUpdate(() => rerender());
