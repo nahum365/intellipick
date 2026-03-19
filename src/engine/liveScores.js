@@ -257,11 +257,21 @@ function matchPolymarketEvent(eventTitle) {
 
 async function fetchPolymarketOdds() {
   try {
-    // Fetch active CBB events from Polymarket Gamma API
+    // Fetch active CBB events from Polymarket Gamma API via CORS proxy
     const targetUrl = 'https://gamma-api.polymarket.com/events?active=true&closed=false&tag=cbb&limit=100';
-    const url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl);
-    const res = await fetch(url);
-    if (!res.ok) return;
+    // Try multiple CORS proxies in case one is down
+    const proxies = [
+      'https://corsproxy.io/?' + encodeURIComponent(targetUrl),
+      'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl),
+    ];
+    let res = null;
+    for (const proxyUrl of proxies) {
+      try {
+        const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(5000) });
+        if (r.ok) { res = r; break; }
+      } catch { continue; }
+    }
+    if (!res) return;
     const events = await res.json();
     if (!Array.isArray(events)) return;
 
@@ -324,28 +334,32 @@ async function fetchPolymarketOdds() {
   }
 }
 
+function notifyListeners() {
+  for (const cb of listeners) {
+    try { cb(); } catch {}
+  }
+}
+
 async function fetchScores() {
   const today = new Date();
   const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
 
   const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${dateStr}&groups=50&limit=365`;
 
+  // Fetch ESPN scores first, notify immediately so scores appear fast
   try {
     const res = await fetch(url);
-    if (!res.ok) return;
-    const data = await res.json();
-    processEvents(data.events || []);
+    if (res.ok) {
+      const data = await res.json();
+      processEvents(data.events || []);
+      notifyListeners();
+    }
   } catch {
     // Silent failure — bracket works without scores
   }
 
-  // Fetch odds from Polymarket (separate, non-blocking)
-  await fetchPolymarketOdds();
-
-  // Notify listeners after both fetches complete
-  for (const cb of listeners) {
-    try { cb(); } catch {}
-  }
+  // Fetch Polymarket odds separately — slower, non-blocking
+  fetchPolymarketOdds().then(() => notifyListeners());
 }
 
 export function startPolling() {
