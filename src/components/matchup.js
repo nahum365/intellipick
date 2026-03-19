@@ -127,8 +127,8 @@ export function createMatchupCard(matchup, onPickMade) {
       row.appendChild(scoreEl);
     }
 
-    // Record (hide when scores are showing to save space)
-    if (!hasScore && profile && profile.record) {
+    // Record
+    if (profile && profile.record) {
       const record = document.createElement('span');
       record.className = 'team-row__record';
       record.textContent = profile.record;

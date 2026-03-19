@@ -344,47 +344,87 @@ async function fetchViaProxy(targetUrl) {
   return null;
 }
 
+// Fetch JSON from Polymarket via proxy, returning parsed array or []
+async function fetchPolymarketJson(targetUrl) {
+  const res = await fetchViaProxy(targetUrl);
+  if (!res) return [];
+  try {
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch { return []; }
+}
+
 async function fetchPolymarketOdds() {
   fetchStatus.polymarketLoading = true;
   notifyListeners();
   try {
-    // Try multiple tag variations for NCAA basketball on Polymarket Gamma API.
-    // The correct tag may vary — try several and also a broad fallback.
-    const tagVariants = [
-      'ncaa-basketball', 'march-madness', 'ncaa', 'college-basketball', 'cbb', 'basketball',
-    ];
-    const base = 'https://gamma-api.polymarket.com/events?active=true&closed=false&limit=100';
+    const base = 'https://gamma-api.polymarket.com';
 
-    // Fire all tag queries in parallel, plus a broad tagless search
-    const fetches = [
-      ...tagVariants.map(tag => fetchViaProxy(`${base}&tag=${tag}`)),
-      fetchViaProxy(`${base}`),  // broad fallback — no tag filter
+    // Strategy: use multiple search approaches in parallel to find NCAA basketball events.
+    // The tag-based approach doesn't work (returns unrelated events), so we use:
+    // 1. Text search via _q parameter (Strapi convention)
+    // 2. Slug-based search
+    // 3. Paginated broad search to look beyond the top 100
+    const searches = [
+      // Text searches for NCAA basketball
+      `${base}/events?_q=NCAA&active=true&closed=false&limit=100`,
+      `${base}/events?_q=March+Madness&active=true&closed=false&limit=100`,
+      `${base}/events?_q=college+basketball&active=true&closed=false&limit=100`,
+      // Also try the markets endpoint with text search
+      `${base}/markets?_q=NCAA&active=true&closed=false&limit=100`,
+      `${base}/markets?_q=March+Madness&active=true&closed=false&limit=100`,
+      // Paginated broad event search (basketball events may be low-volume)
+      `${base}/events?active=true&closed=false&limit=100&offset=0`,
+      `${base}/events?active=true&closed=false&limit=100&offset=100`,
+      `${base}/events?active=true&closed=false&limit=100&offset=200`,
+      `${base}/events?active=true&closed=false&limit=100&offset=300`,
+      // Tag attempts
+      `${base}/events?tag=ncaa&active=true&closed=false&limit=100`,
+      `${base}/events?tag=march-madness&active=true&closed=false&limit=100`,
+      `${base}/events?tag=sports&active=true&closed=false&limit=100`,
+      `${base}/events?tag=ncaa-basketball&active=true&closed=false&limit=100`,
     ];
-    const responses = await Promise.all(fetches);
 
-    // Collect all unique events by id
+    const results = await Promise.all(searches.map(url => fetchPolymarketJson(url)));
+
+    // Collect all unique events by id.
+    // Markets endpoint returns market objects (no sub-markets array), so we normalize.
     const seenIds = new Set();
     const allEvents = [];
-    for (const res of responses) {
-      if (!res) continue;
-      try {
-        const data = await res.json();
-        if (!Array.isArray(data)) continue;
-        for (const event of data) {
-          if (!seenIds.has(event.id)) {
-            seenIds.add(event.id);
-            allEvents.push(event);
-          }
+    for (const data of results) {
+      for (const item of data) {
+        const id = item.id;
+        if (seenIds.has(id)) continue;
+        seenIds.add(id);
+        // If this came from /markets endpoint, wrap it as a pseudo-event
+        if (!item.markets && item.outcomes) {
+          allEvents.push({ id, title: item.question || '', markets: [item] });
+        } else {
+          allEvents.push(item);
         }
-      } catch { continue; }
+      }
     }
-    const events = allEvents;
-    console.log(`[Polymarket] Fetched ${events.length} events, checking for NCAA matchups...`);
+
+    console.log(`[Polymarket] Fetched ${allEvents.length} unique events/markets`);
+
+    // Log a sample of titles to help debug
+    const sampleTitles = allEvents.slice(0, 10).map(e => e.title || '(no title)');
+    console.log('[Polymarket] Sample titles:', sampleTitles);
 
     let matchedCount = 0;
-    for (const event of events) {
+    for (const event of allEvents) {
+      // Try matching by event title
       const title = event.title || '';
-      const result = matchPolymarketEvent(title);
+      let result = matchPolymarketEvent(title);
+
+      // Also try matching by individual market questions
+      if (!result && event.markets) {
+        for (const m of event.markets) {
+          result = matchPolymarketEvent(m.question || '');
+          if (result) break;
+        }
+      }
+
       if (!result) continue;
       matchedCount++;
       console.log(`[Polymarket] Matched: "${title}" -> ${result.matchupId}`);
