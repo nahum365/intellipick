@@ -51,8 +51,8 @@ export function getDownstreamMatchupId(matchupId, roundIndex) {
     return laterRoundId(region, 4, 0);
   } else if (roundIndex === 3) {
     // E8 -> F4: region champions meet
-    // East vs West = ff-0, South vs Midwest = ff-1
-    if (region === 'East' || region === 'West') return 'ff-0';
+    // East vs South = ff-0, West vs Midwest = ff-1
+    if (region === 'East' || region === 'South') return 'ff-0';
     return 'ff-1';
   } else if (roundIndex === 4) {
     // F4 -> Championship
@@ -142,9 +142,9 @@ export function getGeneratedMatchup(matchupId) {
     const ffIdx = parseInt(matchupId.split('-')[1]);
     if (ffIdx === 0) {
       team1 = getPick(laterRoundId('east', 4, 0));
-      team2 = getPick(laterRoundId('west', 4, 0));
+      team2 = getPick(laterRoundId('south', 4, 0));
     } else {
-      team1 = getPick(laterRoundId('south', 4, 0));
+      team1 = getPick(laterRoundId('west', 4, 0));
       team2 = getPick(laterRoundId('midwest', 4, 0));
     }
   } else {
