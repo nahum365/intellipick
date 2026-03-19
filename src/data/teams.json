@@ -10,20 +10,36 @@
       "conference": "ACC",
       "kenpomRank": 1,
       "barttovikRank": 1,
-      "championshipOdds": "+300",
-      "championshipImpliedPct": 25.0,
+      "championshipOdds": "+330",
+      "championshipImpliedPct": 23.3,
       "offenseEfficiency": "Rank 1 in Adjusted Offensive Efficiency; most efficient offense in the country. Qualifies as a Top 40 Offense.",
       "defenseEfficiency": "Consistently dominating defensive efficiency metrics across a massive sample size. Qualifies as a Top 25 Defense.",
-      "recentMomentum": "32-2 regular season record; secured the top overall seed.",
+      "recentMomentum": "32-2 regular season record; secured the top overall seed. Won the ACC Tournament (Sports Illustrated).",
       "injuries": [
-        { "player": "Caleb Foster", "status": "OUT", "detail": "Foot fracture — primary ball-handler, critical for perimeter creation and ball security. (9 Pts/4 Reb/3 Ast)" },
-        { "player": "Patrick Ngongba II", "status": "DOUBTFUL", "detail": "Foot injury — interior depth and rim protection compromised." }
+        {
+          "player": "Caleb Foster",
+          "status": "OUT",
+          "detail": "Foot fracture — primary ball-handler, critical for perimeter creation and ball security. Not expected back until the Final Four (Associated Press). (9 Pts/4 Reb/3 Ast)"
+        },
+        {
+          "player": "Patrick Ngongba II",
+          "status": "QUESTIONABLE",
+          "detail": "Foot injury — interior depth and rim protection compromised. Missed the ACC Tournament but is close to returning (Athlon Sports)."
+        }
       ],
       "keyPlayers": [
-        { "name": "Cameron Boozer", "stats": "22.5 PPG, 10.2 RPG, 56.5% FG", "note": "National Player of the Year candidate." },
-        { "name": "Cayden Boozer", "stats": null, "note": "Elevated into primary playmaking role with Foster out." }
+        {
+          "name": "Cameron Boozer",
+          "stats": "22.5 PPG, 10.2 RPG, 56.5% FG",
+          "note": "National Player of the Year candidate."
+        },
+        {
+          "name": "Cayden Boozer",
+          "stats": null,
+          "note": "Elevated into primary playmaking role with Foster out."
+        }
       ],
-      "blurb": "Duke finished the regular season with a 32-2 record and secured the top overall seed in the East Region. They rank first in both KenPom and BartTorvik. However, their margin for error has evaporated due to foot injuries to point guard Caleb Foster and big man Patrick Ngongba II. Fits the ideal AI Intellipick profile for a deep run.",
+      "blurb": "Duke finished the regular season with a 32-2 record and secured the top overall seed in the East Region. They rank first in both KenPom and BartTorvik. Fox Sports analyst Michael Cohen predicted Duke to win the National Championship. However, their margin for error has evaporated due to foot injuries to point guard Caleb Foster and big man Patrick Ngongba II. Fits the ideal AI Intellipick profile for a deep run.",
       "strengths": "Most efficient offense in the country, anchored by generational talent Cameron Boozer.",
       "weaknesses": "Depleted backcourt depth and compromised frontcourt rotation due to injuries.",
       "upsetAlert": null,
@@ -71,8 +87,16 @@
       "recentMomentum": "Returning to the NCAA Tournament for the first time in three years.",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Bruce Thornton", "stats": "20.2 PPG, 40% 3PT", "note": "All-time leading scorer in program history." },
-        { "name": "John Mobley Jr.", "stats": "15.7 PPG", "note": "Lethal 3-point shooter." }
+        {
+          "name": "Bruce Thornton",
+          "stats": "20.2 PPG, 40% 3PT",
+          "note": "All-time leading scorer in program history."
+        },
+        {
+          "name": "John Mobley Jr.",
+          "stats": "15.7 PPG",
+          "note": "Lethal 3-point shooter."
+        }
       ],
       "blurb": "Ohio State returns to the NCAA Tournament for the first time in three years under coach Jake Diebler. They are led by all-time leading scorer Bruce Thornton.",
       "strengths": "Strong shooting and a highly efficient offense (124.3 AdjO for Thornton).",
@@ -122,7 +146,11 @@
       "recentMomentum": "Won the Big East regular-season and tournament titles (including a twenty-point demolition of UConn).",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Zuby Ejiofor", "stats": null, "note": "Big East Player of the Year." }
+        {
+          "name": "Zuby Ejiofor",
+          "stats": null,
+          "note": "Big East Player of the Year."
+        }
       ],
       "blurb": "St. John's is a 5-seed with a 28-6 record. Under Rick Pitino, they absolutely dominate the possession battle and rank 28th nationally in offensive rebounds.",
       "strengths": "Relentless on the offensive boards and hyper-athletic, transition-heavy offensive scheme.",
@@ -169,10 +197,14 @@
       "championshipImpliedPct": 1.6,
       "offenseEfficiency": null,
       "defenseEfficiency": null,
-      "recentMomentum": null,
+      "recentMomentum": "Lost to Houston 69-47 in the Big 12 Tournament semifinals (Houston Athletics).",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Darryn Peterson", "stats": null, "note": "Star freshman guard and potential top NBA pick." }
+        {
+          "name": "Darryn Peterson",
+          "stats": null,
+          "note": "Star freshman guard and potential top NBA pick."
+        }
       ],
       "blurb": "Kansas is a 4-seed led by star freshman Darryn Peterson. They went 14-8 with him in the lineup and 9-2 without him, but he enters the tournament fully healthy.",
       "strengths": null,
@@ -198,7 +230,11 @@
       "recentMomentum": null,
       "injuries": [],
       "keyPlayers": [
-        { "name": "Dominique Daniels", "stats": null, "note": "Fiery scoring guard." }
+        {
+          "name": "Dominique Daniels",
+          "stats": null,
+          "note": "Fiery scoring guard."
+        }
       ],
       "blurb": "California Baptist is making its first NCAA Tournament appearance in program history, having transitioned to Division I in 2018.",
       "strengths": null,
@@ -223,10 +259,18 @@
       "defenseEfficiency": "Qualifies as a Top 25 Defense.",
       "recentMomentum": "Entered the tournament severely compromised by late-season injuries.",
       "injuries": [
-        { "player": "Mikel Brown Jr.", "status": "OUT", "detail": "Back injury — primary playmaker missing. (18 Pts/3 Reb/5 Ast)" }
+        {
+          "player": "Mikel Brown Jr.",
+          "status": "OUT",
+          "detail": "Back injury — primary playmaker missing. (18 Pts/3 Reb/5 Ast)"
+        }
       ],
       "keyPlayers": [
-        { "name": "Ryan Conwell", "stats": null, "note": "Forced into higher offensive burden." }
+        {
+          "name": "Ryan Conwell",
+          "stats": null,
+          "note": "Forced into higher offensive burden."
+        }
       ],
       "blurb": "Louisville is a 6-seed with a 23-10 record. They come into the tournament severely compromised by the loss of primary playmaker Mikel Brown Jr. to a back injury. Classified as a Fringe AI Intellipick based on strong overall Net Rating.",
       "strengths": "High-major talent and athleticism.",
@@ -252,7 +296,11 @@
       "recentMomentum": "Riding a massive wave of momentum fueled by an eleven-game winning streak.",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Wes Enis", "stats": null, "note": "Elite perimeter shooting; recorded eight games with 5+ made threes." }
+        {
+          "name": "Wes Enis",
+          "stats": null,
+          "note": "Elite perimeter shooting; recorded eight games with 5+ made threes."
+        }
       ],
       "blurb": "South Florida is an 11-seed entering with a 25-8 record on an eleven-game winning streak. They are identified as a Very High confidence upset pick. Characterized by the Fastest Pace metric.",
       "strengths": "Elite rebounding (43 per game) and blistering offensive pace focusing on transition three-pointers.",
@@ -277,10 +325,18 @@
       "defenseEfficiency": "Qualifies as a Top 25 Defense.",
       "recentMomentum": null,
       "injuries": [
-        { "player": "Divine Ugochukwu", "status": "OUT", "detail": "Season-ending injury." }
+        {
+          "player": "Divine Ugochukwu",
+          "status": "OUT",
+          "detail": "Season-ending injury."
+        }
       ],
       "keyPlayers": [
-        { "name": "Jeremy Fears Jr.", "stats": null, "note": "Point guard running the offense." }
+        {
+          "name": "Jeremy Fears Jr.",
+          "stats": null,
+          "note": "Point guard running the offense."
+        }
       ],
       "blurb": "Michigan State extended its Big Ten record to 28 consecutive NCAA Tournament appearances under Tom Izzo. Classified as a Fringe AI Intellipick based on elite net rating.",
       "strengths": null,
@@ -330,8 +386,16 @@
       "recentMomentum": null,
       "injuries": [],
       "keyPlayers": [
-        { "name": "Tyler Bilodeau", "stats": null, "note": "Key offensive producer." },
-        { "name": "Donovan Dent", "stats": null, "note": "Key offensive producer." }
+        {
+          "name": "Tyler Bilodeau",
+          "stats": null,
+          "note": "Key offensive producer."
+        },
+        {
+          "name": "Donovan Dent",
+          "stats": null,
+          "note": "Key offensive producer."
+        }
       ],
       "blurb": "UCLA enters as a 7-seed. They rely heavily on the production of Tyler Bilodeau and Donovan Dent to carry the offensive load.",
       "strengths": null,
@@ -374,14 +438,26 @@
       "conference": "Big East",
       "kenpomRank": 11,
       "barttovikRank": null,
-      "championshipOdds": "+2500",
-      "championshipImpliedPct": 3.8,
+      "championshipOdds": "+1700",
+      "championshipImpliedPct": 5.6,
       "offenseEfficiency": "Qualifies as a Top 40 Offense.",
       "defenseEfficiency": "Qualifies as a Top 25 Defense.",
       "recentMomentum": null,
-      "injuries": [],
-      "keyPlayers": [],
-      "blurb": "UConn enters as a 2-seed after suffering a 20-point blowout loss to St. John's in the Big East title game. Dan Hurley's squad remains a massive threat. Classified as a Fringe AI Intellipick due to playing a slightly too slow pace for optimal models.",
+      "injuries": [
+        {
+          "player": "Silas Demary",
+          "status": "QUESTIONABLE",
+          "detail": "Mild ankle sprain (NBC Sports)."
+        }
+      ],
+      "keyPlayers": [
+        {
+          "name": "Jaylin Stewart",
+          "stats": null,
+          "note": "Expected to play through knee soreness (NBC Sports)."
+        }
+      ],
+      "blurb": "UConn enters as a 2-seed after suffering a 20-point blowout loss to St. John's in the Big East title game. Dan Hurley's squad remains a massive threat; Fox Sports notes that with Hurley on the sideline, UConn has a chance to win it all. Classified as a Fringe AI Intellipick due to playing a slightly too slow pace for optimal models.",
       "strengths": "Dynastic pedigree and extreme roster depth.",
       "weaknesses": null,
       "upsetAlert": null,
@@ -422,18 +498,30 @@
       "conference": "Big 12",
       "kenpomRank": 2,
       "barttovikRank": 3,
-      "championshipOdds": "+390",
-      "championshipImpliedPct": 20.4,
+      "championshipOdds": "+400",
+      "championshipImpliedPct": 20.0,
       "offenseEfficiency": "Ranks in the top five nationally in adjusted offensive efficiency. Qualifies as a Top 40 Offense.",
       "defenseEfficiency": "Ranks in the top five nationally in adjusted defensive efficiency. Qualifies as a Top 25 Defense.",
-      "recentMomentum": "Won the Big 12 Tournament.",
+      "recentMomentum": "Won the Big 12 Tournament, defeating Houston 79-74 in the championship game (Zona Zealots).",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Motiejus Krivas", "stats": null, "note": "Massive 7-foot-2 interior presence." },
-        { "name": "Koa Peat", "stats": null, "note": "Freshman integrated into veteran starting lineup." },
-        { "name": "Brayden Burries", "stats": null, "note": "Freshman integrated into veteran starting lineup." }
+        {
+          "name": "Motiejus Krivas",
+          "stats": null,
+          "note": "Massive 7-foot-2 interior presence."
+        },
+        {
+          "name": "Koa Peat",
+          "stats": null,
+          "note": "Freshman integrated into veteran starting lineup."
+        },
+        {
+          "name": "Brayden Burries",
+          "stats": null,
+          "note": "Freshman integrated into veteran starting lineup."
+        }
       ],
-      "blurb": "Arizona enters as the overall No. 2 seed after winning both the Big 12 regular-season and tournament titles under Coach of the Year Tommy Lloyd. They opened the year with 23 straight wins. Firmly hits the optimal AI Intellipick profile combining elite pace with elite net efficiency.",
+      "blurb": "Arizona enters as the overall No. 2 seed after winning both the Big 12 regular-season and tournament titles under Coach of the Year Tommy Lloyd. They opened the year with 23 straight wins. The Wildcats are a popular national championship ticket at BetMGM (Fox Sports). Firmly hits the optimal AI Intellipick profile combining elite pace with elite net efficiency.",
       "strengths": "Elite balance; top five nationally in both adjusted offensive and defensive efficiency with physical interior dominance.",
       "weaknesses": null,
       "upsetAlert": null,
@@ -480,7 +568,11 @@
       "defenseEfficiency": null,
       "recentMomentum": null,
       "injuries": [
-        { "player": "Matt Hodge", "status": "OUT", "detail": "Rotation piece missing. (9 Pts/4 Reb/1 Ast)" }
+        {
+          "player": "Matt Hodge",
+          "status": "OUT",
+          "detail": "Rotation piece missing. (9 Pts/4 Reb/1 Ast)"
+        }
       ],
       "keyPlayers": [],
       "blurb": "Villanova enters as an 8-seed. Their offense is highly reliant on three-point variance, making them vulnerable.",
@@ -578,10 +670,18 @@
       "defenseEfficiency": null,
       "recentMomentum": "Won the SEC Tournament.",
       "injuries": [
-        { "player": "Karter Knox", "status": "QUESTIONABLE", "detail": "(8 Pts/5 Reb/1 Ast)" }
+        {
+          "player": "Karter Knox",
+          "status": "QUESTIONABLE",
+          "detail": "Torn meniscus surgery (NBC Sports). (8 Pts/5 Reb/1 Ast)"
+        }
       ],
       "keyPlayers": [
-        { "name": "Darius Acuff Jr.", "stats": null, "note": "Standout freshman scorer." }
+        {
+          "name": "Darius Acuff Jr.",
+          "stats": null,
+          "note": "Standout freshman scorer."
+        }
       ],
       "blurb": "Arkansas claimed the SEC Tournament title over Vanderbilt, securing a 4-seed in John Calipari's second season. They are led by freshman star Darius Acuff Jr.",
       "strengths": null,
@@ -630,10 +730,18 @@
       "defenseEfficiency": null,
       "recentMomentum": null,
       "injuries": [
-        { "player": "Richie Saunders", "status": "OUT", "detail": "Season-ending ACL injury (was averaging 18.0 PPG). (18 Pts/6 Reb/2 Ast)" }
+        {
+          "player": "Richie Saunders",
+          "status": "OUT",
+          "detail": "Season-ending ACL injury (was averaging 18.0 PPG). (18 Pts/6 Reb/2 Ast)"
+        }
       ],
       "keyPlayers": [
-        { "name": "AJ Dybantsa", "stats": "25.3 PPG", "note": "Nation's leading scorer." }
+        {
+          "name": "AJ Dybantsa",
+          "stats": "25.3 PPG",
+          "note": "Nation's leading scorer."
+        }
       ],
       "blurb": "BYU boasts the nation's leading scorer in freshman AJ Dybantsa, but they suffered a devastating blow with the season-ending ACL injury to Richie Saunders.",
       "strengths": null,
@@ -682,10 +790,14 @@
       "defenseEfficiency": "Qualifies as a Top 25 Defense.",
       "recentMomentum": null,
       "injuries": [
-        { "player": "Braden Huff", "status": "QUESTIONABLE", "detail": "(18 Pts/6 Reb/2 Ast)" }
+        {
+          "player": "Braden Huff",
+          "status": "QUESTIONABLE",
+          "detail": "Reported kneecap dislocation (NBC Sports). (18 Pts/6 Reb/2 Ast)"
+        }
       ],
       "keyPlayers": [],
-      "blurb": "Gonzaga secured a No. 3 seed. While perhaps lacking the overpowering dominance of vintage Zag squads, they remain highly dangerous. Matches the ideal AI Intellipick profile thanks to top-tier Offense and Defense metrics combined with appropriate pacing.",
+      "blurb": "Gonzaga secured a No. 3 seed. Fox Sports notes they are trying to restart a Sweet 16 streak after failing to advance past the first weekend last season. Matches the ideal AI Intellipick profile thanks to top-tier Offense and Defense metrics combined with appropriate pacing.",
       "strengths": null,
       "weaknesses": null,
       "upsetAlert": null,
@@ -778,10 +890,26 @@
       "championshipImpliedPct": 3.8,
       "offenseEfficiency": null,
       "defenseEfficiency": null,
-      "recentMomentum": "Won the Big Ten Tournament.",
+      "recentMomentum": "Won the Big Ten Tournament 80-72 over Michigan (Associated Press).",
       "injuries": [],
-      "keyPlayers": [],
-      "blurb": "Purdue enters at 27-8 after defeating top-seeded Michigan 80-72 to win the Big Ten Tournament, securing a No. 2 seed.",
+      "keyPlayers": [
+        {
+          "name": "Braden Smith",
+          "stats": "14 Pts, 11 Ast in Big Ten Final",
+          "note": "AP All-American and Cousy Award Finalist (Purdue Athletics)."
+        },
+        {
+          "name": "Oscar Cluff",
+          "stats": "21 Pts in Big Ten Final",
+          "note": "All-Tournament Team selection (Associated Press)."
+        },
+        {
+          "name": "Trey Kaufman-Renn",
+          "stats": "20 Pts in Big Ten Final",
+          "note": "Malone Award Finalist (Purdue Athletics)."
+        }
+      ],
+      "blurb": "Purdue enters at 27-8 after defeating top-seeded Michigan 80-72 to win the Big Ten Tournament, securing a No. 2 seed. They boast KenPom's No. 2 offense at 131 points per 100 possessions (Fox Sports).",
       "strengths": null,
       "weaknesses": null,
       "upsetAlert": null,
@@ -822,17 +950,34 @@
       "conference": "Big Ten",
       "kenpomRank": 3,
       "barttovikRank": 2,
-      "championshipOdds": "+360",
-      "championshipImpliedPct": 21.7,
+      "championshipOdds": "+350",
+      "championshipImpliedPct": 22.2,
       "offenseEfficiency": "Top-tier offensive efficiency metrics matching historical championship thresholds. Qualifies as a Top 40 Offense.",
       "defenseEfficiency": "Rank 1 overall in adjusted defensive efficiency; allowing only 68 points per game. Qualifies as a Top 25 Defense.",
-      "recentMomentum": "31-3 record entering the tournament.",
+      "recentMomentum": "31-3 record entering the tournament. Reached the Big Ten Tournament championship, losing 80-72 to Purdue (Associated Press).",
       "injuries": [
-        { "player": "L.J. Cason", "status": "OUT", "detail": "Torn ACL \u2014 backup point guard. (8 Pts/2 Reb/2 Ast)" }
+        {
+          "player": "L.J. Cason",
+          "status": "OUT",
+          "detail": "Torn ACL — backup point guard. (8 Pts/2 Reb/2 Ast)"
+        }
       ],
       "keyPlayers": [
-        { "name": "Elliot Cadeau", "stats": null, "note": "Dissects defenses with precision passing." },
-        { "name": "Yaxel Lendeborg", "stats": null, "note": "Controls the interior." }
+        {
+          "name": "Elliot Cadeau",
+          "stats": "10 Pts, 10 Ast in B1G Final",
+          "note": "Dissects defenses with precision passing."
+        },
+        {
+          "name": "Yaxel Lendeborg",
+          "stats": "20 Pts in B1G Final",
+          "note": "Controls the interior."
+        },
+        {
+          "name": "Aday Mara",
+          "stats": "17 Pts, 7 Reb, 2 Blk in B1G Final",
+          "note": "7-foot-3 interior presence (Associated Press)."
+        }
       ],
       "blurb": "Michigan secured a 1-seed in the Midwest with a 31-3 record. They rank first overall in adjusted defensive efficiency, allowing an average of only 68 points per game. Lands securely in the ideal AI Intellipick profile with an elite balance.",
       "strengths": "Defensively elite, allowing only 68 points per game, with surgical passing from the point guard position.",
@@ -929,7 +1074,11 @@
       "defenseEfficiency": "Highly vulnerable inside and missing rim protection.",
       "recentMomentum": "Blown out by Iowa State in the Big 12 Tournament.",
       "injuries": [
-        { "player": "JT Toppin", "status": "OUT", "detail": "Torn ACL — star forward, forces a predictable offense. (22 Pts/11 Reb/2 Ast)" }
+        {
+          "player": "JT Toppin",
+          "status": "OUT",
+          "detail": "Torn ACL — star forward, forces a predictable offense. (22 Pts/11 Reb/2 Ast)"
+        }
       ],
       "keyPlayers": [],
       "blurb": "Texas Tech is a 5-seed with a 22-10 record. They suffered a devastating blow with the loss of star forward JT Toppin to a torn ACL, leaving them highly vulnerable inside.",
@@ -956,8 +1105,16 @@
       "recentMomentum": "Won the MAC Tournament on a buzzer-beater 3-pointer by Shammah Scott.",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Tavari Johnson", "stats": "20.1 PPG, 5.0 APG", "note": "Lethal inside-out combination piece." },
-        { "name": "Amani Lyles", "stats": "14.6 PPG, 8.1 RPG", "note": "Physical interior presence." }
+        {
+          "name": "Tavari Johnson",
+          "stats": "20.1 PPG, 5.0 APG",
+          "note": "Lethal inside-out combination piece."
+        },
+        {
+          "name": "Amani Lyles",
+          "stats": "14.6 PPG, 8.1 RPG",
+          "note": "Physical interior presence."
+        }
       ],
       "blurb": "Akron earned their automatic bid in clutch fashion when Shammah Scott hit a step-back 3-pointer with six seconds left to win the MAC title.",
       "strengths": "Elite shooting efficiency (Top 15 nationally in 2PT and 3PT %).",
@@ -982,12 +1139,20 @@
       "defenseEfficiency": "Abysmal defensive rebounding (Rank 292 nationally) and highly suspect interior defense.",
       "recentMomentum": null,
       "injuries": [
-        { "player": "Aden Holloway", "status": "OUT", "detail": "Indefinite suspension — severely compromises perimeter spacing." }
+        {
+          "player": "Aden Holloway",
+          "status": "OUT",
+          "detail": "Indefinite suspension / Personal matter (Covers.com) — severely compromises perimeter spacing."
+        }
       ],
       "keyPlayers": [
-        { "name": "Labaron Philon", "stats": "21.7 PPG", "note": "Potential NBA lottery pick." }
+        {
+          "name": "Labaron Philon",
+          "stats": "21.7 PPG",
+          "note": "Potential NBA lottery pick."
+        }
       ],
-      "blurb": "Alabama continues Nate Oats' extreme analytics-driven style, leading the nation in three-point attempts, but their perimeter spacing is compromised. Characterized by the Fastest Pace metric.",
+      "blurb": "Alabama continues Nate Oats' extreme analytics-driven style. They lead the nation in 3-point attempts per game (35.3) while shooting 35.8% (Fox Sports), but their perimeter spacing is compromised. Characterized by the Fastest Pace metric.",
       "strengths": "Lead the nation in 3-point attempts per game (35.3), shooting 35.8%.",
       "weaknesses": "Abysmal defensive rebounding (292nd) and highly suspect interior defense.",
       "upsetAlert": "Hofstra",
@@ -1011,8 +1176,16 @@
       "recentMomentum": "Won 12 of their last 13 games, including a buzzer-beating bank shot to beat Towson in the CAA semis.",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Silas Sunday", "stats": null, "note": "Seven-foot center providing massive frontcourt length." },
-        { "name": "Cruz Davis", "stats": null, "note": "CAA Player of the Year." }
+        {
+          "name": "Silas Sunday",
+          "stats": null,
+          "note": "Seven-foot center providing massive frontcourt length."
+        },
+        {
+          "name": "Cruz Davis",
+          "stats": null,
+          "note": "CAA Player of the Year."
+        }
       ],
       "blurb": "Hofstra enters incredibly hot, winning 12 of 13. They intentionally slow games to a glacial pace to dictate terms.",
       "strengths": "Massive frontcourt length, elite tempo control, and ranks third nationally in two-point percentage defense.",
@@ -1133,8 +1306,16 @@
       "defenseEfficiency": null,
       "recentMomentum": null,
       "injuries": [
-        { "player": "Jaland Lowe", "status": "OUT", "detail": "Shoulder injury — primary point guard." },
-        { "player": "Jayden Quaintance", "status": "QUESTIONABLE", "detail": "(5 Pts/5 Reb/1 Ast)" }
+        {
+          "player": "Jaland Lowe",
+          "status": "OUT",
+          "detail": "Shoulder injury — primary point guard."
+        },
+        {
+          "player": "Jayden Quaintance",
+          "status": "QUESTIONABLE",
+          "detail": "(5 Pts/5 Reb/1 Ast)"
+        }
       ],
       "keyPlayers": [],
       "blurb": "Kentucky enters the tournament struggling to score in half-court sets. These issues are heavily exacerbated by the loss of point guard Jaland Lowe to a shoulder injury. Listed as a Top 40 Offense & Fringe Top 25 Defense.",
@@ -1178,14 +1359,30 @@
       "conference": "Big 12",
       "kenpomRank": 6,
       "barttovikRank": null,
-      "championshipOdds": "+1500",
-      "championshipImpliedPct": 6.3,
+      "championshipOdds": "+2200",
+      "championshipImpliedPct": 4.3,
       "offenseEfficiency": "Qualifies as a Top 40 Offense.",
       "defenseEfficiency": "Elite defensive unit (3rd in turnover rate). Qualifies as a Top 25 Defense.",
-      "recentMomentum": "Blew out Texas Tech in the Big 12 Tournament.",
+      "recentMomentum": "Lost to Arizona 82-80 in the Big 12 Tournament semifinals (Heartland College Sports).",
       "injuries": [],
-      "keyPlayers": [],
-      "blurb": "Iowa State is an elite defensive unit (3rd in turnover rate) and enters following a blowout win in their conference tournament. Matches perfectly with the AI Intellipick criteria for ideal pace combined with Top Offense & Defense metrics.",
+      "keyPlayers": [
+        {
+          "name": "Tamin Lipsey",
+          "stats": null,
+          "note": "All-Defensive and Second Team All-Big 12 (Cyclones.com)."
+        },
+        {
+          "name": "Joshua Jefferson",
+          "stats": null,
+          "note": "All-Big 12 First Team (Cyclones.com)."
+        },
+        {
+          "name": "Milan Momcilovic",
+          "stats": null,
+          "note": "All-Big 12 Second Team (Cyclones.com)."
+        }
+      ],
+      "blurb": "Iowa State is an elite defensive unit (3rd in turnover rate). Coach T.J. Otzelberger has led the Cyclones to five straight NCAA Tournaments (Cyclones.com). Matches perfectly with the AI Intellipick criteria for ideal pace combined with Top Offense & Defense metrics.",
       "strengths": null,
       "weaknesses": null,
       "upsetAlert": null,
@@ -1226,15 +1423,21 @@
       "conference": "SEC",
       "kenpomRank": 4,
       "barttovikRank": null,
-      "championshipOdds": "+750",
-      "championshipImpliedPct": 11.8,
+      "championshipOdds": "+700",
+      "championshipImpliedPct": 12.5,
       "offenseEfficiency": "Qualifies as a Top 40 Offense.",
       "defenseEfficiency": "Qualifies as a Top 25 Defense.",
-      "recentMomentum": "Won the SEC regular season title.",
+      "recentMomentum": "Won the SEC regular season title. Attempting to win back-to-back National Championships (Fox Sports).",
       "injuries": [],
-      "keyPlayers": [],
+      "keyPlayers": [
+        {
+          "name": "Thomas Haugh",
+          "stats": "17.1 PPG, 6.2 RPG",
+          "note": "The engine that makes this Florida team go (Fox Sports)."
+        }
+      ],
       "blurb": "Florida is the defending national champion and secured a 1-seed for the second straight year after winning the SEC regular-season title. Viewed as a Fringe AI Intellipick because advanced models indicate they play a bit too fast.",
-      "strengths": null,
+      "strengths": "Elite offensive rebounding, grabbing 43.2% of their missed field-goal attempts (Fox Sports).",
       "weaknesses": null,
       "upsetAlert": null,
       "deepRunWatch": false,
@@ -1280,7 +1483,11 @@
       "defenseEfficiency": null,
       "recentMomentum": null,
       "injuries": [
-        { "player": "Carter Welling", "status": "OUT", "detail": "Season-ending ACL injury (second-leading scorer). (10 Pts/5 Reb/1 Ast)" }
+        {
+          "player": "Carter Welling",
+          "status": "OUT",
+          "detail": "Season-ending ACL injury (second-leading scorer). (10 Pts/5 Reb/1 Ast)"
+        }
       ],
       "keyPlayers": [],
       "blurb": "Clemson is an 8-seed but suffered a brutal blow when second-leading scorer Carter Welling was lost to a season-ending ACL injury.",
@@ -1331,8 +1538,16 @@
       "recentMomentum": "Reached the SEC Tournament title game before falling to Arkansas.",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Duke Miles", "stats": null, "note": "Elite veteran backcourt." },
-        { "name": "Tyler Tanner", "stats": null, "note": "Elite veteran backcourt." }
+        {
+          "name": "Duke Miles",
+          "stats": null,
+          "note": "Elite veteran backcourt."
+        },
+        {
+          "name": "Tyler Tanner",
+          "stats": null,
+          "note": "Elite veteran backcourt."
+        }
       ],
       "blurb": "Vanderbilt is severely underseeded at a 5-seed, arriving with momentum after a run to the SEC title game. Classified as a Fringe AI Intellipick based on Net Rating.",
       "strengths": "Elite free-throw shooting (79%), imposing physical forwards, and top-fifteen adjusted efficiency offense.",
@@ -1379,7 +1594,7 @@
       "championshipImpliedPct": 1.0,
       "offenseEfficiency": null,
       "defenseEfficiency": null,
-      "recentMomentum": "Lost by 16 to Purdue.",
+      "recentMomentum": "Lost by 16 to Purdue in the Big Ten Tournament semifinals (Purdue Athletics).",
       "injuries": [],
       "keyPlayers": [],
       "blurb": "Nebraska is searching for the first NCAA Tournament victory in program history but enters reeling after a 16-point loss to Purdue.",
@@ -1429,10 +1644,18 @@
       "defenseEfficiency": "Compromised interior defense and traditional rebounding dominance is shifted.",
       "recentMomentum": null,
       "injuries": [
-        { "player": "Caleb Wilson", "status": "OUT", "detail": "Season-ending hand fracture — interior enforcer. (9 Pts/5 Reb/2 Ast)" }
+        {
+          "player": "Caleb Wilson",
+          "status": "OUT",
+          "detail": "Season-ending hand fracture — interior enforcer. (9 Pts/5 Reb/2 Ast)"
+        }
       ],
       "keyPlayers": [
-        { "name": "Henri Veesaar", "stats": null, "note": "Forced to shoulder an unsustainable rebounding burden." }
+        {
+          "name": "Henri Veesaar",
+          "stats": null,
+          "note": "Forced to shoulder an unsustainable rebounding burden."
+        }
       ],
       "blurb": "North Carolina has one of the best wins of any team, handing Duke one of its two losses, but the loss of Caleb Wilson severely limits their ceiling.",
       "strengths": "Traditional blue-blood pedigree.",
@@ -1479,7 +1702,7 @@
       "championshipImpliedPct": 5.0,
       "offenseEfficiency": "Qualifies as a Top 40 Offense.",
       "defenseEfficiency": null,
-      "recentMomentum": "Blew a 15-point lead and lost in overtime to Wisconsin in the Big Ten Tournament.",
+      "recentMomentum": "Blew a 15-point lead and lost in overtime to Wisconsin in the Big Ten Tournament. Illinois is 0-4 in overtime games this season (Fox Sports).",
       "injuries": [],
       "keyPlayers": [],
       "blurb": "Illinois possesses a highly productive attack but enters the tournament stinging from a blown 15-point lead in an overtime loss to Wisconsin. Viewed as a Fringe AI Intellipick with a slightly too slow pace.",
@@ -1575,12 +1798,16 @@
       "championshipImpliedPct": 9.1,
       "offenseEfficiency": "Qualifies as a Top 40 Offense.",
       "defenseEfficiency": "Qualifies as a Top 25 Defense.",
-      "recentMomentum": null,
+      "recentMomentum": "Reached the Big 12 Championship game, falling to Arizona 79-74 (Houston Athletics).",
       "injuries": [],
       "keyPlayers": [
-        { "name": "Kingston Flemings", "stats": null, "note": "Freshman leading scorer." }
+        {
+          "name": "Kingston Flemings",
+          "stats": null,
+          "note": "Freshman leading scorer."
+        }
       ],
-      "blurb": "This is the first time Houston hasn't earned a 1-seed since 2022. They are led by freshman Kingston Flemings and placed in the South region. Characterized by the Slowest Pace metric.",
+      "blurb": "This is the first time Houston hasn't earned a 1-seed since 2022. They are led by freshman Kingston Flemings and placed in the South region. An AI tool developed by a Bryant University alum predicted Houston to win the 2026 National Championship (Bryant News). Characterized by the Slowest Pace metric.",
       "strengths": null,
       "weaknesses": null,
       "upsetAlert": null,
