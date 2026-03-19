@@ -60,6 +60,11 @@
   margin-bottom: 4px;
 }
 
+.bracket__region--west .region__header,
+.bracket__region--midwest .region__header {
+  text-align: right;
+}
+
 .region__rounds {
   display: flex;
   gap: 0;
