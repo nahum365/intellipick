@@ -1,13 +1,27 @@
 import { getAllPicks } from '../engine/picks.js';
 import { computeScore, computeChalkScore, computeRecommendedScore, getUpsetAlerts } from '../engine/scoring.js';
-import { cascadePick } from '../engine/propagation.js';
-import { getR64Matchup } from '../engine/propagation.js';
+import { cascadePick, getR64Matchup, getRegionR64Matchups } from '../engine/propagation.js';
 import { openModal } from './modal.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
 import teamsData from '../data/teams.json';
 
 function getTeamProfile(teamId) {
   return teamsData.teams.find(t => t.id === teamId) || null;
+}
+
+// Resolve a canonical R32 ID (e.g., east-1-9) to its generated matchup ID (east-r2-0)
+function resolveR32GeneratedId(canonicalId, region) {
+  const r64s = getRegionR64Matchups(region);
+  const entry = getR64Matchup(canonicalId);
+  if (!entry) return null;
+  const seed1 = entry.team1.seed;
+  for (let i = 0; i < r64s.length; i++) {
+    const r64 = getR64Matchup(r64s[i]);
+    if (r64 && (r64.team1.seed === seed1 || r64.team2.seed === seed1)) {
+      return `${region.toLowerCase()}-r2-${Math.floor(i / 2)}`;
+    }
+  }
+  return null;
 }
 
 // Track collapsed state across re-renders
@@ -159,16 +173,12 @@ export function updateScorePanel(panel, onPickChange) {
   `;
   body.appendChild(content);
 
-  // Build recommended upsets list with interactive elements
-  const upsetsSection = document.createElement('div');
-  const upsetsTitle = document.createElement('div');
-  upsetsTitle.style.cssText = 'font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px';
-  upsetsTitle.textContent = 'Recommended Upsets';
-  upsetsSection.appendChild(upsetsTitle);
+  // Build recommended upsets list, grouped by round
+  const r64Upsets = upsets.filter(u => u.round === 'First Round');
+  const r32Upsets = upsets.filter(u => u.round === 'Second Round');
 
-  for (const u of upsets) {
-    const isSelected = picks[u.matchupId] && picks[u.matchupId].id === u.team.id;
-    const matchup = getR64Matchup(u.matchupId);
+  function buildUpsetRow(u, pickId, matchup) {
+    const isSelected = picks[pickId] && picks[pickId].id === u.team.id;
 
     const row = document.createElement('div');
     row.className = 'upset-row';
@@ -182,9 +192,9 @@ export function updateScorePanel(panel, onPickChange) {
     checkbox.style.cssText = 'cursor:pointer;accent-color:var(--upset);flex-shrink:0';
     checkbox.addEventListener('change', () => {
       if (checkbox.checked) {
-        cascadePick(u.matchupId, u.team);
+        cascadePick(pickId, u.team);
       } else {
-        cascadePick(u.matchupId, u.opponent);
+        cascadePick(pickId, u.opponent);
       }
       if (onPickChange) onPickChange();
     });
@@ -264,10 +274,39 @@ export function updateScorePanel(panel, onPickChange) {
       row.appendChild(infoBtn);
     }
 
-    upsetsSection.appendChild(row);
+    return row;
   }
 
-  body.appendChild(upsetsSection);
+  // Round of 64 upsets
+  if (r64Upsets.length > 0) {
+    const r64Section = document.createElement('div');
+    r64Section.style.cssText = 'margin-bottom:16px';
+    const r64Title = document.createElement('div');
+    r64Title.style.cssText = 'font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px';
+    r64Title.textContent = 'Round of 64 Upsets';
+    r64Section.appendChild(r64Title);
+    for (const u of r64Upsets) {
+      const matchup = getR64Matchup(u.matchupId);
+      r64Section.appendChild(buildUpsetRow(u, u.matchupId, matchup));
+    }
+    body.appendChild(r64Section);
+  }
+
+  // Round of 32 upsets
+  if (r32Upsets.length > 0) {
+    const r32Section = document.createElement('div');
+    r32Section.style.cssText = 'margin-bottom:16px';
+    const r32Title = document.createElement('div');
+    r32Title.style.cssText = 'font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px';
+    r32Title.textContent = 'Round of 32 Upsets';
+    r32Section.appendChild(r32Title);
+    for (const u of r32Upsets) {
+      const matchup = getR64Matchup(u.matchupId);
+      const pickId = resolveR32GeneratedId(u.matchupId, u.region) || u.matchupId;
+      r32Section.appendChild(buildUpsetRow(u, pickId, matchup));
+    }
+    body.appendChild(r32Section);
+  }
   panel.appendChild(body);
   panel.appendChild(grabber);
 }

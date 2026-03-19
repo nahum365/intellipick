@@ -125,6 +125,7 @@ export function getUpsetAlerts() {
     .map(m => ({
       matchupId: m.id,
       region: m.region,
+      round: m.round,
       team: m.recommendedPick === m.team1.id ? m.team1 : m.team2,
       opponent: m.recommendedPick === m.team1.id ? m.team2 : m.team1,
       confidence: m.confidence,
