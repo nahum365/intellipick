@@ -231,6 +231,18 @@ export function createMatchupCard(matchup, onPickMade) {
     card.appendChild(statusEl);
   }
 
+  // Polymarket odds bar (for scheduled games with odds)
+  if (liveScore && liveScore.odds && (!hasScore || liveScore.status === 'scheduled')) {
+    const oddsBar = document.createElement('div');
+    oddsBar.className = 'matchup-card__odds-bar';
+    const o = liveScore.odds;
+    oddsBar.innerHTML = `<span class="matchup-card__odds-source">${o.source || 'Market'}</span>`
+      + `<span class="matchup-card__odds-team">${o.team1Prob}%</span>`
+      + `<span class="matchup-card__odds-sep">\u2013</span>`
+      + `<span class="matchup-card__odds-team">${o.team2Prob}%</span>`;
+    card.appendChild(oddsBar);
+  }
+
   // Footer with probability bar and info button (any round with prediction data)
   if (hasPrediction) {
     const footer = document.createElement('div');
