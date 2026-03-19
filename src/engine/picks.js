@@ -3,11 +3,23 @@ const STORAGE_KEY = 'intellipick-picks';
 let picks = {};
 let listeners = [];
 
-export function loadPicks() {
+export function loadPicks(validIds) {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) picks = JSON.parse(saved);
   } catch { /* ignore */ }
+  // Clean up stale keys (e.g., canonical R32 IDs) if validIds provided
+  if (validIds) {
+    const validSet = new Set(validIds);
+    let cleaned = false;
+    for (const key of Object.keys(picks)) {
+      if (!validSet.has(key)) {
+        delete picks[key];
+        cleaned = true;
+      }
+    }
+    if (cleaned) savePicks();
+  }
   return picks;
 }
 

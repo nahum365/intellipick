@@ -187,7 +187,7 @@ export function getGeneratedMatchup(matchupId) {
 
 // Get all matchups for the entire bracket
 export function getAllMatchups() {
-  const r64 = matchupsData.matchups;
+  const r64 = matchupsData.matchups.filter(m => m.round === 'First Round');
   const all = [...r64];
 
   // Generate later round matchups
@@ -212,6 +212,18 @@ export function getAllMatchups() {
 // Get R64 matchup data by ID
 export function getR64Matchup(id) {
   return matchupsData.matchups.find(m => m.id === id) || null;
+}
+
+// Get all valid bracket slot IDs (63 total)
+export function getValidBracketIds() {
+  const ids = [...REGION_MATCHUP_ORDER]; // 32 R64
+  for (const region of REGIONS) {
+    for (let i = 0; i < 4; i++) ids.push(laterRoundId(region, 2, i));  // 16 R32
+    for (let i = 0; i < 2; i++) ids.push(laterRoundId(region, 3, i));  // 8 S16
+    ids.push(laterRoundId(region, 4, 0));                               // 4 E8
+  }
+  ids.push('ff-0', 'ff-1', 'championship');                             // 3 FF+Champ
+  return ids;
 }
 
 export { ROUNDS, REGIONS };
