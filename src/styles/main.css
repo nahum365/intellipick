@@ -275,17 +275,17 @@ body {
     padding: 0 16px;
     overflow: hidden;
     position: fixed;
-    top: 49px;
+    top: 57px;
     left: 0;
     right: 0;
     z-index: 99;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    max-height: calc(100vh - 49px);
+    max-height: calc(100vh - 57px);
   }
 
   /* Spacer to push content below the fixed sidebar anchor */
   .main-content {
-    margin-top: 52px;
+    margin-top: 60px;
   }
 
   /* Anchor stats strip */
