@@ -258,7 +258,8 @@ function matchPolymarketEvent(eventTitle) {
 async function fetchPolymarketOdds() {
   try {
     // Fetch active CBB events from Polymarket Gamma API
-    const url = 'https://gamma-api.polymarket.com/events?active=true&closed=false&tag=cbb&limit=100';
+    const targetUrl = 'https://gamma-api.polymarket.com/events?active=true&closed=false&tag=cbb&limit=100';
+    const url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl);
     const res = await fetch(url);
     if (!res.ok) return;
     const events = await res.json();
