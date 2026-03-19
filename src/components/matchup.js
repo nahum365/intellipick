@@ -126,13 +126,27 @@ export function createMatchupCard(matchup, onPickMade) {
       row.appendChild(pct);
     }
 
-    // Check mark if picked
+    // Check mark if picked (desktop only, hidden on mobile via CSS)
     if (isPicked) {
       const check = document.createElement('span');
       check.className = 'team-row__check';
       check.textContent = '\u2713';
       row.appendChild(check);
     }
+
+    // Pick checkbox (mobile only, hidden on desktop via CSS)
+    const mobileCheckbox = document.createElement('input');
+    mobileCheckbox.type = 'checkbox';
+    mobileCheckbox.checked = isPicked;
+    mobileCheckbox.className = 'team-row__mobile-checkbox';
+    mobileCheckbox.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+    mobileCheckbox.addEventListener('change', () => {
+      cascadePick(matchup.id, team);
+      if (onPickMade) onPickMade();
+    });
+    row.appendChild(mobileCheckbox);
 
     // Click behavior: on mobile open modal, on desktop pick
     const isMobile = () => window.innerWidth <= 768;

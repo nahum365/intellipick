@@ -176,11 +176,16 @@
   background: var(--injury-doubtful);
 }
 
-/* Pick check indicator */
+/* Pick check indicator (desktop) */
 .team-row__check {
   font-size: 11px;
   color: var(--confidence-very-high);
   flex-shrink: 0;
+}
+
+/* Mobile pick checkbox (hidden on desktop) */
+.team-row__mobile-checkbox {
+  display: none;
 }
 
 /* Footer */
@@ -273,6 +278,19 @@
   .team-row__seed {
     font-size: 11px;
     width: 20px;
+  }
+
+  .team-row__check {
+    display: none;
+  }
+
+  .team-row__mobile-checkbox {
+    display: block;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: var(--primary);
   }
 
   .matchup-card__info-btn {

@@ -98,5 +98,6 @@ export function getUpsetAlerts() {
       confidence: m.confidence,
       confidencePercentage: m.confidencePercentage,
       category: m.category,
-    }));
+    }))
+    .sort((a, b) => b.confidencePercentage - a.confidencePercentage);
 }

@@ -10,8 +10,6 @@ import { cascadePick } from './engine/propagation.js';
 import { createBracket } from './components/bracket.js';
 import { createScorePanel, updateScorePanel } from './components/scorePanel.js';
 import { createInsightsBar, updateInsightsBar } from './components/insightsBar.js';
-import { createFilters } from './components/filters.js';
-
 const app = document.getElementById('app');
 
 // Load saved picks
@@ -62,25 +60,6 @@ function renderApp() {
   header.appendChild(controls);
   app.appendChild(header);
 
-  // Filters
-  const filters = createFilters((region) => {
-    const regions = bracketContainerEl.querySelectorAll('.bracket__region');
-    const center = bracketContainerEl.querySelector('.bracket__center');
-    regions.forEach(r => {
-      if (!region) {
-        r.style.display = '';
-      } else {
-        const isMatch = r.classList.contains('bracket__region--' + region.toLowerCase());
-        r.style.display = isMatch ? '' : 'none';
-      }
-    });
-    if (center) center.style.display = region ? 'none' : '';
-    // Also handle the spacer
-    const spacer = bracketContainerEl.querySelector('[style*="grid-column: 2"]');
-    if (spacer) spacer.style.display = region ? 'none' : '';
-  });
-  app.appendChild(filters);
-
   // Main content
   const main = document.createElement('div');
   main.className = 'main-content';
@@ -104,7 +83,28 @@ function renderApp() {
 }
 
 function rerender() {
+  // Save scroll positions before re-render
+  const savedScrolls = {};
+  if (bracketContainerEl) {
+    savedScrolls.bracketX = bracketContainerEl.scrollLeft;
+    savedScrolls.bracketY = bracketContainerEl.scrollTop;
+  }
+  const sidebar = document.querySelector('.score-sidebar');
+  if (sidebar) {
+    savedScrolls.sidebarY = sidebar.scrollTop;
+  }
+
   renderApp();
+
+  // Restore scroll positions after re-render
+  if (bracketContainerEl) {
+    bracketContainerEl.scrollLeft = savedScrolls.bracketX || 0;
+    bracketContainerEl.scrollTop = savedScrolls.bracketY || 0;
+  }
+  const newSidebar = document.querySelector('.score-sidebar');
+  if (newSidebar) {
+    newSidebar.scrollTop = savedScrolls.sidebarY || 0;
+  }
 }
 
 // Initial render
