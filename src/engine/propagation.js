@@ -119,6 +119,16 @@ export function cascadePick(matchupId, pickedTeam) {
   }
 }
 
+// Look up a later-round matchup in the JSON data by canonical seed ID
+// e.g., region "South", seeds 3 and 11 -> looks for "south-3-11"
+function findMatchupData(region, team1, team2) {
+  if (!team1 || !team2) return null;
+  const lo = Math.min(team1.seed, team2.seed);
+  const hi = Math.max(team1.seed, team2.seed);
+  const canonicalId = `${region.toLowerCase()}-${lo}-${hi}`;
+  return matchupsData.matchups.find(m => m.id === canonicalId) || null;
+}
+
 // Build a generated matchup for later rounds based on current picks
 export function getGeneratedMatchup(matchupId) {
   const roundIdx = getRoundIndex(matchupId);
@@ -158,16 +168,20 @@ export function getGeneratedMatchup(matchupId) {
     }
   }
 
+  // Check if there's prediction data for this specific matchup in the JSON
+  const region = getMatchupRegion(matchupId);
+  const data = region ? findMatchupData(region, team1, team2) : null;
+
   return {
     id: matchupId,
     round: ROUNDS[roundIdx],
     team1: team1 ? { id: team1.id, name: team1.name, seed: team1.seed } : null,
     team2: team2 ? { id: team2.id, name: team2.name, seed: team2.seed } : null,
-    recommendedPick: null,
-    category: null,
-    confidence: null,
-    confidencePercentage: null,
-    tacticalAdvantage: null,
+    recommendedPick: data ? data.recommendedPick : null,
+    category: data ? data.category : null,
+    confidence: data ? data.confidence : null,
+    confidencePercentage: data ? data.confidencePercentage : null,
+    tacticalAdvantage: data ? data.tacticalAdvantage : null,
   };
 }
 

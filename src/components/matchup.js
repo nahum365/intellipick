@@ -25,6 +25,7 @@ export function createMatchupCard(matchup, onPickMade) {
   const card = document.createElement('div');
   const isR64 = getRoundIndex(matchup.id) === 0;
   const isLaterRound = !isR64;
+  const hasPrediction = !!matchup.confidencePercentage;
   const hasTeams = matchup.team1 && matchup.team2;
   const hasAnyTeam = matchup.team1 || matchup.team2;
   const confClass = confidenceClass(matchup.confidence);
@@ -37,8 +38,8 @@ export function createMatchupCard(matchup, onPickMade) {
   else if (confClass) classes += ` matchup-card--${confClass}`;
   card.className = classes;
 
-  // Header (R64 only)
-  if (isR64 && matchup.category) {
+  // Header (any round with prediction data)
+  if (hasPrediction && matchup.category) {
     const header = document.createElement('div');
     header.className = 'matchup-card__header';
 
@@ -118,7 +119,7 @@ export function createMatchupCard(matchup, onPickMade) {
     }
 
     // Confidence percentage
-    if (isR64 && matchup.confidencePercentage) {
+    if (hasPrediction) {
       const pct = document.createElement('span');
       pct.className = 'team-row__pct';
       const teamPct = isRecommended ? matchup.confidencePercentage : (100 - matchup.confidencePercentage);
@@ -177,8 +178,8 @@ export function createMatchupCard(matchup, onPickMade) {
   card.appendChild(renderTeamRow(matchup.team1, true));
   card.appendChild(renderTeamRow(matchup.team2, false));
 
-  // Footer with probability bar and info button (R64 only)
-  if (isR64 && matchup.confidencePercentage) {
+  // Footer with probability bar and info button (any round with prediction data)
+  if (hasPrediction) {
     const footer = document.createElement('div');
     footer.className = 'matchup-card__footer';
 

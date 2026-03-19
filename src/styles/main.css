@@ -291,10 +291,10 @@ body {
   /* Anchor stats strip */
   .score-sidebar__anchor-stats {
     display: flex;
-    gap: 16px;
+    gap: 18px;
     align-items: baseline;
     justify-content: center;
-    padding: 10px 0 4px;
+    padding: 12px 0 6px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
@@ -302,18 +302,23 @@ body {
   .score-sidebar__anchor-stat {
     display: flex;
     align-items: baseline;
-    gap: 3px;
+    gap: 4px;
   }
 
   .score-sidebar__anchor-stat-value {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 800;
   }
 
   .score-sidebar__anchor-stat-label {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-muted);
     font-weight: 600;
+  }
+
+  /* Add top padding to expanded body so "Bracket Score" isn't clipped */
+  .score-sidebar__body {
+    padding-top: 8px;
   }
 
   /* Grabber — always visible, sits below body */
