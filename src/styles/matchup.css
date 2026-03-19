@@ -183,8 +183,8 @@
   flex-shrink: 0;
 }
 
-/* Mobile pick checkbox (hidden on desktop) */
-.team-row__mobile-checkbox {
+/* Mobile pick toggle button (hidden on desktop) */
+.team-row__pick-btn {
   display: none;
 }
 
@@ -284,13 +284,28 @@
     display: none;
   }
 
-  .team-row__mobile-checkbox {
-    display: block;
-    width: 22px;
-    height: 22px;
+  .team-row__pick-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: transparent;
+    font-size: 14px;
     cursor: pointer;
-    accent-color: var(--primary);
+    transition: all 0.15s;
+    padding: 0;
+    font-family: var(--font);
+  }
+
+  .team-row__pick-btn--active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
   }
 
   .matchup-card__info-btn {
