@@ -10,7 +10,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 99,
-      "tacticalAdvantage": "Duke enters as the overall No. 1 seed after a 32-2 season. Despite late-season injuries to Caleb Foster, the talent gap anchored by Cameron Boozer is too wide for Siena to overcome. This aligns with historical data, where 1-seeds win 99.3% of the time, easily supporting Duke's -27.5 point betting spread."
+      "tacticalAdvantage": "Historically, 1-seeds win 99.3% of First Round matchups. Duke ranks No. 1 in KenPom adjusted efficiency and is a -27.5 point favorite."
     },
     {
       "id": "east-8-9",
@@ -18,11 +18,11 @@
       "round": "First Round",
       "team1": { "id": "ohio-state", "name": "Ohio State", "seed": 8 },
       "team2": { "id": "tcu", "name": "TCU", "seed": 9 },
-      "recommendedPick": "tcu",
-      "category": "Standard Matchup",
+      "recommendedPick": "ohio-state",
+      "category": "Toss-Up",
       "confidence": "Medium",
-      "confidencePercentage": 52,
-      "tacticalAdvantage": "Historically, 8-vs-9 matchups are a near coin flip (9-seeds win 48.7%). Ohio State relies heavily on senior guard Bruce Thornton (124.3 AdjO), but TCU brings an elite defense (97.8 AdjD) and a 75% cover rate as an underdog. The tight -2.5 spread in Ohio State's favor makes TCU an appealing, albeit coin-flip, upset pick."
+      "confidencePercentage": 51,
+      "tacticalAdvantage": "Historically, 8-seeds hold a slight 51.3% edge over 9-seeds in First Round matchups. Ohio State's No. 26 KenPom ranking narrowly edges out TCU."
     },
     {
       "id": "east-5-12",
@@ -31,10 +31,10 @@
       "team1": { "id": "st-johns", "name": "St. John's", "seed": 5 },
       "team2": { "id": "northern-iowa", "name": "Northern Iowa", "seed": 12 },
       "recommendedPick": "st-johns",
-      "category": "Poisoned Value Trap (Avoid Upset)",
-      "confidence": "High",
-      "confidencePercentage": 82,
-      "tacticalAdvantage": "While 12-seeds historically upset 5-seeds 35.3% of the time, this specific matchup is a trap. Northern Iowa is utterly atrocious on the offensive glass (356th nationally). St. John's ranks 28th nationally in offensive rebounds and will overpower them, validating their -10.5 point spread."
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 65,
+      "tacticalAdvantage": "Historically, 5-seeds win 64.7% of First Round matchups. St. John's is a -10.5 point favorite against a Northern Iowa team ranking 356th in offensive rebounding."
     },
     {
       "id": "east-4-13",
@@ -45,8 +45,8 @@
       "recommendedPick": "kansas",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 85,
-      "tacticalAdvantage": "Kansas features potential top NBA pick Darryn Peterson. CBU relies on Dominique Daniels but is making its first NCAA tournament appearance. Historically, 4-seeds win 79.5% of these matchups, and Kansas fits the mold as a comfortable -14.5 point favorite."
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Historically, 4-seeds win 79.5% of First Round matchups. Kansas is a -14.5 point betting favorite."
     },
     {
       "id": "east-6-11",
@@ -54,11 +54,11 @@
       "round": "First Round",
       "team1": { "id": "louisville", "name": "Louisville", "seed": 6 },
       "team2": { "id": "south-florida", "name": "South Florida", "seed": 11 },
-      "recommendedPick": "south-florida",
-      "category": "High-Conviction Upset",
-      "confidence": "High",
-      "confidencePercentage": 75,
-      "tacticalAdvantage": "Louisville is missing primary playmaker Mikel Brown Jr. South Florida plays at a blistering pace and ranks second nationally in rebounds (43 per game). Historically, 11-seeds only win 37.8% of the time, which tempers absolute certainty, but the stylistic matchup and tight -6.5 spread makes USF highly live."
+      "recommendedPick": "louisville",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 62,
+      "tacticalAdvantage": "Historically, 6-seeds win 62.2% of First Round matchups. While South Florida is a strong rebounding team, Louisville's high-major talent provides a solid statistical edge."
     },
     {
       "id": "east-3-14",
@@ -69,8 +69,8 @@
       "recommendedPick": "michigan-state",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 88,
-      "tacticalAdvantage": "Michigan State extended its Big Ten record to 28 consecutive NCAA Tournament appearances. They share the ball exceptionally well and face a Summit League champion in NDSU. 3-seeds historically win 85.3% of the time, and the Spartans' -16.5 spread reflects that dominance."
+      "confidencePercentage": 85,
+      "tacticalAdvantage": "Historically, 3-seeds win 85.3% of First Round matchups. Michigan State is a -16.5 point favorite."
     },
     {
       "id": "east-7-10",
@@ -78,11 +78,11 @@
       "round": "First Round",
       "team1": { "id": "ucla", "name": "UCLA", "seed": 7 },
       "team2": { "id": "ucf", "name": "UCF", "seed": 10 },
-      "recommendedPick": "ucf",
+      "recommendedPick": "ucla",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 52,
-      "tacticalAdvantage": "UCF features an explosive offense averaging 81 points per game and plays a tough style. UCLA relies heavily on Tyler Bilodeau but has battled uneven performances. 10-seeds historically win about 40% of the time, making this a risky upset, but UCF's relentless pace makes them an intriguing value play against a -5.5 spread."
+      "confidencePercentage": 60,
+      "tacticalAdvantage": "Historically, 7-seeds win 60.3% of First Round matchups. UCLA's Tyler Bilodeau provides enough firepower to edge out UCF's offense."
     },
     {
       "id": "east-2-15",
@@ -93,8 +93,8 @@
       "recommendedPick": "uconn",
       "category": "Standard Matchup",
       "confidence": "Very High",
-      "confidencePercentage": 96,
-      "tacticalAdvantage": "Furman is a dangerous mid-major, but UConn under Dan Hurley is a dynastic mastermind with too much depth. 2-seeds boast a 93.6% historical win rate, and the Huskies command a massive -19.5 point spread."
+      "confidencePercentage": 94,
+      "tacticalAdvantage": "Historically, 2-seeds win 93.6% of First Round matchups. UConn is a -19.5 point favorite."
     },
     {
       "id": "west-1-16",
@@ -106,7 +106,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 99,
-      "tacticalAdvantage": "Arizona opened the season with 23 straight wins and is the model's projected national champion, featuring top-five ranks in both offensive and defensive efficiency. Historical 1-seed dominance (99.3%) secures this -29.5 spread."
+      "tacticalAdvantage": "Historically, 1-seeds win 99.3% of First Round matchups. Arizona ranks in the top five nationally in both adjusted offensive and defensive efficiency."
     },
     {
       "id": "west-8-9",
@@ -114,11 +114,11 @@
       "round": "First Round",
       "team1": { "id": "villanova", "name": "Villanova", "seed": 8 },
       "team2": { "id": "utah-state", "name": "Utah State", "seed": 9 },
-      "recommendedPick": "utah-state",
-      "category": "Statistical Favorite",
+      "recommendedPick": "villanova",
+      "category": "Toss-Up",
       "confidence": "Medium",
-      "confidencePercentage": 60,
-      "tacticalAdvantage": "Historical 8-vs-9 matchups are a toss-up, but Utah State possesses a highly balanced offensive attack against a Villanova squad overly reliant on three-point variance and missing Matt Hodge. Oddsmakers agree, installing the 9-seed Aggies as -1.5 point favorites."
+      "confidencePercentage": 51,
+      "tacticalAdvantage": "Historically, 8-seeds hold a slight 51.3% edge. Villanova's Big East strength of schedule gives them the slimmest of margins over Utah State."
     },
     {
       "id": "west-5-12",
@@ -126,11 +126,11 @@
       "round": "First Round",
       "team1": { "id": "wisconsin", "name": "Wisconsin", "seed": 5 },
       "team2": { "id": "high-point", "name": "High Point", "seed": 12 },
-      "recommendedPick": "high-point",
-      "category": "Statistical Favorite",
+      "recommendedPick": "wisconsin",
+      "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 65,
-      "tacticalAdvantage": "High Point enters on a 14-game winning streak and thrives on offensive execution, while Wisconsin ranks 177th in opponent effective FG%. Historically, 12-seeds win 35.3% of the time, so absolute conviction is dangerous, but High Point's momentum creates a strong statistical upset opportunity."
+      "tacticalAdvantage": "Historically, 5-seeds win 64.7% of First Round matchups. Despite High Point's winning streak, Wisconsin's battle-tested Big Ten pedigree gives them the mathematical advantage."
     },
     {
       "id": "west-4-13",
@@ -138,11 +138,11 @@
       "round": "First Round",
       "team1": { "id": "arkansas", "name": "Arkansas", "seed": 4 },
       "team2": { "id": "hawaii", "name": "Hawai'i", "seed": 13 },
-      "recommendedPick": "hawaii",
-      "category": "Sharp Money Target / Spread Play",
-      "confidence": "Low",
-      "confidencePercentage": 42,
-      "tacticalAdvantage": "Arkansas won the SEC Tournament, but sharp money heavily favors Hawai'i to cover the +15.5 spread. 13-seeds historically win only ~20% of the time, so predicting an outright upset is highly speculative, but Hawai'i can exploit Arkansas's defensive lapses to keep it close."
+      "recommendedPick": "arkansas",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Historically, 4-seeds win 79.5% of First Round matchups. Arkansas ranks No. 15 in KenPom efficiency."
     },
     {
       "id": "west-6-11",
@@ -150,11 +150,11 @@
       "round": "First Round",
       "team1": { "id": "byu", "name": "BYU", "seed": 6 },
       "team2": { "id": "texas", "name": "Texas", "seed": 11 },
-      "recommendedPick": "texas",
+      "recommendedPick": "byu",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 54,
-      "tacticalAdvantage": "Texas advanced out of the First Four with momentum. BYU attempts to overcome the loss of key rotation piece Richie Saunders. While 11-seeds historically win 37.8% of the time, BYU's injuries make this a prime spot for Texas to overperform."
+      "confidencePercentage": 62,
+      "tacticalAdvantage": "Historically, 6-seeds win 62.2% of First Round matchups. Although BYU lost Richie Saunders, their top-25 KenPom efficiency supports them advancing over Texas."
     },
     {
       "id": "west-3-14",
@@ -165,8 +165,8 @@
       "recommendedPick": "gonzaga",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 92,
-      "tacticalAdvantage": "Gonzaga secured a No. 3 seed and boasts elite efficiency. While considered less dominant than classic Bulldogs teams, historical 3-seed dominance (85.3%) and a -18.5 point spread support them comfortably advancing over Kennesaw State."
+      "confidencePercentage": 85,
+      "tacticalAdvantage": "Historically, 3-seeds win 85.3% of First Round matchups. Gonzaga ranks No. 10 in KenPom and is an -18.5 point favorite."
     },
     {
       "id": "west-7-10",
@@ -177,8 +177,8 @@
       "recommendedPick": "miami-fl",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 62,
-      "tacticalAdvantage": "Missouri dropped to the 10-line after struggling down the stretch, drawing a battle-tested ACC opponent. Miami holds the edge in analytics (No. 31 KenPom vs No. 52), aligning with the historical 60% win rate for 7-seeds."
+      "confidencePercentage": 60,
+      "tacticalAdvantage": "Historically, 7-seeds win 60.3% of First Round matchups. Miami ranks No. 31 in KenPom compared to Missouri at No. 52."
     },
     {
       "id": "west-2-15",
@@ -189,8 +189,8 @@
       "recommendedPick": "purdue",
       "category": "Standard Matchup",
       "confidence": "Very High",
-      "confidencePercentage": 96,
-      "tacticalAdvantage": "Purdue enters at 27-8 after winning the Big Ten Tournament. 2-seeds boast a 93.6% historical win rate against 15-seeds, making Purdue's No. 8 KenPom rating an overwhelming advantage."
+      "confidencePercentage": 94,
+      "tacticalAdvantage": "Historically, 2-seeds win 93.6% of First Round matchups. Purdue is a -23.5 point favorite."
     },
     {
       "id": "midwest-1-16",
@@ -201,8 +201,8 @@
       "recommendedPick": "michigan",
       "category": "Standard Matchup",
       "confidence": "Very High",
-      "confidencePercentage": 97,
-      "tacticalAdvantage": "Michigan boasts the country's most efficient defense (No. 1 AdjD), anchored by 7-foot-7 rim protector Aday Mara. This aligns perfectly with the 99.3% historical win rate of 1-seeds."
+      "confidencePercentage": 99,
+      "tacticalAdvantage": "Historically, 1-seeds win 99.3% of First Round matchups. Michigan ranks No. 1 nationally in adjusted defensive efficiency."
     },
     {
       "id": "midwest-8-9",
@@ -211,10 +211,10 @@
       "team1": { "id": "georgia", "name": "Georgia", "seed": 8 },
       "team2": { "id": "saint-louis", "name": "Saint Louis", "seed": 9 },
       "recommendedPick": "georgia",
-      "category": "Statistical Favorite / Sharp Money",
+      "category": "Toss-Up",
       "confidence": "Medium",
-      "confidencePercentage": 68,
-      "tacticalAdvantage": "8-vs-9 matchups are historical 50/50 toss-ups, but Georgia leads the nation in fast-break points and boasts an elite +3.09 turnover margin. Sharp money backs Georgia to exploit Saint Louis's 230th rank in offensive turnovers."
+      "confidencePercentage": 51,
+      "tacticalAdvantage": "Historically, 8-seeds win 51.3% of First Round matchups. Georgia averages 89.8 points per game and ranks No. 32 in KenPom."
     },
     {
       "id": "midwest-5-12",
@@ -222,11 +222,11 @@
       "round": "First Round",
       "team1": { "id": "texas-tech", "name": "Texas Tech", "seed": 5 },
       "team2": { "id": "akron", "name": "Akron", "seed": 12 },
-      "recommendedPick": "akron",
-      "category": "Value Underdog",
+      "recommendedPick": "texas-tech",
+      "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 55,
-      "tacticalAdvantage": "Texas Tech lost star forward JT Toppin, forcing them into a predictable offense. Akron ranks in the top fifteen nationally in shooting percentage. While 12-seeds historically win only 35.3% of the time, Toppin's absence provides Akron a strong opening."
+      "confidencePercentage": 65,
+      "tacticalAdvantage": "Historically, 5-seeds win 64.7% of First Round matchups. Even without JT Toppin, Texas Tech's overall No. 20 KenPom ranking secures their favored status over Akron."
     },
     {
       "id": "midwest-4-13",
@@ -234,11 +234,11 @@
       "round": "First Round",
       "team1": { "id": "alabama", "name": "Alabama", "seed": 4 },
       "team2": { "id": "hofstra", "name": "Hofstra", "seed": 13 },
-      "recommendedPick": "hofstra",
-      "category": "Value Underdog",
-      "confidence": "Low",
-      "confidencePercentage": 45,
-      "tacticalAdvantage": "Alabama lost guard Aden Holloway, compromising perimeter spacing. Hofstra plays at a glacial pace to exploit Alabama's poor defensive rebounding. However, 13-seeds historically win just over 20% of the time, so while the stylistic matchup screams upset, history demands tempered expectations."
+      "recommendedPick": "alabama",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Historically, 4-seeds win 79.5% of First Round matchups. Alabama ranks No. 18 in KenPom and averages 35.3 three-point attempts per game."
     },
     {
       "id": "midwest-6-11",
@@ -247,10 +247,10 @@
       "team1": { "id": "tennessee", "name": "Tennessee", "seed": 6 },
       "team2": { "id": "miami-oh", "name": "Miami (OH)", "seed": 11 },
       "recommendedPick": "tennessee",
-      "category": "Poisoned Value Trap (Avoid Upset)",
-      "confidence": "High",
-      "confidencePercentage": 86,
-      "tacticalAdvantage": "Miami (OH) built a 31-1 record on a weak schedule. While 11-seeds are trendy upset picks (winning 37.8% historically), Tennessee is battle-tested, healthy, and will overwhelm Miami with SEC-tier speed and a 44.7% offensive rebounding rate."
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 62,
+      "tacticalAdvantage": "Historically, 6-seeds win 62.2% of First Round matchups. Tennessee leads the nation with a 44.7% offensive rebounding rate."
     },
     {
       "id": "midwest-3-14",
@@ -261,8 +261,8 @@
       "recommendedPick": "virginia",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 88,
-      "tacticalAdvantage": "Virginia secured a No. 3 seed with their trademark pack-line defense and will suffocate the Horizon League champion. 3-seeds historically win 85.3% of matchups, supporting Virginia's -17.5 spread."
+      "confidencePercentage": 85,
+      "tacticalAdvantage": "Historically, 3-seeds win 85.3% of First Round matchups. Virginia ranks No. 13 in KenPom and is a -17.5 point favorite."
     },
     {
       "id": "midwest-7-10",
@@ -270,11 +270,11 @@
       "round": "First Round",
       "team1": { "id": "kentucky", "name": "Kentucky", "seed": 7 },
       "team2": { "id": "santa-clara", "name": "Santa Clara", "seed": 10 },
-      "recommendedPick": "santa-clara",
-      "category": "Statistical Favorite",
+      "recommendedPick": "kentucky",
+      "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 60,
-      "tacticalAdvantage": "Kentucky struggles to score in half-court sets and is missing point guard Jaland Lowe. 10-seeds historically win 39.7% of the time, making this generally risky, but Kentucky being favored by only -3.5 points signals extreme vulnerability against Santa Clara's outside shooting."
+      "tacticalAdvantage": "Historically, 7-seeds win 60.3% of First Round matchups. Despite Kentucky's half-court struggles without Jaland Lowe, their SEC athleticism provides a 60% probability of advancing."
     },
     {
       "id": "midwest-2-15",
@@ -285,8 +285,8 @@
       "recommendedPick": "iowa-state",
       "category": "Standard Matchup",
       "confidence": "Very High",
-      "confidencePercentage": 95,
-      "tacticalAdvantage": "Iowa State relies on interior dominance and boasts incredible defensive metrics. The historical 93.6% win rate for 2-seeds against 15-seeds easily validates the Cyclones' -23.5 point spread."
+      "confidencePercentage": 94,
+      "tacticalAdvantage": "Historically, 2-seeds win 93.6% of First Round matchups. Iowa State ranks No. 6 in KenPom and ranks 3rd nationally in turnover rate."
     },
     {
       "id": "south-1-16",
@@ -297,8 +297,8 @@
       "recommendedPick": "florida",
       "category": "Standard Matchup",
       "confidence": "Very High",
-      "confidencePercentage": 97,
-      "tacticalAdvantage": "Florida is the defending national champion and won the SEC regular-season title. The massive talent gap perfectly aligns with the 99.3% historical win rate of 1-seeds."
+      "confidencePercentage": 99,
+      "tacticalAdvantage": "Historically, 1-seeds win 99.3% of First Round matchups. Florida ranks No. 4 in KenPom and won the SEC regular-season title."
     },
     {
       "id": "south-8-9",
@@ -306,11 +306,11 @@
       "round": "First Round",
       "team1": { "id": "clemson", "name": "Clemson", "seed": 8 },
       "team2": { "id": "iowa", "name": "Iowa", "seed": 9 },
-      "recommendedPick": "iowa",
-      "category": "Standard Matchup",
+      "recommendedPick": "clemson",
+      "category": "Toss-Up",
       "confidence": "Medium",
-      "confidencePercentage": 56,
-      "tacticalAdvantage": "8-vs-9 matchups are notoriously close (9-seeds win 48.7%). Iowa brings strong March experience and opened as a slight -1.5 point favorite, heavily influenced by Clemson missing key rebounder Carter Welling to a torn ACL."
+      "confidencePercentage": 51,
+      "tacticalAdvantage": "Historically, 8-seeds hold a slight 51.3% edge. Clemson's No. 36 KenPom ranking gives them a marginal mathematical advantage over Iowa in a coin-flip scenario."
     },
     {
       "id": "south-5-12",
@@ -319,10 +319,10 @@
       "team1": { "id": "vanderbilt", "name": "Vanderbilt", "seed": 5 },
       "team2": { "id": "mcneese", "name": "McNeese", "seed": 12 },
       "recommendedPick": "vanderbilt",
-      "category": "Poisoned Value Trap (Avoid Upset)",
-      "confidence": "High",
-      "confidencePercentage": 81,
-      "tacticalAdvantage": "Vanderbilt is severely underseeded (12th in KenPom) and shoots 79% from the free-throw line. While 12-seeds secure upsets roughly 35% of the time, Vanderbilt's physical forwards are perfectly equipped to exploit McNeese's poor defensive rebounding, avoiding the trap."
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 65,
+      "tacticalAdvantage": "Historically, 5-seeds win 64.7% of First Round matchups. Vanderbilt ranks No. 12 in KenPom and is a -10.5 point favorite."
     },
     {
       "id": "south-4-13",
@@ -330,11 +330,11 @@
       "round": "First Round",
       "team1": { "id": "nebraska", "name": "Nebraska", "seed": 4 },
       "team2": { "id": "troy", "name": "Troy", "seed": 13 },
-      "recommendedPick": "troy",
-      "category": "Value Underdog / Spread Play",
-      "confidence": "Low",
-      "confidencePercentage": 38,
-      "tacticalAdvantage": "Nebraska heavily regressed late in the season, and Troy limits shot efficiency at the basket. However, historically, 13-seeds only win 20.5% of First Round matchups. While Troy is highly live to cover the 13.5-point spread, predicting an outright upset here requires tempering expectations given historical precedent."
+      "recommendedPick": "nebraska",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Historically, 4-seeds win 79.5% of First Round matchups. While Nebraska regressed late, their No. 14 KenPom ranking dictates a high probability of survival against Sun Belt competition."
     },
     {
       "id": "south-6-11",
@@ -342,11 +342,11 @@
       "round": "First Round",
       "team1": { "id": "north-carolina", "name": "North Carolina", "seed": 6 },
       "team2": { "id": "vcu", "name": "VCU", "seed": 11 },
-      "recommendedPick": "vcu",
-      "category": "Value Underdog",
+      "recommendedPick": "north-carolina",
+      "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 62,
-      "tacticalAdvantage": "UNC lost interior enforcer Caleb Wilson. VCU's relentless ball pressure will disrupt half-court sets. Historically, 11-seeds win 37.8% of the time, but Oddsmakers see the vulnerability, opening UNC as a minuscule -1.5 point favorite."
+      "tacticalAdvantage": "Historically, 6-seeds win 62.2% of First Round matchups. Missing Caleb Wilson hurts UNC, but their blue-blood pedigree and talent pool give them the mathematical edge over VCU."
     },
     {
       "id": "south-3-14",
@@ -357,8 +357,8 @@
       "recommendedPick": "illinois",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 87,
-      "tacticalAdvantage": "Illinois possesses the country's most productive attack. Penn arrives hot, but faces a massive talent deficit. 3-seeds win 85.3% of the time, safely validating Illinois's -20.5 point spread."
+      "confidencePercentage": 85,
+      "tacticalAdvantage": "Historically, 3-seeds win 85.3% of First Round matchups. Illinois ranks No. 7 in KenPom and is a -20.5 point favorite."
     },
     {
       "id": "south-7-10",
@@ -369,8 +369,8 @@
       "recommendedPick": "saint-marys",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 58,
-      "tacticalAdvantage": "A heavy stylistic clash: Saint Mary's dictates a slow slog, while Texas A&M pushes a fast track meet. 7-seeds win roughly 60% of the time, aligning with Saint Mary's narrow -1.5 point spread."
+      "confidencePercentage": 60,
+      "tacticalAdvantage": "Historically, 7-seeds win 60.3% of First Round matchups. Saint Mary's ranks No. 24 in KenPom compared to Texas A&M at No. 39."
     },
     {
       "id": "south-2-15",
@@ -381,8 +381,8 @@
       "recommendedPick": "houston",
       "category": "Standard Matchup",
       "confidence": "Very High",
-      "confidencePercentage": 96,
-      "tacticalAdvantage": "Houston was placed in the South Region, setting up a highly motivated run. With 2-seeds winning 93.6% of the time, Houston's No. 5 KenPom ranking easily supports their -19.5 spread."
+      "confidencePercentage": 94,
+      "tacticalAdvantage": "Historically, 2-seeds win 93.6% of First Round matchups. Houston ranks No. 5 in KenPom and is a -19.5 point favorite."
     }
   ]
 }
