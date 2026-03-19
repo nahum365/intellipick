@@ -33,6 +33,7 @@ export function createMatchupCard(matchup, onPickMade) {
 
   let classes = 'matchup-card';
   if (isLaterRound) classes += ' matchup-card--later-round';
+  if (isLaterRound && hasPrediction) classes += ' matchup-card--has-prediction';
   if (!hasAnyTeam) classes += ' matchup-card--empty';
   if (isUpset) classes += ' matchup-card--upset';
   else if (confClass) classes += ` matchup-card--${confClass}`;
