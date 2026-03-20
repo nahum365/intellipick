@@ -11,7 +11,7 @@ const REGIONS = [
   { name: 'Midwest', dir: 'rtl' },
 ];
 
-export function createBracket(onPickMade) {
+export function createBracket() {
   const wrapper = document.createElement('div');
   wrapper.className = 'bracket-wrapper';
 
@@ -47,7 +47,7 @@ export function createBracket(onPickMade) {
 
   // Build all regions
   for (const r of REGIONS) {
-    const regionEl = createRegion(r.name, r.dir, onPickMade);
+    const regionEl = createRegion(r.name, r.dir);
     regionEl.dataset.region = r.name;
     // On mobile, hide non-active regions
     if (r.name !== activeMobileTab) regionEl.classList.add('bracket-region--hidden');
@@ -55,7 +55,7 @@ export function createBracket(onPickMade) {
 
     // Insert Final Four center after East (grid position handled by CSS)
     if (r.name === 'East') {
-      const ff = createFinalFour(onPickMade);
+      const ff = createFinalFour();
       if (activeMobileTab !== 'Final Four') ff.classList.add('bracket-region--hidden');
       bracket.appendChild(ff);
     }

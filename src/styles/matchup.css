@@ -126,11 +126,6 @@
   background: var(--primary-light);
 }
 
-.team-row--picked {
-  background: var(--picked-bg);
-  font-weight: 600;
-}
-
 .team-row--recommended {
   /* subtle left indicator for recommended pick */
 }
@@ -176,14 +171,6 @@
   flex-shrink: 0;
 }
 
-.team-row__pct {
-  font-size: 10px;
-  font-weight: 700;
-  flex-shrink: 0;
-  min-width: 28px;
-  text-align: right;
-}
-
 .team-row__injuries {
   display: flex;
   gap: 2px;
@@ -205,52 +192,31 @@
   background: var(--injury-doubtful);
 }
 
-/* Pick check indicator (desktop) */
-.team-row__check {
-  font-size: 11px;
-  color: var(--confidence-very-high);
-  flex-shrink: 0;
-}
-
-/* Mobile pick toggle button (hidden on desktop) */
-.team-row__pick-btn {
-  display: none;
-}
-
-/* Footer */
-.matchup-card__footer {
+/* Game status footer bar */
+.matchup-card__status-bar {
   padding: 3px 6px;
   background: var(--bg);
   border-top: 1px solid var(--border-light);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 4px;
+  min-height: 22px;
 }
 
-/* Probability bar */
-.prob-bar {
-  flex: 1;
-  height: 4px;
-  background: var(--border-light);
-  border-radius: 2px;
-  overflow: hidden;
+.matchup-card__status-bar--live {
+  background: var(--upset-bg);
 }
 
-.prob-bar__fill {
-  height: 100%;
-  border-radius: 2px;
-  transition: width 0.3s;
-}
-
-.prob-bar__fill--very-high { background: var(--confidence-very-high); }
-.prob-bar__fill--high { background: var(--confidence-high); }
-.prob-bar__fill--medium { background: var(--confidence-medium); }
-
-.matchup-card__pct {
-  font-size: 10px;
+.matchup-card__status-label {
+  font-size: 9px;
   font-weight: 700;
-  color: var(--text-secondary);
-  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .matchup-card__info-btn {
@@ -288,18 +254,6 @@
   display: none;
 }
 
-.matchup-card--later-round .matchup-card__footer {
-  display: none;
-}
-
-/* Restore header/footer when later-round matchup has prediction data */
-.matchup-card--has-prediction .matchup-card__header {
-  display: flex;
-}
-
-.matchup-card--has-prediction .matchup-card__footer {
-  display: flex;
-}
 
 /* Live score on team row */
 .team-row__score {
@@ -318,23 +272,6 @@
   font-weight: 800;
 }
 
-/* Live game status bar */
-.matchup-card__live-status {
-  padding: 2px 6px;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  text-align: center;
-  color: var(--upset);
-  background: var(--upset-bg);
-  border-top: 1px solid var(--border-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
 .matchup-card__live-dot {
   width: 6px;
   height: 6px;
@@ -346,18 +283,6 @@
 @keyframes live-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
-}
-
-.matchup-card__final-status {
-  padding: 2px 6px;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  text-align: center;
-  color: var(--text-muted);
-  background: var(--bg);
-  border-top: 1px solid var(--border-light);
 }
 
 /* Polymarket odds bar — percentage display */
@@ -465,34 +390,6 @@
     min-width: 20px;
   }
 
-  .team-row__check {
-    display: none;
-  }
-
-  .team-row__pick-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    background: var(--surface);
-    color: transparent;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.15s;
-    padding: 0;
-    font-family: var(--font);
-  }
-
-  .team-row__pick-btn--active {
-    border-color: var(--primary);
-    background: var(--primary);
-    color: white;
-  }
-
   .matchup-card__info-btn {
     width: 24px;
     height: 24px;
@@ -513,7 +410,7 @@
     padding: 1px 4px;
   }
 
-  .matchup-card__footer {
+  .matchup-card__status-bar {
     padding: 3px 8px;
   }
 
@@ -526,13 +423,7 @@
     font-size: 7px;
   }
 
-  .matchup-card__live-status {
+  .matchup-card__status-label {
     font-size: 8px;
-    padding: 2px 8px;
-  }
-
-  .matchup-card__final-status {
-    font-size: 8px;
-    padding: 2px 8px;
   }
 }

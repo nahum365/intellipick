@@ -1,11 +1,8 @@
 import teamsData from '../data/teams.json';
-import { getPick } from '../engine/picks.js';
-import { cascadePick } from '../engine/propagation.js';
 import { getScoreForMatchup, onScoresUpdate } from '../engine/liveScores.js';
 import { getMarketData, onPolymarketUpdate } from '../engine/polymarket.js';
 
 let overlayEl = null;
-let currentOnPickChange = null;
 let currentMatchup = null;
 let currentOptions = null;
 let unsubScoreUpdate = null;
@@ -26,19 +23,12 @@ function confidenceClass(confidence) {
 function buildTeamPanel(team, profile, matchup) {
   if (!team) return '<div class="modal__team-panel"><p style="color:var(--text-muted)">TBD</p></div>';
 
-  const currentPick = getPick(matchup.id);
-  const isPicked = currentPick && currentPick.id === team.id;
-
   let html = `<div class="modal__team-panel" data-team-id="${team.id}">`;
 
-  // Header with pick checkbox
+  // Header
   html += `<div class="modal__team-panel-header">
     <span class="modal__team-panel-seed">${team.seed}</span>
     <span class="modal__team-panel-name">${profile ? profile.name : team.name}</span>
-    <label class="modal__pick-toggle">
-      <input type="checkbox" class="modal__pick-checkbox" data-matchup-id="${matchup.id}" data-team-id="${team.id}" ${isPicked ? 'checked' : ''}>
-      <span class="modal__pick-label">${isPicked ? 'Picked' : 'Pick'}</span>
-    </label>
   </div>`;
 
   // Meta
@@ -329,8 +319,7 @@ function ensureOverlay() {
 }
 
 export function openModal(matchup, options = {}) {
-  const { scrollToTeamId, onPickChange } = options;
-  currentOnPickChange = onPickChange || null;
+  const { scrollToTeamId } = options;
   currentMatchup = matchup;
   currentOptions = options;
   const overlay = ensureOverlay();
@@ -429,27 +418,6 @@ export function openModal(matchup, options = {}) {
 
   // Close button
   overlay.querySelector('.modal__close').addEventListener('click', closeModal);
-
-  // Wire up pick checkboxes
-  const teams = { [matchup.team1?.id]: matchup.team1, [matchup.team2?.id]: matchup.team2 };
-  overlay.querySelectorAll('.modal__pick-checkbox').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const teamId = cb.dataset.teamId;
-      const matchupId = cb.dataset.matchupId;
-      const team = teams[teamId];
-      if (team) {
-        cascadePick(matchupId, team);
-        // Update both checkboxes and labels
-        overlay.querySelectorAll('.modal__pick-checkbox').forEach(otherCb => {
-          const isThisTeam = otherCb.dataset.teamId === teamId;
-          otherCb.checked = isThisTeam;
-          const label = otherCb.nextElementSibling;
-          if (label) label.textContent = isThisTeam ? 'Picked' : 'Pick';
-        });
-        if (currentOnPickChange) currentOnPickChange();
-      }
-    });
-  });
 
   // Show
   requestAnimationFrame(() => {

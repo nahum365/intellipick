@@ -7,7 +7,7 @@ function laterRoundId(region, round, position) {
   return `${region.toLowerCase()}-r${round}-${position}`;
 }
 
-export function createRegion(regionName, direction, onPickMade) {
+export function createRegion(regionName, direction) {
   const container = document.createElement('div');
   container.className = 'bracket__region bracket__region--' + regionName.toLowerCase();
 
@@ -48,7 +48,7 @@ export function createRegion(regionName, direction, onPickMade) {
     for (let i = 0; i < rc.count; i++) {
       const matchup = rc.getMatchup(i);
       if (matchup) {
-        matchups.appendChild(createMatchupCard(matchup, onPickMade));
+        matchups.appendChild(createMatchupCard(matchup));
       }
     }
 

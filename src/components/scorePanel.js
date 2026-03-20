@@ -1,6 +1,6 @@
 import { getAllPicks } from '../engine/picks.js';
 import { computeScore, getUpsetAlerts } from '../engine/scoring.js';
-import { cascadePick, getR64Matchup, getRegionR64Matchups, getValidBracketIds } from '../engine/propagation.js';
+import { getR64Matchup, getRegionR64Matchups, getValidBracketIds } from '../engine/propagation.js';
 import { getFetchStatus, getScoreForMatchup } from '../engine/liveScores.js';
 import { openModal } from './modal.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
@@ -208,27 +208,9 @@ export function updateScorePanel(panel, onPickChange) {
   const r32Upsets = upsets.filter(u => u.round === 'Second Round');
 
   function buildUpsetRow(u, pickId, matchup) {
-    const isSelected = picks[pickId] && picks[pickId].id === u.team.id;
-
     const row = document.createElement('div');
     row.className = 'upset-row';
     row.style.cssText = 'font-size:11px;padding:4px 0;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:6px';
-
-    // Checkbox
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = isSelected;
-    checkbox.className = 'upset-row__checkbox';
-    checkbox.style.cssText = 'cursor:pointer;accent-color:var(--upset);flex-shrink:0';
-    checkbox.addEventListener('change', () => {
-      if (checkbox.checked) {
-        cascadePick(pickId, u.team);
-      } else {
-        cascadePick(pickId, u.opponent);
-      }
-      if (onPickChange) onPickChange();
-    });
-    row.appendChild(checkbox);
 
     // Team names with blurb tooltips
     const label = document.createElement('span');
@@ -251,7 +233,7 @@ export function updateScorePanel(panel, onPickChange) {
       teamSpan.addEventListener('click', (e) => {
         if (isMobile() && matchup) {
           e.stopPropagation();
-          openModal(matchup, { scrollToTeamId: u.team.id, onPickChange: onPickChange });
+          openModal(matchup, { scrollToTeamId: u.team.id });
         }
       });
     }
@@ -274,7 +256,7 @@ export function updateScorePanel(panel, onPickChange) {
       oppSpan.addEventListener('click', (e) => {
         if (isMobile() && matchup) {
           e.stopPropagation();
-          openModal(matchup, { scrollToTeamId: u.opponent.id, onPickChange: onPickChange });
+          openModal(matchup, { scrollToTeamId: u.opponent.id });
         }
       });
     }
