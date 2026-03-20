@@ -233,54 +233,35 @@ export function createMatchupCard(matchup, onPickMade) {
     card.appendChild(statusEl);
   }
 
-  // Polymarket odds bar — show for any game with odds data
+  // Polymarket odds — clean percentage display
   const oddsData = liveScore && liveScore.odds;
   if (oddsData) {
     const oddsBar = document.createElement('div');
     oddsBar.className = 'matchup-card__odds-bar' + (oddsData.wsConnected ? ' matchup-card__odds-bar--live' : '');
 
-    // Visual probability split bar
-    const probSplit = document.createElement('div');
-    probSplit.className = 'matchup-card__prob-split';
-    const t1Fill = document.createElement('div');
-    t1Fill.className = 'matchup-card__prob-fill matchup-card__prob-fill--t1';
-    t1Fill.style.width = oddsData.team1Prob + '%';
-    const t2Fill = document.createElement('div');
-    t2Fill.className = 'matchup-card__prob-fill matchup-card__prob-fill--t2';
-    t2Fill.style.width = oddsData.team2Prob + '%';
-    probSplit.appendChild(t1Fill);
-    probSplit.appendChild(t2Fill);
-    oddsBar.appendChild(probSplit);
+    const t1Pct = document.createElement('span');
+    t1Pct.className = 'matchup-card__odds-pct';
+    const d1 = oddsData.team1ProbDelta || 0;
+    const arrow1 = d1 > 0.005 ? '\u25B2' : d1 < -0.005 ? '\u25BC' : '';
+    const cls1 = d1 > 0.005 ? ' matchup-card__odds-pct--up' : d1 < -0.005 ? ' matchup-card__odds-pct--down' : '';
+    t1Pct.className += cls1;
+    t1Pct.textContent = oddsData.team1Prob + '%' + (arrow1 ? ' ' + arrow1 : '');
 
-    // Labels row
-    const labelsRow = document.createElement('div');
-    labelsRow.className = 'matchup-card__odds-labels';
+    const source = document.createElement('span');
+    source.className = 'matchup-card__odds-source';
+    source.textContent = oddsData.wsConnected ? '\u26A1 Polymarket' : 'Polymarket';
 
-    const t1Label = document.createElement('span');
-    t1Label.className = 'matchup-card__odds-team';
-    const t1Delta = oddsData.team1ProbDelta || 0;
-    const t1Arrow = t1Delta > 0.005 ? ' \u25B2' : t1Delta < -0.005 ? ' \u25BC' : '';
-    const t1DeltaClass = t1Delta > 0.005 ? 'odds-flash--up' : t1Delta < -0.005 ? 'odds-flash--down' : '';
-    t1Label.innerHTML = `<span class="${t1DeltaClass}">${oddsData.team1Prob}%${t1Arrow}</span>`;
-    t1Label.title = oddsData.moneyline1 ? `ML: ${oddsData.moneyline1}` : '';
+    const t2Pct = document.createElement('span');
+    t2Pct.className = 'matchup-card__odds-pct';
+    const d2 = oddsData.team2ProbDelta || 0;
+    const arrow2 = d2 > 0.005 ? '\u25B2' : d2 < -0.005 ? '\u25BC' : '';
+    const cls2 = d2 > 0.005 ? ' matchup-card__odds-pct--up' : d2 < -0.005 ? ' matchup-card__odds-pct--down' : '';
+    t2Pct.className += cls2;
+    t2Pct.textContent = oddsData.team2Prob + '%' + (arrow2 ? ' ' + arrow2 : '');
 
-    const sourceLabel = document.createElement('span');
-    sourceLabel.className = 'matchup-card__odds-source';
-    sourceLabel.textContent = oddsData.wsConnected ? '\u26A1 LIVE' : (oddsData.source || 'Market');
-
-    const t2Label = document.createElement('span');
-    t2Label.className = 'matchup-card__odds-team';
-    const t2Delta = oddsData.team2ProbDelta || 0;
-    const t2Arrow = t2Delta > 0.005 ? ' \u25B2' : t2Delta < -0.005 ? ' \u25BC' : '';
-    const t2DeltaClass = t2Delta > 0.005 ? 'odds-flash--up' : t2Delta < -0.005 ? 'odds-flash--down' : '';
-    t2Label.innerHTML = `<span class="${t2DeltaClass}">${oddsData.team2Prob}%${t2Arrow}</span>`;
-    t2Label.title = oddsData.moneyline2 ? `ML: ${oddsData.moneyline2}` : '';
-
-    labelsRow.appendChild(t1Label);
-    labelsRow.appendChild(sourceLabel);
-    labelsRow.appendChild(t2Label);
-    oddsBar.appendChild(labelsRow);
-
+    oddsBar.appendChild(t1Pct);
+    oddsBar.appendChild(source);
+    oddsBar.appendChild(t2Pct);
     card.appendChild(oddsBar);
   }
 

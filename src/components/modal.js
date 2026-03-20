@@ -152,23 +152,8 @@ function buildTeamPanel(team, profile, matchup) {
 function buildScoreboardHtml(matchup, liveScore) {
   if (!liveScore) return '';
 
-  // For scheduled games, only show odds if available
-  if (liveScore.status === 'scheduled') {
-    if (!liveScore.odds) return '';
-    const t1Name = matchup.team1?.name || 'TBD';
-    const t2Name = matchup.team2?.name || 'TBD';
-    const o = liveScore.odds;
-    return `<div class="modal__scoreboard">
-      <div class="modal__scoreboard-status modal__scoreboard-status--final">Pre-Game</div>
-      <div class="modal__odds">
-        <div class="modal__odds-source">${o.source || 'Market'} Odds</div>
-        <div class="modal__odds-items">
-          <span class="modal__odds-item"><span class="modal__odds-label">${t1Name}:</span> ${o.team1Prob}% (${o.moneyline1})</span>
-          <span class="modal__odds-item"><span class="modal__odds-label">${t2Name}:</span> ${o.team2Prob}% (${o.moneyline2})</span>
-        </div>
-      </div>
-    </div>`;
-  }
+  // Don't show scoreboard for scheduled games (Polymarket panel handles pre-game odds)
+  if (liveScore.status === 'scheduled') return '';
 
   let statusLabel, statusClass;
   if (liveScore.status === 'live') {
@@ -189,22 +174,6 @@ function buildScoreboardHtml(matchup, liveScore) {
   const t2Name = matchup.team2?.name || 'TBD';
   const t1Seed = matchup.team1?.seed || '';
   const t2Seed = matchup.team2?.seed || '';
-
-  let oddsHtml = '';
-  if (liveScore.odds) {
-    const o = liveScore.odds;
-    const items = [];
-    if (o.team1Prob && o.team2Prob) {
-      items.push(`<span class="modal__odds-item"><span class="modal__odds-label">${t1Name}:</span> ${o.team1Prob}% (${o.moneyline1})</span>`);
-      items.push(`<span class="modal__odds-item"><span class="modal__odds-label">${t2Name}:</span> ${o.team2Prob}% (${o.moneyline2})</span>`);
-    }
-    if (items.length) {
-      oddsHtml = `<div class="modal__odds">
-        <div class="modal__odds-source">${o.source || 'Market'} Odds</div>
-        <div class="modal__odds-items">${items.join('')}</div>
-      </div>`;
-    }
-  }
 
   let predictionHtml = '';
   if (matchup.recommendedPick) {
@@ -244,7 +213,6 @@ function buildScoreboardHtml(matchup, liveScore) {
         <span class="modal__scoreboard-pts">${liveScore.team2Score}</span>
       </div>
     </div>
-    ${oddsHtml}
     ${predictionHtml}
   </div>`;
 }
