@@ -61,18 +61,17 @@ export function createMatchupCard(matchup) {
   const isLive = hasScore && (liveScore.status === 'live' || liveScore.status === 'halftime');
   const isFinal = hasScore && liveScore.status === 'final';
 
-  if (isLive) {
-    classes += ' matchup-card--live';
-  } else if (isFinal) {
-    classes += ' matchup-card--final';
-    if (matchup.recommendedPick) {
-      const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;
-      const recWon = recIsTeam1
-        ? liveScore.team1Score > liveScore.team2Score
-        : liveScore.team2Score > liveScore.team1Score;
-      classes += recWon ? ' matchup-card--pick-correct' : ' matchup-card--pick-incorrect';
-    }
+  // For final games, determine if our recommended pick was correct
+  let recWon = null;
+  if (isFinal && matchup.recommendedPick) {
+    const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;
+    recWon = recIsTeam1
+      ? liveScore.team1Score > liveScore.team2Score
+      : liveScore.team2Score > liveScore.team1Score;
   }
+
+  if (isLive) classes += ' matchup-card--live';
+  else if (isFinal) classes += ' matchup-card--final';
 
   card.className = classes;
 
@@ -113,11 +112,16 @@ export function createMatchupCard(matchup) {
     if (isRecommended) rowClasses += ' team-row--recommended';
     row.className = rowClasses;
 
-    // Star for recommended
-    const star = document.createElement('span');
-    star.className = 'team-row__star';
-    star.textContent = isRecommended ? '\u2605' : '';
-    row.appendChild(star);
+    // Indicator: star for recommended, check/x for final results
+    const indicator = document.createElement('span');
+    indicator.className = 'team-row__star';
+    if (isFinal && isRecommended && recWon !== null) {
+      indicator.textContent = recWon ? '\u2713' : '\u2717';
+      indicator.className += recWon ? ' team-row__star--correct' : ' team-row__star--incorrect';
+    } else {
+      indicator.textContent = isRecommended ? '\u2605' : '';
+    }
+    row.appendChild(indicator);
 
     // Seed
     const seed = document.createElement('span');

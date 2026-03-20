@@ -22,10 +22,15 @@
   background: var(--upset-bg);
 }
 
-/* Final: muted appearance */
+/* Final: darkened/inactive appearance */
 .matchup-card--final {
-  opacity: 0.8;
+  background: var(--bg);
   border-color: var(--border);
+  filter: saturate(0.4);
+}
+
+.matchup-card--final:hover {
+  filter: saturate(0.7);
 }
 
 /* Header badges */
@@ -119,6 +124,16 @@
   font-size: 11px;
   width: 12px;
   flex-shrink: 0;
+}
+
+.team-row__star--correct {
+  color: var(--confidence-very-high);
+  font-weight: 800;
+}
+
+.team-row__star--incorrect {
+  color: var(--upset);
+  font-weight: 800;
 }
 
 .team-row__seed {
@@ -299,14 +314,4 @@
   color: var(--text-muted);
 }
 
-/* Final game prediction results */
-.matchup-card--pick-correct {
-  border-color: var(--confidence-very-high);
-  opacity: 1;
-}
-
-.matchup-card--pick-incorrect {
-  border-color: var(--upset);
-  opacity: 1;
-}
 
