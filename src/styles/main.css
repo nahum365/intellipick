@@ -59,48 +59,16 @@ body {
 }
 
 #app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Desktop: lock to viewport, sidebar beside bracket */
-@media (min-width: 769px) {
-  #app {
-    height: 100vh;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    grid-template-columns: 1fr 280px;
-  }
-
-  .header {
-    grid-column: 1 / -1;
-  }
-
-  .main-content {
-    grid-column: 1;
-    grid-row: 2;
-    overflow: hidden;
-  }
-
-  .bracket-container {
-    height: 100%;
-  }
-
-  .score-sidebar {
-    grid-column: 2;
-    grid-row: 2;
-    width: auto;
-  }
-
-  .insights-bar {
-    grid-column: 1 / -1;
-  }
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr 280px;
 }
 
 /* Header */
 .header {
+  grid-column: 1 / -1;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   padding: 12px 24px;
@@ -179,20 +147,23 @@ body {
 
 /* Main content */
 .main-content {
-  flex: 1;
+  grid-column: 1;
+  grid-row: 2;
   overflow: hidden;
   min-height: 0;
 }
 
 .bracket-container {
-  flex: 1;
+  height: 100%;
   overflow: auto;
   padding: 24px;
 }
 
-/* Score sidebar — desktop: right column inside .main-content via CSS order */
+/* Score sidebar */
 .score-sidebar {
-  width: 280px;
+  grid-column: 2;
+  grid-row: 2;
+  width: auto;
   background: var(--surface);
   border-left: 1px solid var(--border);
   padding: 20px;
@@ -200,9 +171,9 @@ body {
   flex-shrink: 0;
 }
 
-
 /* Insights bar */
 .insights-bar {
+  grid-column: 1 / -1;
   background: var(--surface);
   border-top: 1px solid var(--border);
   padding: 10px 24px;
@@ -239,170 +210,6 @@ body {
   color: var(--primary);
 }
 
-/* ============================
-   Mobile layout (<= 768px)
-   ============================ */
-@media (max-width: 768px) {
-  /* Header: compact, thinner */
-  .header {
-    padding: 8px 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    gap: 8px;
-  }
-
-  .header__logo {
-    font-size: 15px;
-  }
-
-  .header__controls {
-    gap: 6px;
-  }
-
-  .btn {
-    padding: 6px 10px;
-    font-size: 12px;
-    min-height: 32px;
-    border-radius: 6px;
-  }
-
-  /* #app: single column, full height */
-  #app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-  }
-
-  /* Main content: fill remaining space, scroll bracket */
-  .main-content {
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Bracket: fill space, internal scroll */
-  .bracket-container {
-    flex: 1;
-    min-height: 0;
-    overflow-x: auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 0;
-  }
-
-  /* Sidebar: bottom sheet, not fixed at top */
-  .score-sidebar {
-    width: 100%;
-    border-left: none;
-    border-top: 1px solid var(--border);
-    padding: 0 12px;
-    overflow: hidden;
-    position: relative;
-    z-index: 50;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
-    flex-shrink: 0;
-    order: 10;
-    max-height: none;
-  }
-
-  /* Anchor stats strip */
-  .score-sidebar__anchor-stats {
-    display: flex;
-    gap: 16px;
-    align-items: baseline;
-    justify-content: center;
-    padding: 8px 0 2px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .score-sidebar__anchor-stat {
-    display: flex;
-    align-items: baseline;
-    gap: 3px;
-  }
-
-  .score-sidebar__anchor-stat-value {
-    font-size: 16px;
-    font-weight: 800;
-  }
-
-  .score-sidebar__anchor-stat-label {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 600;
-  }
-
-  .score-sidebar__body {
-    padding-top: 6px;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Grabber */
-  .score-sidebar__grabber {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 4px 0 6px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .score-sidebar__grabber-bar {
-    display: block;
-    width: 32px;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--border);
-    transition: background 0.15s;
-  }
-
-  .score-sidebar__grabber:active .score-sidebar__grabber-bar {
-    background: var(--primary);
-  }
-
-  /* Upset rows: touch-friendly */
-  .upset-row {
-    padding: 8px 0 !important;
-    min-height: 40px;
-    font-size: 12px !important;
-  }
-
-  .upset-row__checkbox {
-    width: 20px;
-    height: 20px;
-    min-width: 20px;
-  }
-
-  .upset-row__info-btn {
-    min-width: 32px;
-    min-height: 32px;
-    font-size: 13px !important;
-    padding: 4px 8px !important;
-    border-radius: 6px !important;
-  }
-
-  /* Hide insights bar on mobile — anchor bar replaces it */
-  .insights-bar {
-    display: none;
-  }
-}
-
-/* Hide mobile shelf controls on desktop */
-@media (min-width: 769px) {
-  .score-sidebar__anchor-stats {
-    display: none;
-  }
-  .score-sidebar__grabber {
-    display: none;
-  }
-}
-
 /* Fetch status indicator */
 .fetch-status {
   display: flex;
@@ -437,39 +244,4 @@ body {
 
 @keyframes fetch-spin {
   to { transform: rotate(360deg); }
-}
-
-/* Compact variant for mobile anchor stats */
-.fetch-status--compact {
-  display: inline-flex;
-  padding: 0;
-  margin: 0;
-  border: none;
-  gap: 4px;
-  width: 100%;
-  justify-content: center;
-  padding-top: 4px;
-}
-
-.fetch-status--compact .fetch-status__text {
-  font-size: 10px;
-}
-
-.fetch-status--compact .fetch-status__spinner {
-  width: 10px;
-  height: 10px;
-  border-width: 1.5px;
-}
-
-/* Hide desktop status on mobile, and vice versa */
-@media (max-width: 768px) {
-  .fetch-status-container {
-    display: none;
-  }
-}
-
-@media (min-width: 769px) {
-  .fetch-status--compact {
-    display: none;
-  }
 }

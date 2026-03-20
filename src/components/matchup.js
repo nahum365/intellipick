@@ -159,7 +159,7 @@ export function createMatchupCard(matchup, onPickMade) {
       row.appendChild(pct);
     }
 
-    // Check mark if picked (desktop only, hidden on mobile via CSS)
+    // Check mark if picked
     if (isPicked) {
       const check = document.createElement('span');
       check.className = 'team-row__check';
@@ -167,41 +167,19 @@ export function createMatchupCard(matchup, onPickMade) {
       row.appendChild(check);
     }
 
-    // Pick toggle button (mobile only, hidden on desktop via CSS)
-    const pickBtn = document.createElement('button');
-    pickBtn.className = 'team-row__pick-btn' + (isPicked ? ' team-row__pick-btn--active' : '');
-    pickBtn.textContent = isPicked ? '\u2713' : '';
-    pickBtn.setAttribute('aria-label', isPicked ? 'Selected' : 'Select');
-    pickBtn.addEventListener('click', (e) => {
+    // Click to pick
+    row.addEventListener('click', (e) => {
       e.stopPropagation();
       cascadePick(matchup.id, team);
       if (onPickMade) onPickMade();
     });
-    row.appendChild(pickBtn);
 
-    // Click behavior: on mobile open modal, on desktop pick
-    const isMobile = () => window.innerWidth <= 768;
-
-    row.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (isMobile()) {
-        openModal(matchup, { scrollToTeamId: team.id, onPickChange: onPickMade });
-      } else {
-        cascadePick(matchup.id, team);
-        if (onPickMade) onPickMade();
-      }
-    });
-
-    // Hover for tooltip (desktop only)
+    // Hover for tooltip
     row.addEventListener('mouseenter', (e) => {
-      if (!isMobile()) {
-        showTooltip(team, profile, matchup, e.currentTarget);
-      }
+      showTooltip(team, profile, matchup, e.currentTarget);
     });
     row.addEventListener('mouseleave', () => {
-      if (!isMobile()) {
-        hideTooltip();
-      }
+      hideTooltip();
     });
 
     return row;
