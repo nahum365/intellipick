@@ -168,13 +168,12 @@ export function createMatchupCard(matchup) {
       openModal(matchup, { scrollToTeamId: team.id });
     });
 
-    // Hover for tooltip (desktop only)
-    const isMobile = () => window.innerWidth <= 768;
+    // Hover for tooltip
     row.addEventListener('mouseenter', (e) => {
-      if (!isMobile()) showTooltip(team, profile, matchup, e.currentTarget);
+      showTooltip(team, profile, matchup, e.currentTarget);
     });
     row.addEventListener('mouseleave', () => {
-      if (!isMobile()) hideTooltip();
+      hideTooltip();
     });
 
     return row;

@@ -35,36 +35,25 @@ function timeAgo(ts) {
   return `${Math.floor(mins / 60)}h ago`;
 }
 
-function buildFetchStatusHtml(compact) {
+function buildFetchStatusHtml() {
   const s = getFetchStatus();
   const loading = s.espnLoading || s.polymarketLoading;
 
   if (loading) {
     const spinner = '<span class="fetch-status__spinner"></span>';
-    if (compact) {
-      return `<span class="fetch-status fetch-status--compact">${spinner}<span class="fetch-status__text">Loading scores&hellip;</span></span>`;
-    }
     const items = [];
     if (s.espnLoading) items.push('ESPN');
     if (s.polymarketLoading) items.push('Polymarket');
     return `<div class="fetch-status">${spinner}<span class="fetch-status__text">Loading ${items.join(' &amp; ')} info&hellip;</span></div>`;
   }
 
-  // Not loading — show freshness
   const parts = [];
   if (s.espnLastLoaded) parts.push(`ESPN ${timeAgo(s.espnLastLoaded)}`);
   if (s.polymarketLastLoaded) parts.push(`Polymarket ${timeAgo(s.polymarketLastLoaded)}`);
   if (parts.length === 0) return '';
 
-  const text = parts.join(compact ? ' · ' : ', ');
-  if (compact) {
-    return `<span class="fetch-status fetch-status--compact fetch-status--done"><span class="fetch-status__text">${text}</span></span>`;
-  }
-  return `<div class="fetch-status fetch-status--done"><span class="fetch-status__text">${text}</span></div>`;
+  return `<div class="fetch-status fetch-status--done"><span class="fetch-status__text">${parts.join(', ')}</span></div>`;
 }
-
-// Track collapsed state across re-renders
-let sidebarCollapsed = true;
 
 export function createScorePanel(onPickChange) {
   const panel = document.createElement('div');
@@ -85,92 +74,15 @@ export function updateScorePanel(panel, onPickChange) {
 
   panel.innerHTML = '';
 
-  const isMobile = () => window.innerWidth <= 768;
-
-  // Mobile anchor stats (hidden on desktop via CSS, hidden when shelf open)
-  const anchorStats = document.createElement('div');
-  anchorStats.className = 'score-sidebar__anchor-stats';
-  if (!sidebarCollapsed) anchorStats.style.display = 'none';
-  const mobileStatusHtml = buildFetchStatusHtml(true);
-  anchorStats.innerHTML = `
-    <span class="score-sidebar__anchor-stat">
-      <span class="score-sidebar__anchor-stat-value">${pickedCount}</span>
-      <span class="score-sidebar__anchor-stat-label">/ ${totalGames} picked</span>
-    </span>
-    <span class="score-sidebar__anchor-stat">
-      <span class="score-sidebar__anchor-stat-value" style="color:var(--primary)">${pct}${pickedCount > 0 ? '%' : ''}</span>
-      <span class="score-sidebar__anchor-stat-label">score</span>
-    </span>
-    <span class="score-sidebar__anchor-stat">
-      <span class="score-sidebar__anchor-stat-value" style="color:var(--upset)">${score.upsetCount}</span>
-      <span class="score-sidebar__anchor-stat-label">upsets</span>
-    </span>
-    ${mobileStatusHtml}
-  `;
-  panel.appendChild(anchorStats);
-
-  // Body wrapper — JS shelf animation on mobile, always visible on desktop
   const body = document.createElement('div');
   body.className = 'score-sidebar__body';
-
-  // On mobile, set initial collapsed state (no animation on first render)
-  if (isMobile() && sidebarCollapsed) {
-    body.style.height = '0px';
-    body.style.overflow = 'hidden';
-  }
-
-  // Grabber (below body — animates to bottom when shelf opens)
-  const grabber = document.createElement('div');
-  grabber.className = 'score-sidebar__grabber';
-  grabber.innerHTML = '<span class="score-sidebar__grabber-bar"></span>';
-
-  // Toggle with slide animation
-  grabber.addEventListener('click', () => {
-    if (!isMobile()) return;
-    sidebarCollapsed = !sidebarCollapsed;
-
-    if (sidebarCollapsed) {
-      // Show stats
-      anchorStats.style.display = '';
-      // Collapse: animate from current height to 0
-      const h = body.scrollHeight;
-      body.style.height = h + 'px';
-      body.offsetHeight; // force reflow
-      body.style.transition = 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-      body.style.height = '0px';
-      body.style.overflow = 'hidden';
-    } else {
-      // Hide stats
-      anchorStats.style.display = 'none';
-      // Expand: animate from 0 to scrollHeight, capped at 50vh
-      const maxH = window.innerHeight * 0.5;
-      const targetH = Math.min(body.scrollHeight, maxH);
-      body.style.transition = 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-      body.style.height = targetH + 'px';
-      body.style.overflow = 'hidden';
-      const onEnd = () => {
-        body.removeEventListener('transitionend', onEnd);
-        if (!sidebarCollapsed) {
-          body.style.height = targetH + 'px';
-          body.style.overflowY = 'auto';
-        }
-      };
-      body.addEventListener('transitionend', onEnd);
-    }
-  });
-
-  // Also allow tapping anchor stats to open
-  anchorStats.addEventListener('click', () => {
-    if (isMobile() && sidebarCollapsed) grabber.click();
-  });
 
   // Score content
   const content = document.createElement('div');
 
-  // Fetch status indicator (desktop) — at the top
   const statusContainer = document.createElement('div');
   statusContainer.className = 'fetch-status-container';
-  statusContainer.innerHTML = buildFetchStatusHtml(false);
+  statusContainer.innerHTML = buildFetchStatusHtml();
   content.appendChild(statusContainer);
 
   const innerHtml = document.createElement('div');
@@ -216,26 +128,14 @@ export function updateScorePanel(panel, onPickChange) {
     const label = document.createElement('span');
     label.style.cssText = 'flex:1;min-width:0';
 
-    const isMobile = () => window.innerWidth <= 768;
-
     const teamSpan = document.createElement('span');
     teamSpan.style.cssText = 'cursor:default';
     teamSpan.innerHTML = `<strong>${u.team.seed}</strong> ${u.team.name}`;
     const teamProfile = getTeamProfile(u.team.id);
     if (teamProfile) {
       teamSpan.style.cursor = 'pointer';
-      teamSpan.addEventListener('mouseenter', () => {
-        if (!isMobile()) showTooltip(u.team, teamProfile, matchup, teamSpan);
-      });
-      teamSpan.addEventListener('mouseleave', () => {
-        if (!isMobile()) hideTooltip();
-      });
-      teamSpan.addEventListener('click', (e) => {
-        if (isMobile() && matchup) {
-          e.stopPropagation();
-          openModal(matchup, { scrollToTeamId: u.team.id });
-        }
-      });
+      teamSpan.addEventListener('mouseenter', () => showTooltip(u.team, teamProfile, matchup, teamSpan));
+      teamSpan.addEventListener('mouseleave', () => hideTooltip());
     }
 
     const overSpan = document.createElement('span');
@@ -247,18 +147,8 @@ export function updateScorePanel(panel, onPickChange) {
     const oppProfile = getTeamProfile(u.opponent.id);
     if (oppProfile) {
       oppSpan.style.cursor = 'pointer';
-      oppSpan.addEventListener('mouseenter', () => {
-        if (!isMobile()) showTooltip(u.opponent, oppProfile, matchup, oppSpan);
-      });
-      oppSpan.addEventListener('mouseleave', () => {
-        if (!isMobile()) hideTooltip();
-      });
-      oppSpan.addEventListener('click', (e) => {
-        if (isMobile() && matchup) {
-          e.stopPropagation();
-          openModal(matchup, { scrollToTeamId: u.opponent.id });
-        }
-      });
+      oppSpan.addEventListener('mouseenter', () => showTooltip(u.opponent, oppProfile, matchup, oppSpan));
+      oppSpan.addEventListener('mouseleave', () => hideTooltip());
     }
 
     label.appendChild(teamSpan);
@@ -334,6 +224,6 @@ export function updateScorePanel(panel, onPickChange) {
     }
     body.appendChild(r32Section);
   }
+
   panel.appendChild(body);
-  panel.appendChild(grabber);
 }
