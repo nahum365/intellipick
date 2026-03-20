@@ -56,21 +56,22 @@ export function createMatchupCard(matchup) {
   if (isLaterRound) classes += ' matchup-card--later-round';
   if (isLaterRound && hasPrediction) classes += ' matchup-card--has-prediction';
   if (!hasAnyTeam) classes += ' matchup-card--empty';
-  if (isUpset) classes += ' matchup-card--upset';
-  else if (confClass) classes += ` matchup-card--${confClass}`;
 
-  // Live game shimmer
-  if (hasScore && (liveScore.status === 'live' || liveScore.status === 'halftime')) {
+  // Three game states: live, final, or default (hasn't started)
+  const isLive = hasScore && (liveScore.status === 'live' || liveScore.status === 'halftime');
+  const isFinal = hasScore && liveScore.status === 'final';
+
+  if (isLive) {
     classes += ' matchup-card--live';
-  }
-
-  // Prediction result styling for final games
-  if (hasScore && liveScore.status === 'final' && matchup.recommendedPick) {
-    const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;
-    const recWon = recIsTeam1
-      ? liveScore.team1Score > liveScore.team2Score
-      : liveScore.team2Score > liveScore.team1Score;
-    classes += recWon ? ' matchup-card--pick-correct' : ' matchup-card--pick-incorrect';
+  } else if (isFinal) {
+    classes += ' matchup-card--final';
+    if (matchup.recommendedPick) {
+      const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;
+      const recWon = recIsTeam1
+        ? liveScore.team1Score > liveScore.team2Score
+        : liveScore.team2Score > liveScore.team1Score;
+      classes += recWon ? ' matchup-card--pick-correct' : ' matchup-card--pick-incorrect';
+    }
   }
 
   card.className = classes;
