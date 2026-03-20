@@ -8,7 +8,7 @@ const REGIONS = [
   { name: 'Midwest', dir: 'rtl' },
 ];
 
-export function createBracket(onPickMade) {
+export function createBracket() {
   const wrapper = document.createElement('div');
   wrapper.className = 'bracket-wrapper';
 
@@ -16,13 +16,13 @@ export function createBracket(onPickMade) {
   bracket.className = 'bracket';
 
   for (const r of REGIONS) {
-    const regionEl = createRegion(r.name, r.dir, onPickMade);
+    const regionEl = createRegion(r.name, r.dir);
     regionEl.dataset.region = r.name;
     bracket.appendChild(regionEl);
 
     // Insert Final Four center after East (grid position handled by CSS)
     if (r.name === 'East') {
-      bracket.appendChild(createFinalFour(onPickMade));
+      bracket.appendChild(createFinalFour());
     }
   }
 

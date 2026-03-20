@@ -1,6 +1,5 @@
 import teamsData from '../data/teams.json';
-import { getPick } from '../engine/picks.js';
-import { cascadePick, getRoundIndex } from '../engine/propagation.js';
+import { getRoundIndex } from '../engine/propagation.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
 import { openModal } from './modal.js';
 import { getScoreForMatchup } from '../engine/liveScores.js';
@@ -23,7 +22,24 @@ function isUpsetCategory(category) {
   return category.toLowerCase().includes('upset') && !category.toLowerCase().includes('avoid');
 }
 
-export function createMatchupCard(matchup, onPickMade) {
+function formatGameDate(dateStr) {
+  if (!dateStr) return 'TBD';
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return 'TBD';
+    const month = d.toLocaleString('en-US', { month: 'short' });
+    const day = d.getDate();
+    const hours = d.getHours();
+    const mins = String(d.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const h = hours % 12 || 12;
+    return `${month} ${day}, ${h}:${mins} ${ampm}`;
+  } catch {
+    return 'TBD';
+  }
+}
+
+export function createMatchupCard(matchup) {
   const card = document.createElement('div');
   const isR64 = getRoundIndex(matchup.id) === 0;
   const isLaterRound = !isR64;
@@ -35,7 +51,6 @@ export function createMatchupCard(matchup, onPickMade) {
 
   const liveScore = hasTeams ? getScoreForMatchup(matchup.id) : null;
   const hasScore = liveScore && liveScore.status !== 'scheduled';
-  const mkt = hasTeams ? getMarketData(matchup.id) : null;
 
   let classes = 'matchup-card';
   if (isLaterRound) classes += ' matchup-card--later-round';
@@ -81,8 +96,6 @@ export function createMatchupCard(matchup, onPickMade) {
   }
 
   // Team rows
-  const currentPick = getPick(matchup.id);
-
   const renderTeamRow = (team, isTop) => {
     const row = document.createElement('div');
 
@@ -94,10 +107,8 @@ export function createMatchupCard(matchup, onPickMade) {
 
     const profile = getTeamProfile(team.id);
     const isRecommended = matchup.recommendedPick === team.id;
-    const isPicked = currentPick && currentPick.id === team.id;
 
     let rowClasses = 'team-row';
-    if (isPicked) rowClasses += ' team-row--picked';
     if (isRecommended) rowClasses += ' team-row--recommended';
     row.className = rowClasses;
 
@@ -119,7 +130,7 @@ export function createMatchupCard(matchup, onPickMade) {
     name.textContent = team.name;
     row.appendChild(name);
 
-    // Record (before score)
+    // Record
     if (profile && profile.record) {
       const record = document.createElement('span');
       record.className = 'team-row__record';
@@ -150,28 +161,11 @@ export function createMatchupCard(matchup, onPickMade) {
       row.appendChild(injuries);
     }
 
-    // Confidence percentage (hidden when live scores are showing)
-    if (hasPrediction && !hasScore) {
-      const pct = document.createElement('span');
-      pct.className = 'team-row__pct';
-      const teamPct = isRecommended ? matchup.confidencePercentage : (100 - matchup.confidencePercentage);
-      pct.textContent = `${teamPct}%`;
-      row.appendChild(pct);
-    }
-
-    // Check mark if picked
-    if (isPicked) {
-      const check = document.createElement('span');
-      check.className = 'team-row__check';
-      check.textContent = '\u2713';
-      row.appendChild(check);
-    }
-
-    // Click to pick
+    // Click -> open modal
+    row.style.cursor = 'pointer';
     row.addEventListener('click', (e) => {
       e.stopPropagation();
-      cascadePick(matchup.id, team);
-      if (onPickMade) onPickMade();
+      openModal(matchup, { scrollToTeamId: team.id });
     });
 
     // Hover for tooltip
@@ -188,30 +182,34 @@ export function createMatchupCard(matchup, onPickMade) {
   card.appendChild(renderTeamRow(matchup.team1, true));
   card.appendChild(renderTeamRow(matchup.team2, false));
 
-  // Live game status bar
-  if (hasScore && (liveScore.status === 'live' || liveScore.status === 'halftime')) {
-    const statusEl = document.createElement('div');
-    statusEl.className = 'matchup-card__live-status';
-    const dot = document.createElement('span');
-    dot.className = 'matchup-card__live-dot';
-    statusEl.appendChild(dot);
-    const label = document.createElement('span');
-    if (liveScore.status === 'halftime') {
-      label.textContent = 'HALF';
-    } else {
-      const periodLabel = liveScore.period > 2 ? 'OT' : liveScore.period === 1 ? '1H' : '2H';
-      label.textContent = `${liveScore.clock} ${periodLabel}`;
-    }
-    statusEl.appendChild(label);
-    card.appendChild(statusEl);
-  } else if (hasScore && liveScore.status === 'final') {
-    const statusEl = document.createElement('div');
-    statusEl.className = 'matchup-card__final-status';
-    statusEl.textContent = 'FINAL';
-    card.appendChild(statusEl);
+  // --- IntelliPick odds (always above Polymarket) ---
+  if (hasPrediction && hasTeams) {
+    const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;
+    const t1Pct = recIsTeam1 ? matchup.confidencePercentage : (100 - matchup.confidencePercentage);
+    const t2Pct = recIsTeam1 ? (100 - matchup.confidencePercentage) : matchup.confidencePercentage;
+
+    const ipBar = document.createElement('div');
+    ipBar.className = 'matchup-card__odds-bar';
+
+    const ip1 = document.createElement('span');
+    ip1.className = 'matchup-card__odds-pct';
+    ip1.textContent = t1Pct + '%';
+
+    const ipSource = document.createElement('span');
+    ipSource.className = 'matchup-card__odds-source';
+    ipSource.textContent = 'IntelliPick';
+
+    const ip2 = document.createElement('span');
+    ip2.className = 'matchup-card__odds-pct';
+    ip2.textContent = t2Pct + '%';
+
+    ipBar.appendChild(ip1);
+    ipBar.appendChild(ipSource);
+    ipBar.appendChild(ip2);
+    card.appendChild(ipBar);
   }
 
-  // Polymarket odds — clean percentage display
+  // --- Polymarket odds (below IntelliPick) ---
   const oddsData = liveScore && liveScore.odds;
   if (oddsData) {
     const oddsBar = document.createElement('div');
@@ -227,7 +225,7 @@ export function createMatchupCard(matchup, onPickMade) {
 
     const source = document.createElement('span');
     source.className = 'matchup-card__odds-source';
-    source.textContent = oddsData.wsConnected ? '\u26A1 Polymarket' : 'Polymarket';
+    source.textContent = 'Polymarket';
 
     const t2Pct = document.createElement('span');
     t2Pct.className = 'matchup-card__odds-pct';
@@ -243,24 +241,41 @@ export function createMatchupCard(matchup, onPickMade) {
     card.appendChild(oddsBar);
   }
 
-  // Footer with probability bar and info button (any round with prediction data)
-  if (hasPrediction) {
-    const footer = document.createElement('div');
-    footer.className = 'matchup-card__footer';
+  // --- Game status footer (always at bottom) ---
+  const statusBar = document.createElement('div');
+  statusBar.className = 'matchup-card__status-bar';
 
-    const bar = document.createElement('div');
-    bar.className = 'prob-bar';
-    const fill = document.createElement('div');
-    fill.className = `prob-bar__fill prob-bar__fill--${confClass}`;
-    fill.style.width = matchup.confidencePercentage + '%';
-    bar.appendChild(fill);
-    footer.appendChild(bar);
+  const statusLabel = document.createElement('span');
+  statusLabel.className = 'matchup-card__status-label';
 
-    const pctLabel = document.createElement('span');
-    pctLabel.className = 'matchup-card__pct';
-    pctLabel.textContent = matchup.confidencePercentage + '%';
-    footer.appendChild(pctLabel);
+  if (!hasTeams) {
+    statusLabel.textContent = 'TBD';
+  } else if (hasScore && (liveScore.status === 'live' || liveScore.status === 'halftime')) {
+    statusBar.classList.add('matchup-card__status-bar--live');
+    const dot = document.createElement('span');
+    dot.className = 'matchup-card__live-dot';
+    statusLabel.appendChild(dot);
+    const text = document.createElement('span');
+    if (liveScore.status === 'halftime') {
+      text.textContent = 'HALF';
+    } else {
+      const periodLabel = liveScore.period > 2 ? 'OT' : liveScore.period === 1 ? '1H' : '2H';
+      text.textContent = `${liveScore.clock} ${periodLabel}`;
+    }
+    statusLabel.appendChild(text);
+  } else if (hasScore && liveScore.status === 'final') {
+    const finalText = liveScore.period > 2 ? 'Final/OT' : 'Final';
+    statusLabel.textContent = finalText;
+  } else if (liveScore && liveScore.gameDate) {
+    statusLabel.textContent = formatGameDate(liveScore.gameDate);
+  } else {
+    statusLabel.textContent = 'TBD';
+  }
 
+  statusBar.appendChild(statusLabel);
+
+  // Info button
+  if (hasTeams) {
     const infoBtn = document.createElement('button');
     infoBtn.className = 'matchup-card__info-btn';
     infoBtn.textContent = 'i';
@@ -269,10 +284,10 @@ export function createMatchupCard(matchup, onPickMade) {
       e.stopPropagation();
       openModal(matchup);
     });
-    footer.appendChild(infoBtn);
-
-    card.appendChild(footer);
+    statusBar.appendChild(infoBtn);
   }
+
+  card.appendChild(statusBar);
 
   return card;
 }

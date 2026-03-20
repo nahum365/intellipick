@@ -4,13 +4,11 @@ import './styles/matchup.css';
 import './styles/tooltip.css';
 import './styles/modal.css';
 
-import { loadPicks, onPicksChange, clearAllPicks, setPick } from './engine/picks.js';
-import { getSmartFillPicks } from './engine/scoring.js';
-import { cascadePick, getValidBracketIds } from './engine/propagation.js';
-import { copyBracketToClipboard, downloadBracketText } from './components/exportBracket.js';
+import { loadPicks } from './engine/picks.js';
+import { getValidBracketIds } from './engine/propagation.js';
 import { createBracket } from './components/bracket.js';
-import { createScorePanel, updateScorePanel } from './components/scorePanel.js';
-import { createInsightsBar, updateInsightsBar } from './components/insightsBar.js';
+import { createScorePanel } from './components/scorePanel.js';
+import { createInsightsBar } from './components/insightsBar.js';
 import { startPolling, onScoresUpdate } from './engine/liveScores.js';
 const app = document.getElementById('app');
 
@@ -33,86 +31,9 @@ function renderApp() {
   logo.innerHTML = 'Intelli<span>Pick</span>';
   header.appendChild(logo);
 
-  const controls = document.createElement('div');
-  controls.className = 'header__controls';
-
-  const smartFillBtn = document.createElement('button');
-  smartFillBtn.className = 'btn btn--primary';
-  smartFillBtn.textContent = 'Smart Fill';
-  smartFillBtn.addEventListener('click', () => {
-    const fills = getSmartFillPicks();
-    for (const [id, team] of Object.entries(fills)) {
-      cascadePick(id, team);
-    }
-    rerender();
-  });
-  controls.appendChild(smartFillBtn);
-
-  const exportBtn = document.createElement('button');
-  exportBtn.className = 'btn btn--secondary';
-  exportBtn.textContent = 'Export';
-  exportBtn.addEventListener('click', () => {
-    // Show a small dropdown with copy/download options
-    const existing = document.querySelector('.export-dropdown');
-    if (existing) { existing.remove(); return; }
-
-    const dropdown = document.createElement('div');
-    dropdown.className = 'export-dropdown';
-    dropdown.style.cssText = 'position:absolute;top:100%;right:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:100;display:flex;flex-direction:column;gap:4px;min-width:160px';
-
-    const copyBtn = document.createElement('button');
-    copyBtn.className = 'btn btn--primary';
-    copyBtn.style.cssText = 'font-size:12px;padding:6px 12px;width:100%';
-    copyBtn.textContent = 'Copy to Clipboard';
-    copyBtn.addEventListener('click', () => {
-      copyBracketToClipboard().then(() => {
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => dropdown.remove(), 1000);
-      });
-    });
-
-    const dlBtn = document.createElement('button');
-    dlBtn.className = 'btn';
-    dlBtn.style.cssText = 'font-size:12px;padding:6px 12px;width:100%;background:var(--bg-secondary);color:var(--text);border:1px solid var(--border)';
-    dlBtn.textContent = 'Download .txt';
-    dlBtn.addEventListener('click', () => {
-      downloadBracketText();
-      dropdown.remove();
-    });
-
-    dropdown.appendChild(copyBtn);
-    dropdown.appendChild(dlBtn);
-
-    // Position relative to export button
-    exportBtn.style.position = 'relative';
-    exportBtn.appendChild(dropdown);
-
-    // Close on outside click
-    const close = (e) => {
-      if (!dropdown.contains(e.target) && e.target !== exportBtn) {
-        dropdown.remove();
-        document.removeEventListener('click', close);
-      }
-    };
-    setTimeout(() => document.addEventListener('click', close), 0);
-  });
-  controls.appendChild(exportBtn);
-
-  const resetBtn = document.createElement('button');
-  resetBtn.className = 'btn btn--danger';
-  resetBtn.textContent = 'Reset';
-  resetBtn.addEventListener('click', () => {
-    if (confirm('Clear all picks?')) {
-      clearAllPicks();
-      rerender();
-    }
-  });
-  controls.appendChild(resetBtn);
-
-  header.appendChild(controls);
   app.appendChild(header);
 
-  // Score panel (on mobile renders as a sticky shelf below header)
+  // Score panel
   scorePanelEl = createScorePanel(() => rerender());
 
   // Main content
@@ -122,7 +43,7 @@ function renderApp() {
   // Bracket
   bracketContainerEl = document.createElement('div');
   bracketContainerEl.className = 'bracket-container';
-  const bracket = createBracket(() => rerender());
+  const bracket = createBracket();
   bracketContainerEl.appendChild(bracket);
   main.appendChild(bracketContainerEl);
 
