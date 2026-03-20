@@ -1,10 +1,10 @@
-import { getAllPicks } from '../engine/picks.js';
-import { computeScore, getUpsetAlerts } from '../engine/scoring.js';
+import { getUpsetAlerts } from '../engine/scoring.js';
 import { getR64Matchup, getRegionR64Matchups, getValidBracketIds } from '../engine/propagation.js';
 import { getFetchStatus, getScoreForMatchup } from '../engine/liveScores.js';
 import { openModal } from './modal.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
 import teamsData from '../data/teams.json';
+import matchupsData from '../data/matchups.json';
 
 function getTeamProfile(teamId) {
   return teamsData.teams.find(t => t.id === teamId) || null;
@@ -55,67 +55,97 @@ function buildFetchStatusHtml() {
   return `<div class="fetch-status fetch-status--done"><span class="fetch-status__text">${parts.join(', ')}</span></div>`;
 }
 
-export function createScorePanel(onPickChange) {
+// Compute IntelliPick performance across all matchups with predictions
+function computeIntelliPickPerformance() {
+  const results = { correct: 0, incorrect: 0, pending: 0, live: 0, total: 0, weightedScore: 0, weightedTotal: 0 };
+
+  for (const m of matchupsData.matchups) {
+    if (!m.recommendedPick || !m.team1 || !m.team2) continue;
+    results.total++;
+
+    const liveScore = getScoreForMatchup(m.id);
+    if (!liveScore) { results.pending++; continue; }
+
+    if (liveScore.status === 'live' || liveScore.status === 'halftime') {
+      results.live++;
+      continue;
+    }
+
+    if (liveScore.status !== 'final') { results.pending++; continue; }
+
+    const recIsTeam1 = m.recommendedPick === m.team1.id;
+    const recWon = recIsTeam1
+      ? liveScore.team1Score > liveScore.team2Score
+      : liveScore.team2Score > liveScore.team1Score;
+
+    if (recWon) {
+      results.correct++;
+      results.weightedScore += m.confidencePercentage || 50;
+    } else {
+      results.incorrect++;
+    }
+    results.weightedTotal += m.confidencePercentage || 50;
+  }
+
+  return results;
+}
+
+export function createScorePanel() {
   const panel = document.createElement('div');
   panel.className = 'score-sidebar';
-  updateScorePanel(panel, onPickChange);
+  updateScorePanel(panel);
   return panel;
 }
 
-export function updateScorePanel(panel, onPickChange) {
-  const picks = getAllPicks();
-  const score = computeScore(picks);
+export function updateScorePanel(panel) {
   const upsets = getUpsetAlerts();
-  const validIds = getValidBracketIds();
-  const totalGames = validIds.length; // 63: 32+16+8+4+2+1
-
-  const pickedCount = validIds.filter(id => picks[id]).length;
-  const pct = pickedCount > 0 ? score.overall.toFixed(1) : '--';
+  const perf = computeIntelliPickPerformance();
+  const decided = perf.correct + perf.incorrect;
+  const winPct = decided > 0 ? Math.round((perf.correct / decided) * 100) : null;
 
   panel.innerHTML = '';
 
   const body = document.createElement('div');
   body.className = 'score-sidebar__body';
 
-  // Score content
-  const content = document.createElement('div');
-
+  // Fetch status
   const statusContainer = document.createElement('div');
   statusContainer.className = 'fetch-status-container';
   statusContainer.innerHTML = buildFetchStatusHtml();
-  content.appendChild(statusContainer);
+  body.appendChild(statusContainer);
 
-  const innerHtml = document.createElement('div');
-  innerHtml.innerHTML = `
+  // IntelliPick Performance section
+  const perfSection = document.createElement('div');
+  const recordText = decided > 0 ? `${perf.correct}-${perf.incorrect}` : '--';
+  const pctDisplay = winPct !== null ? `${winPct}%` : '--';
+  const pctColor = winPct !== null
+    ? (winPct >= 70 ? 'var(--confidence-very-high)' : winPct >= 50 ? 'var(--primary)' : 'var(--upset)')
+    : 'var(--text-muted)';
+  const barWidth = winPct !== null ? winPct : 0;
+
+  let statusLine = '';
+  if (perf.live > 0) statusLine += `<span style="color:var(--upset)">${perf.live} live</span>`;
+  if (perf.pending > 0) statusLine += `${statusLine ? ' &middot; ' : ''}${perf.pending} upcoming`;
+
+  perfSection.innerHTML = `
     <div style="margin-bottom:20px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Bracket Score</div>
-      <div style="font-size:32px;font-weight:800;color:var(--primary)">${pct}${pickedCount > 0 ? '%' : ''}</div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">IntelliPick Performance</div>
+      <div style="display:flex;align-items:baseline;gap:10px">
+        <div style="font-size:32px;font-weight:800;color:${pctColor}">${recordText}</div>
+        ${winPct !== null ? `<div style="font-size:18px;font-weight:700;color:${pctColor}">${pctDisplay}</div>` : ''}
+      </div>
       <div style="margin-top:6px">
         <div style="height:6px;background:var(--border-light);border-radius:3px;overflow:hidden">
-          <div style="height:100%;width:${pickedCount > 0 ? score.overall : 0}%;background:var(--primary);border-radius:3px;transition:width 0.3s"></div>
+          <div style="height:100%;width:${barWidth}%;background:${pctColor};border-radius:3px;transition:width 0.3s"></div>
         </div>
       </div>
-    </div>
-
-    <div style="margin-bottom:16px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Progress</div>
-      <div style="font-size:13px;color:var(--text)"><strong>${pickedCount}</strong> / ${totalGames} games picked</div>
-      <div style="height:4px;background:var(--border-light);border-radius:2px;overflow:hidden;margin-top:4px">
-        <div style="height:100%;width:${(pickedCount / totalGames) * 100}%;background:var(--confidence-very-high);border-radius:2px;transition:width 0.3s"></div>
-      </div>
-    </div>
-
-    <div style="margin-bottom:16px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Upset Picks</div>
-      <div style="font-size:24px;font-weight:800;color:var(--upset)">${score.upsetCount}</div>
-      <div style="font-size:11px;color:var(--text-secondary)">${upsets.length} upsets recommended</div>
+      ${decided > 0 ? `<div style="font-size:11px;color:var(--text-secondary);margin-top:4px">${perf.correct} correct, ${perf.incorrect} wrong out of ${perf.total} picks</div>` : `<div style="font-size:11px;color:var(--text-muted);margin-top:4px">No games finalized yet</div>`}
+      ${statusLine ? `<div style="font-size:11px;margin-top:2px">${statusLine}</div>` : ''}
     </div>
   `;
-  content.appendChild(innerHtml);
+  body.appendChild(perfSection);
 
-  body.appendChild(content);
-
-  // Build recommended upsets list, grouped by round
+  // Intelliupsets section
   const r64Upsets = upsets.filter(u => u.round === 'First Round');
   const r32Upsets = upsets.filter(u => u.round === 'Second Round');
 
@@ -124,7 +154,6 @@ export function updateScorePanel(panel, onPickChange) {
     row.className = 'upset-row';
     row.style.cssText = 'font-size:11px;padding:4px 0;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:6px';
 
-    // Team names with blurb tooltips
     const label = document.createElement('span');
     label.style.cssText = 'flex:1;min-width:0';
 
@@ -162,7 +191,7 @@ export function updateScorePanel(panel, onPickChange) {
     confSpan.textContent = `${u.confidencePercentage}%`;
     row.appendChild(confSpan);
 
-    // Outcome indicator (check or x) for final games
+    // Outcome indicator for final games
     const liveScore = getScoreForMatchup(pickId);
     if (liveScore && liveScore.status === 'final' && matchup) {
       const upsetTeamIsTeam1 = u.team.id === matchup.team1?.id;
@@ -194,13 +223,42 @@ export function updateScorePanel(panel, onPickChange) {
     return row;
   }
 
+  // Count upset results
+  let upsetHits = 0, upsetMisses = 0;
+  for (const u of upsets) {
+    const pickId = u.round === 'Second Round'
+      ? (resolveR32GeneratedId(u.matchupId, u.region) || u.matchupId)
+      : u.matchupId;
+    const matchup = getR64Matchup(u.matchupId);
+    const liveScore = getScoreForMatchup(pickId);
+    if (liveScore && liveScore.status === 'final' && matchup) {
+      const upsetTeamIsTeam1 = u.team.id === matchup.team1?.id;
+      const upsetTeamScore = upsetTeamIsTeam1 ? liveScore.team1Score : liveScore.team2Score;
+      const otherScore = upsetTeamIsTeam1 ? liveScore.team2Score : liveScore.team1Score;
+      if (upsetTeamScore > otherScore) upsetHits++;
+      else upsetMisses++;
+    }
+  }
+  const upsetDecided = upsetHits + upsetMisses;
+
+  // Intelliupsets header
+  const upsetHeader = document.createElement('div');
+  upsetHeader.innerHTML = `
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px">Intelliupsets</div>
+      <div style="font-size:24px;font-weight:800;color:var(--upset)">${upsets.length}</div>
+      <div style="font-size:11px;color:var(--text-secondary)">${upsetDecided > 0 ? `${upsetHits} hit, ${upsetMisses} missed` : `${upsets.length} upset calls`}</div>
+    </div>
+  `;
+  body.appendChild(upsetHeader);
+
   // Round of 64 upsets
   if (r64Upsets.length > 0) {
     const r64Section = document.createElement('div');
     r64Section.style.cssText = 'margin-bottom:16px';
     const r64Title = document.createElement('div');
     r64Title.style.cssText = 'font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px';
-    r64Title.textContent = 'Round of 64 Upsets';
+    r64Title.textContent = 'Round of 64';
     r64Section.appendChild(r64Title);
     for (const u of r64Upsets) {
       const matchup = getR64Matchup(u.matchupId);
@@ -215,7 +273,7 @@ export function updateScorePanel(panel, onPickChange) {
     r32Section.style.cssText = 'margin-bottom:16px';
     const r32Title = document.createElement('div');
     r32Title.style.cssText = 'font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px';
-    r32Title.textContent = 'Round of 32 Upsets';
+    r32Title.textContent = 'Round of 32';
     r32Section.appendChild(r32Title);
     for (const u of r32Upsets) {
       const matchup = getR64Matchup(u.matchupId);

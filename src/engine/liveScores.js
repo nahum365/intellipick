@@ -114,7 +114,9 @@ function findTeamId(espnCompetitor) {
   ].filter(Boolean);
 
   // Direct exact match (case-insensitive)
-  for (const n of rawNames) {
+  // Sort longest-first so "Miami (OH)" matches before "Miami" (avoids miami-fl/miami-oh confusion)
+  const sortedNames = [...rawNames].sort((a, b) => b.length - a.length);
+  for (const n of sortedNames) {
     const id = ESPN_TO_TEAM_ID[n.toLowerCase()];
     if (id) return id;
   }
