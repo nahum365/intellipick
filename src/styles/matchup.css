@@ -362,15 +362,46 @@
 
 /* Polymarket odds bar */
 .matchup-card__odds-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 2px 6px;
+  padding: 3px 6px;
   font-size: 9px;
   color: var(--text-secondary);
   background: var(--bg);
   border-top: 1px solid var(--border-light);
+}
+
+.matchup-card__odds-bar--live {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%);
+}
+
+/* Probability split bar inside odds bar */
+.matchup-card__prob-split {
+  display: flex;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+
+.matchup-card__prob-fill {
+  height: 100%;
+  transition: width 0.5s ease-out;
+}
+
+.matchup-card__prob-fill--t1 {
+  background: var(--primary);
+  border-radius: 2px 0 0 2px;
+}
+
+.matchup-card__prob-fill--t2 {
+  background: var(--upset);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Labels row under split bar */
+.matchup-card__odds-labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .matchup-card__odds-source {
@@ -378,7 +409,7 @@
   text-transform: uppercase;
   letter-spacing: 0.3px;
   color: var(--text-muted);
-  margin-right: 2px;
+  font-size: 8px;
 }
 
 .matchup-card__odds-team {
@@ -387,6 +418,27 @@
 
 .matchup-card__odds-sep {
   color: var(--text-muted);
+}
+
+/* Flash animations for price changes */
+.odds-flash--up {
+  color: var(--confidence-very-high);
+  animation: odds-flash-green 0.6s ease-out;
+}
+
+.odds-flash--down {
+  color: var(--upset);
+  animation: odds-flash-red 0.6s ease-out;
+}
+
+@keyframes odds-flash-green {
+  0% { background: #d1fae5; }
+  100% { background: transparent; }
+}
+
+@keyframes odds-flash-red {
+  0% { background: #fee2e2; }
+  100% { background: transparent; }
 }
 
 /* Prediction result indicators on card */

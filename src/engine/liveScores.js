@@ -1,5 +1,6 @@
 import matchupsData from '../data/matchups.json';
 import { getR64Matchup, getGeneratedMatchup, getRegionR64Matchups, REGIONS } from './propagation.js';
+import { startPolymarket, stopPolymarket, getMarketData, getAllMarketData, onPolymarketUpdate } from './polymarket.js';
 
 // Map internal team IDs to ESPN shortDisplayName values
 const TEAM_ID_TO_ESPN = {
@@ -537,6 +538,76 @@ async function fetchScores() {
 export function startPolling() {
   fetchScores();
   pollIntervalId = setInterval(fetchScores, 30000);
+
+  // Start Polymarket WebSocket integration alongside polling
+  startPolymarket().catch(err => console.warn('[Polymarket] Init error:', err));
+
+  // When Polymarket WS sends updates, merge into scoreMap and notify
+  onPolymarketUpdate((detail) => {
+    if (detail && detail.matchupId) {
+      mergePolymarketData(detail.matchupId);
+    } else {
+      // Bulk update (init/refresh) — merge all
+      for (const matchupId of getAllMarketData().keys()) {
+        mergePolymarketData(matchupId);
+      }
+    }
+    notifyListeners();
+  });
+}
+
+function mergePolymarketData(matchupId) {
+  const mkt = getMarketData(matchupId);
+  if (!mkt) return;
+
+  // Ensure scoreMap entry exists
+  if (!scoreMap.has(matchupId)) {
+    scoreMap.set(matchupId, {
+      status: 'scheduled',
+      clock: '',
+      period: 0,
+      team1Score: 0,
+      team2Score: 0,
+      odds: null,
+    });
+  }
+
+  const entry = scoreMap.get(matchupId);
+
+  // Update odds from Polymarket WS data
+  entry.odds = {
+    source: 'Polymarket',
+    team1Prob: Math.round(mkt.team1Prob * 100),
+    team2Prob: Math.round(mkt.team2Prob * 100),
+    moneyline1: mkt.moneyline1,
+    moneyline2: mkt.moneyline2,
+    team1ProbDelta: mkt.team1ProbDelta || 0,
+    team2ProbDelta: mkt.team2ProbDelta || 0,
+    volume: mkt.volume,
+    liquidity: mkt.liquidity,
+    bestBid: mkt.bestBid,
+    bestAsk: mkt.bestAsk,
+    sentiment: mkt.sentiment,
+    live: mkt.live,
+    wsConnected: true,
+  };
+
+  // If Sports WS has game state, merge it
+  if (mkt.gameScore) {
+    const parts = mkt.gameScore.split('-').map(s => parseInt(s, 10));
+    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+      entry.team1Score = parts[0];
+      entry.team2Score = parts[1];
+    }
+    if (mkt.live) entry.status = 'live';
+    if (mkt.ended) entry.status = 'final';
+    if (mkt.gamePeriod === 'HT') entry.status = 'halftime';
+    if (mkt.gameElapsed) entry.clock = mkt.gameElapsed;
+    if (mkt.gamePeriod) {
+      const periodMap = { '1H': 1, '2H': 2, 'HT': 1, 'OT': 3, 'FT': 2 };
+      entry.period = periodMap[mkt.gamePeriod] || entry.period;
+    }
+  }
 }
 
 export function stopPolling() {
@@ -544,6 +615,7 @@ export function stopPolling() {
     clearInterval(pollIntervalId);
     pollIntervalId = null;
   }
+  stopPolymarket();
 }
 
 export function getScoreForMatchup(matchupId) {
