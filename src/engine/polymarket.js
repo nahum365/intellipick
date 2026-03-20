@@ -35,7 +35,7 @@ async function fetchGammaEvents() {
   const url = `${GAMMA_BASE}/events?series_id=${SERIES_ID}&active=true&closed=false&limit=100`;
   const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
   try {
-    const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+    const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(30000) });
     if (r.ok) {
       const data = await r.json();
       return Array.isArray(data) ? data : [];
