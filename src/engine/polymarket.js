@@ -47,19 +47,14 @@ async function fetchGammaEvents() {
 }
 
 async function fetchGammaViaProxy(targetUrl) {
-  const proxies = [
-    'https://corsproxy.io/?' + encodeURIComponent(targetUrl),
-    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl),
-  ];
-  for (const proxyUrl of proxies) {
-    try {
-      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
-      if (r.ok) {
-        const data = await r.json();
-        return Array.isArray(data) ? data : [];
-      }
-    } catch { continue; }
-  }
+  const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl);
+  try {
+    const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+    if (r.ok) {
+      const data = await r.json();
+      return Array.isArray(data) ? data : [];
+    }
+  } catch {}
   return [];
 }
 

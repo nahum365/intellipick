@@ -1,6 +1,6 @@
 import matchupsData from '../data/matchups.json';
 import { getR64Matchup, getGeneratedMatchup, getRegionR64Matchups, REGIONS } from './propagation.js';
-import { startPolymarket, stopPolymarket, getMarketData, getAllMarketData, onPolymarketUpdate } from './polymarket.js';
+import { startPolymarket, stopPolymarket } from './polymarket.js';
 
 // Map internal team IDs to ESPN shortDisplayName values
 const TEAM_ID_TO_ESPN = {
@@ -217,13 +217,8 @@ function getMatchupTeamOrder(matchupId) {
 function processEvents(events) {
   // Preserve existing odds across ESPN refreshes
   const prevOdds = new Map();
-  const polymarketOnlyEntries = new Map();
   for (const [id, entry] of scoreMap) {
     if (entry.odds) prevOdds.set(id, entry.odds);
-    // Keep entries that were created solely for Polymarket odds (no ESPN data)
-    if (entry._polymarketOnly) {
-      polymarketOnlyEntries.set(id, entry);
-    }
   }
   scoreMap.clear();
 
@@ -280,13 +275,6 @@ function processEvents(events) {
   }
 
   console.log(`[ESPN] processEvents: ${matched} matched, ${unmatched} unmatched out of ${events.length} events`);
-
-  // Restore Polymarket-only entries that ESPN didn't cover
-  for (const [id, entry] of polymarketOnlyEntries) {
-    if (!scoreMap.has(id)) {
-      scoreMap.set(id, entry);
-    }
-  }
 }
 
 // Convert Polymarket probability (0-1) to American odds
@@ -379,23 +367,39 @@ function parseMarketOutcomes(market) {
   return [];
 }
 
-async function fetchViaProxy(targetUrl) {
-  const proxies = [
-    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl),
-    'https://corsproxy.io/?' + encodeURIComponent(targetUrl),
-  ];
-  for (const proxyUrl of proxies) {
+// Rate-limited codetabs proxy — max 5 requests per second
+let _codetabsQueue = Promise.resolve();
+let _codetabsLastBatch = 0;
+let _codetabsBatchCount = 0;
+
+function fetchViaCodetabs(targetUrl) {
+  _codetabsQueue = _codetabsQueue.then(async () => {
+    const now = Date.now();
+    if (now - _codetabsLastBatch > 1000) {
+      _codetabsLastBatch = now;
+      _codetabsBatchCount = 0;
+    }
+    if (_codetabsBatchCount >= 5) {
+      const wait = 1000 - (now - _codetabsLastBatch);
+      if (wait > 0) await new Promise(r => setTimeout(r, wait));
+      _codetabsLastBatch = Date.now();
+      _codetabsBatchCount = 0;
+    }
+    _codetabsBatchCount++;
+
+    const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl);
     try {
-      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
       if (r.ok) return r;
-    } catch { continue; }
-  }
-  return null;
+    } catch {}
+    return null;
+  });
+  return _codetabsQueue;
 }
 
-// Fetch JSON from Polymarket via proxy, returning parsed array or []
+// Fetch JSON from Polymarket via rate-limited codetabs proxy
 async function fetchPolymarketJson(targetUrl) {
-  const res = await fetchViaProxy(targetUrl);
+  const res = await fetchViaCodetabs(targetUrl);
   if (!res) return [];
   try {
     const data = await res.json();
@@ -531,8 +535,7 @@ async function fetchPolymarketOdds() {
       if (team1Prob && !team2Prob) team2Prob = 1 - team1Prob;
       if (team2Prob && !team1Prob) team1Prob = 1 - team2Prob;
 
-      // Only set proxy-based odds if WS-connected odds aren't already present
-      if (team1Prob && team2Prob && !(existing.odds && existing.odds.wsConnected)) {
+      if (team1Prob && team2Prob) {
         existing.odds = {
           source: 'Polymarket',
           team1Prob: Math.round(team1Prob * 100),
@@ -626,58 +629,8 @@ export function startPolling() {
 
   // Start Polymarket WebSocket integration alongside polling
   startPolymarket().catch(err => console.warn('[Polymarket] Init error:', err));
-
-  // When Polymarket WS sends updates, merge into scoreMap and notify
-  onPolymarketUpdate((detail) => {
-    if (detail && detail.matchupId) {
-      mergePolymarketData(detail.matchupId);
-    } else {
-      // Bulk update (init/refresh) — merge all
-      for (const matchupId of getAllMarketData().keys()) {
-        mergePolymarketData(matchupId);
-      }
-    }
-    notifyListeners();
-  });
 }
 
-function mergePolymarketData(matchupId) {
-  const mkt = getMarketData(matchupId);
-  if (!mkt) return;
-
-  // Ensure scoreMap entry exists
-  if (!scoreMap.has(matchupId)) {
-    scoreMap.set(matchupId, {
-      status: 'scheduled',
-      clock: '',
-      period: 0,
-      team1Score: 0,
-      team2Score: 0,
-      odds: null,
-      _polymarketOnly: true, // flag so ESPN refresh preserves this entry
-    });
-  }
-
-  const entry = scoreMap.get(matchupId);
-
-  // Only update odds — never touch ESPN's authoritative score/status/clock data
-  entry.odds = {
-    source: 'Polymarket',
-    team1Prob: Math.round(mkt.team1Prob * 100),
-    team2Prob: Math.round(mkt.team2Prob * 100),
-    moneyline1: mkt.moneyline1,
-    moneyline2: mkt.moneyline2,
-    team1ProbDelta: mkt.team1ProbDelta || 0,
-    team2ProbDelta: mkt.team2ProbDelta || 0,
-    volume: mkt.volume,
-    liquidity: mkt.liquidity,
-    bestBid: mkt.bestBid,
-    bestAsk: mkt.bestAsk,
-    sentiment: mkt.sentiment,
-    live: mkt.live,
-    wsConnected: true,
-  };
-}
 
 export function stopPolling() {
   if (pollIntervalId) {
