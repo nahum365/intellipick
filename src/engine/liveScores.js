@@ -104,22 +104,45 @@ function normalizeStatus(espnStatus) {
 }
 
 function findTeamId(espnCompetitor) {
-  // Try shortDisplayName first, then displayName, then name
-  const names = [
-    espnCompetitor.team?.shortDisplayName,
-    espnCompetitor.team?.displayName,
-    espnCompetitor.team?.name,
+  const team = espnCompetitor.team || {};
+  // Gather all available name variants from ESPN
+  const rawNames = [
+    team.shortDisplayName,
+    team.displayName,
+    team.name,
+    team.abbreviation,
   ].filter(Boolean);
 
-  for (const n of names) {
+  // Direct exact match (case-insensitive)
+  for (const n of rawNames) {
     const id = ESPN_TO_TEAM_ID[n.toLowerCase()];
     if (id) return id;
   }
 
-  // Try matching by stripping common suffixes from displayName
-  const displayName = espnCompetitor.team?.displayName || '';
+  // Strip parentheticals like "(FL)", "(OH)", "(Fla.)" and retry
+  for (const n of rawNames) {
+    const stripped = n.replace(/\s*\([^)]*\)/g, '').trim().toLowerCase();
+    if (stripped) {
+      const id = ESPN_TO_TEAM_ID[stripped];
+      if (id) return id;
+    }
+  }
+
+  // Prefix matching: does ESPN's displayName start with any of our known names?
+  const displayLower = (team.displayName || '').toLowerCase();
   for (const [espnLower, teamId] of Object.entries(ESPN_TO_TEAM_ID)) {
-    if (displayName.toLowerCase().startsWith(espnLower)) return teamId;
+    if (espnLower.length >= 4 && displayLower.startsWith(espnLower)) return teamId;
+  }
+
+  // Substring matching as last resort (only for longer names to avoid false positives)
+  for (const [espnLower, teamId] of Object.entries(ESPN_TO_TEAM_ID)) {
+    if (espnLower.length >= 6) {
+      for (const n of rawNames) {
+        if (n.toLowerCase().includes(espnLower) || espnLower.includes(n.toLowerCase())) {
+          return teamId;
+        }
+      }
+    }
   }
 
   return null;
@@ -197,6 +220,8 @@ function processEvents(events) {
   }
   scoreMap.clear();
 
+  let matched = 0, unmatched = 0;
+
   for (const event of events) {
     const comp = event.competitions?.[0];
     if (!comp) continue;
@@ -206,10 +231,20 @@ function processEvents(events) {
 
     const teamIdA = findTeamId(competitors[0]);
     const teamIdB = findTeamId(competitors[1]);
-    if (!teamIdA || !teamIdB) continue;
+    if (!teamIdA || !teamIdB) {
+      const nameA = competitors[0].team?.shortDisplayName || competitors[0].team?.displayName || '?';
+      const nameB = competitors[1].team?.shortDisplayName || competitors[1].team?.displayName || '?';
+      console.log(`[ESPN] No team ID match: "${nameA}" (${teamIdA || 'unknown'}) vs "${nameB}" (${teamIdB || 'unknown'})`);
+      unmatched++;
+      continue;
+    }
 
     const matchupId = findMatchupIdForTeams(teamIdA, teamIdB);
-    if (!matchupId) continue;
+    if (!matchupId) {
+      console.log(`[ESPN] No matchup found for ${teamIdA} vs ${teamIdB}`);
+      unmatched++;
+      continue;
+    }
 
     // Determine which ESPN competitor maps to team1/team2 in our matchup
     const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
@@ -231,7 +266,11 @@ function processEvents(events) {
       team2Score,
       odds: prevOdds.get(matchupId) || null,
     });
+    console.log(`[ESPN] Matched ${teamIdA} vs ${teamIdB} -> ${matchupId} (${status}, ${team1Score}-${team2Score})`);
+    matched++;
   }
+
+  console.log(`[ESPN] processEvents: ${matched} matched, ${unmatched} unmatched out of ${events.length} events`);
 
   // Restore Polymarket-only entries that ESPN didn't cover
   for (const [id, entry] of polymarketOnlyEntries) {
@@ -509,35 +548,58 @@ function notifyListeners() {
   }
 }
 
-// Generate the NCAA tournament date range to fetch all game days.
-// Tournament typically runs ~3 weeks from mid-March through early April.
-function getTournamentDateRange() {
+// Generate tournament dates to query: past 6 days + today + tomorrow.
+// Individual-day queries are more reliable than ESPN's date-range format.
+function getTournamentDatesToFetch() {
   const today = new Date();
-  const year = today.getFullYear();
-  // Cover full tournament window: March 16 through April 10
-  const start = `${year}0316`;
-  const end = `${year}0410`;
-  return `${start}-${end}`;
+  const dates = [];
+  // Past 6 days through tomorrow
+  for (let i = -6; i <= 1; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    // Only include dates in tournament window (mid-March through early April)
+    const mmdd = d.getMonth() * 100 + d.getDate(); // e.g., 316 for March 16
+    if ((d.getMonth() === 2 && d.getDate() >= 14) || // March 14+
+        (d.getMonth() === 3 && d.getDate() <= 12)) {  // April 1–12
+      dates.push(`${year}${month}${day}`);
+    }
+  }
+  return dates;
 }
 
 async function fetchScores() {
-  const dateRange = getTournamentDateRange();
+  const dates = getTournamentDatesToFetch();
 
-  // Use date range to fetch ALL tournament games (past, live, and upcoming)
-  const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${dateRange}&groups=50&limit=365`;
-
-  // Fetch ESPN scores first, notify immediately so scores appear fast
   fetchStatus.espnLoading = true;
   notifyListeners();
   try {
-    const res = await fetch(url);
-    if (res.ok) {
-      const data = await res.json();
-      const events = data.events || [];
-      console.log(`[ESPN] Fetched ${events.length} events for date range ${dateRange}`);
-      processEvents(events);
-      fetchStatus.espnLastLoaded = Date.now();
+    // Fetch all relevant dates in parallel
+    const fetches = dates.map(date =>
+      fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${date}&groups=50&limit=100`)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+    );
+    const results = await Promise.all(fetches);
+
+    // Merge events, deduplicating by ESPN event ID
+    const seenIds = new Set();
+    const allEvents = [];
+    for (const data of results) {
+      if (!data) continue;
+      for (const event of (data.events || [])) {
+        if (!seenIds.has(event.id)) {
+          seenIds.add(event.id);
+          allEvents.push(event);
+        }
+      }
     }
+
+    console.log(`[ESPN] Fetched ${allEvents.length} total events from ${dates.length} date queries`);
+    processEvents(allEvents);
+    fetchStatus.espnLastLoaded = Date.now();
   } catch (err) {
     console.warn('[ESPN] Fetch error:', err);
   } finally {
