@@ -1,38 +1,28 @@
 /**
- * Polymarket integration — Gamma REST + CLOB WebSocket + Sports WebSocket
+ * Polymarket integration — Gamma REST + CLOB WebSocket
  *
- * Three data sources:
+ * Two data sources:
  * 1. Gamma REST: market discovery (series_id=10470 for NCAA MBB)
  * 2. CLOB WS:   live odds / order-book streaming
- * 3. Sports WS: live game states (scores, clock)
+ * ESPN is used for live scores (not Polymarket Sports WS).
  */
 
 // ---------------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------------
 const state = {
-  /** @type {Map<string, GammaEvent>} slug -> event */
   events: new Map(),
-  /** @type {Map<string, {prob: number, bestBid: number, bestAsk: number}>} assetId -> price info */
   prices: new Map(),
-  /** @type {Map<string, {teamId: string, matchupId: string}>} assetId -> mapping */
   assetToTeam: new Map(),
-  /** @type {Map<string, object>} slug -> sports game state */
-  gameStates: new Map(),
-  /** @type {Map<string, string>} slug -> matchupId */
   slugToMatchup: new Map(),
-  /** @type {Map<string, string>} matchupId -> slug */
   matchupToSlug: new Map(),
-  /** @type {Map<string, object>} matchupId -> full odds/market data */
   marketData: new Map(),
 };
 
 const listeners = [];
 let clobWs = null;
-let sportsWs = null;
 let clobPingInterval = null;
 let clobReconnectTimer = null;
-let sportsReconnectTimer = null;
 let gammaInterval = null;
 
 // ---------------------------------------------------------------------------
@@ -423,85 +413,12 @@ function updateMarketDataFromWs(matchupId) {
 }
 
 // ---------------------------------------------------------------------------
-// Sports WebSocket — live game states
-// ---------------------------------------------------------------------------
-const SPORTS_WS_URL = 'wss://sports-api.polymarket.com/ws';
-
-function connectSportsWs() {
-  if (sportsWs) {
-    try { sportsWs.close(); } catch {}
-  }
-  clearTimeout(sportsReconnectTimer);
-
-  try {
-    sportsWs = new WebSocket(SPORTS_WS_URL);
-  } catch {
-    scheduleReconnect('sports');
-    return;
-  }
-
-  sportsWs.onopen = () => {
-    console.log('[Polymarket Sports WS] Connected');
-  };
-
-  sportsWs.onmessage = (evt) => {
-    const raw = evt.data;
-
-    // Server sends "ping", we respond "pong"
-    if (raw === 'ping') {
-      sportsWs.send('pong');
-      return;
-    }
-
-    try {
-      const msg = JSON.parse(raw);
-      handleSportsMessage(msg);
-    } catch {
-      // ignore
-    }
-  };
-
-  sportsWs.onclose = () => {
-    console.log('[Polymarket Sports WS] Disconnected');
-    scheduleReconnect('sports');
-  };
-
-  sportsWs.onerror = () => {
-    console.warn('[Polymarket Sports WS] Error');
-  };
-}
-
-function handleSportsMessage(msg) {
-  if (!msg || !msg.slug) return;
-
-  const slug = msg.slug;
-  state.gameStates.set(slug, msg);
-
-  const matchupId = state.slugToMatchup.get(slug);
-  if (matchupId) {
-    const data = state.marketData.get(matchupId);
-    if (data) {
-      data.live = !!msg.live;
-      data.ended = !!msg.ended;
-      data.gameScore = msg.score || null;
-      data.gamePeriod = msg.period || null;
-      data.gameElapsed = msg.elapsed || null;
-    }
-    notifyListeners({ type: 'game', matchupId });
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Reconnection
 // ---------------------------------------------------------------------------
 function scheduleReconnect(type, assetIds) {
-  const delay = 5000;
   if (type === 'clob') {
     clearTimeout(clobReconnectTimer);
-    clobReconnectTimer = setTimeout(() => connectClobWs(assetIds), delay);
-  } else {
-    clearTimeout(sportsReconnectTimer);
-    sportsReconnectTimer = setTimeout(() => connectSportsWs(), delay);
+    clobReconnectTimer = setTimeout(() => connectClobWs(assetIds), 5000);
   }
 }
 
@@ -564,10 +481,7 @@ export async function startPolymarket() {
     connectClobWs(assetIds);
   }
 
-  // 3. Connect Sports WebSocket for live game states
-  connectSportsWs();
-
-  // 4. Re-fetch Gamma every 60s to pick up new events
+  // 3. Re-fetch Gamma every 60s to pick up new events
   gammaInterval = setInterval(async () => {
     const freshEvents = await fetchGammaEvents();
     const freshAssetIds = processGammaEvents(freshEvents);
@@ -586,7 +500,5 @@ export function stopPolymarket() {
   clearInterval(gammaInterval);
   clearInterval(clobPingInterval);
   clearTimeout(clobReconnectTimer);
-  clearTimeout(sportsReconnectTimer);
   if (clobWs) { try { clobWs.close(); } catch {} }
-  if (sportsWs) { try { sportsWs.close(); } catch {} }
 }

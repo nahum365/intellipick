@@ -277,18 +277,24 @@ function buildPolymarketPanel(matchup) {
   const buyPrice1 = mkt.bestAsk ? Math.round(mkt.bestAsk * 100) + '\u00A2' : '--';
   const buyPrice2 = mkt.bestAsk ? Math.round((1 - mkt.bestAsk) * 100) + '\u00A2' : '--';
 
-  // Live game state from Sports WS
+  // Live game state from ESPN (authoritative source for scores)
+  const espnScore = getScoreForMatchup(matchup.id);
+  const isLive = espnScore && (espnScore.status === 'live' || espnScore.status === 'halftime');
   let liveGameHtml = '';
-  if (mkt.live && mkt.gameScore) {
+  if (isLive) {
+    const periodLabel = espnScore.status === 'halftime' ? 'HT'
+      : espnScore.period > 2 ? 'OT'
+      : espnScore.period === 1 ? '1H' : '2H';
+    const clockStr = espnScore.status === 'halftime' ? '' : espnScore.clock;
     liveGameHtml = `
       <div class="pm-live-game">
         <div class="pm-live-game__header">
           <span class="pm-live-game__dot"></span>
           <span class="pm-live-game__label">LIVE</span>
-          ${mkt.gamePeriod ? `<span class="pm-live-game__period">${mkt.gamePeriod}</span>` : ''}
-          ${mkt.gameElapsed ? `<span class="pm-live-game__clock">${mkt.gameElapsed}</span>` : ''}
+          <span class="pm-live-game__period">${periodLabel}</span>
+          ${clockStr ? `<span class="pm-live-game__clock">${clockStr}</span>` : ''}
         </div>
-        <div class="pm-live-game__score">${mkt.gameScore}</div>
+        <div class="pm-live-game__score">${espnScore.team1Score} - ${espnScore.team2Score}</div>
       </div>`;
   }
 
@@ -306,7 +312,7 @@ function buildPolymarketPanel(matchup) {
     <div class="pm-panel__header">
       <span class="pm-panel__logo">\u26A1</span>
       <span class="pm-panel__title">Polymarket Live Odds</span>
-      ${mkt.live ? '<span class="pm-panel__live-badge">LIVE</span>' : ''}
+      ${isLive ? '<span class="pm-panel__live-badge">LIVE</span>' : ''}
     </div>
 
     ${liveGameHtml}

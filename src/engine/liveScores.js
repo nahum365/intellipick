@@ -185,13 +185,13 @@ function getMatchupTeamOrder(matchupId) {
 }
 
 function processEvents(events) {
-  // Preserve existing odds and Polymarket-only entries across ESPN refreshes
+  // Preserve existing odds across ESPN refreshes
   const prevOdds = new Map();
   const polymarketOnlyEntries = new Map();
   for (const [id, entry] of scoreMap) {
     if (entry.odds) prevOdds.set(id, entry.odds);
-    // Keep entries that were created solely for Polymarket odds (scheduled, no ESPN data)
-    if (entry.odds && entry.status === 'scheduled') {
+    // Keep entries that were created solely for Polymarket odds (no ESPN data)
+    if (entry.odds && entry._polymarketOnly) {
       polymarketOnlyEntries.set(id, entry);
     }
   }
@@ -483,7 +483,8 @@ async function fetchPolymarketOdds() {
       if (team1Prob && !team2Prob) team2Prob = 1 - team1Prob;
       if (team2Prob && !team1Prob) team1Prob = 1 - team2Prob;
 
-      if (team1Prob && team2Prob) {
+      // Only set proxy-based odds if WS-connected odds aren't already present
+      if (team1Prob && team2Prob && !(existing.odds && existing.odds.wsConnected)) {
         existing.odds = {
           source: 'Polymarket',
           team1Prob: Math.round(team1Prob * 100),
@@ -569,12 +570,13 @@ function mergePolymarketData(matchupId) {
       team1Score: 0,
       team2Score: 0,
       odds: null,
+      _polymarketOnly: true, // flag so ESPN refresh preserves this entry
     });
   }
 
   const entry = scoreMap.get(matchupId);
 
-  // Update odds from Polymarket WS data
+  // Only update odds — never touch ESPN's authoritative score/status/clock data
   entry.odds = {
     source: 'Polymarket',
     team1Prob: Math.round(mkt.team1Prob * 100),
@@ -591,23 +593,6 @@ function mergePolymarketData(matchupId) {
     live: mkt.live,
     wsConnected: true,
   };
-
-  // If Sports WS has game state, merge it
-  if (mkt.gameScore) {
-    const parts = mkt.gameScore.split('-').map(s => parseInt(s, 10));
-    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-      entry.team1Score = parts[0];
-      entry.team2Score = parts[1];
-    }
-    if (mkt.live) entry.status = 'live';
-    if (mkt.ended) entry.status = 'final';
-    if (mkt.gamePeriod === 'HT') entry.status = 'halftime';
-    if (mkt.gameElapsed) entry.clock = mkt.gameElapsed;
-    if (mkt.gamePeriod) {
-      const periodMap = { '1H': 1, '2H': 2, 'HT': 1, 'OT': 3, 'FT': 2 };
-      entry.period = periodMap[mkt.gamePeriod] || entry.period;
-    }
-  }
 }
 
 export function stopPolling() {
