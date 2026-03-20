@@ -152,23 +152,8 @@ function buildTeamPanel(team, profile, matchup) {
 function buildScoreboardHtml(matchup, liveScore) {
   if (!liveScore) return '';
 
-  // For scheduled games, only show odds if available
-  if (liveScore.status === 'scheduled') {
-    if (!liveScore.odds) return '';
-    const t1Name = matchup.team1?.name || 'TBD';
-    const t2Name = matchup.team2?.name || 'TBD';
-    const o = liveScore.odds;
-    return `<div class="modal__scoreboard">
-      <div class="modal__scoreboard-status modal__scoreboard-status--final">Pre-Game</div>
-      <div class="modal__odds">
-        <div class="modal__odds-source">${o.source || 'Market'} Odds</div>
-        <div class="modal__odds-items">
-          <span class="modal__odds-item"><span class="modal__odds-label">${t1Name}:</span> ${o.team1Prob}% (${o.moneyline1})</span>
-          <span class="modal__odds-item"><span class="modal__odds-label">${t2Name}:</span> ${o.team2Prob}% (${o.moneyline2})</span>
-        </div>
-      </div>
-    </div>`;
-  }
+  // Don't show scoreboard for scheduled games (Polymarket panel handles pre-game odds)
+  if (liveScore.status === 'scheduled') return '';
 
   let statusLabel, statusClass;
   if (liveScore.status === 'live') {
@@ -189,22 +174,6 @@ function buildScoreboardHtml(matchup, liveScore) {
   const t2Name = matchup.team2?.name || 'TBD';
   const t1Seed = matchup.team1?.seed || '';
   const t2Seed = matchup.team2?.seed || '';
-
-  let oddsHtml = '';
-  if (liveScore.odds) {
-    const o = liveScore.odds;
-    const items = [];
-    if (o.team1Prob && o.team2Prob) {
-      items.push(`<span class="modal__odds-item"><span class="modal__odds-label">${t1Name}:</span> ${o.team1Prob}% (${o.moneyline1})</span>`);
-      items.push(`<span class="modal__odds-item"><span class="modal__odds-label">${t2Name}:</span> ${o.team2Prob}% (${o.moneyline2})</span>`);
-    }
-    if (items.length) {
-      oddsHtml = `<div class="modal__odds">
-        <div class="modal__odds-source">${o.source || 'Market'} Odds</div>
-        <div class="modal__odds-items">${items.join('')}</div>
-      </div>`;
-    }
-  }
 
   let predictionHtml = '';
   if (matchup.recommendedPick) {
@@ -244,7 +213,6 @@ function buildScoreboardHtml(matchup, liveScore) {
         <span class="modal__scoreboard-pts">${liveScore.team2Score}</span>
       </div>
     </div>
-    ${oddsHtml}
     ${predictionHtml}
   </div>`;
 }
@@ -318,28 +286,20 @@ function buildPolymarketPanel(matchup) {
     ${liveGameHtml}
 
     <div class="pm-odds">
-      <div class="pm-odds__team ${t1Fav ? 'pm-odds__team--fav' : ''}">
+      <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t1Name}</div>
         <div class="pm-odds__pct">${t1Pct}% ${arrow1}</div>
-        <div class="pm-odds__ml">${mkt.moneyline1 || '--'}</div>
-        <div class="pm-odds__buy">Buy: ${buyPrice1}</div>
+        <div class="pm-odds__detail">${mkt.moneyline1 || '--'} · ${buyPrice1}</div>
       </div>
-      <div class="pm-odds__vs">VS</div>
-      <div class="pm-odds__team ${!t1Fav ? 'pm-odds__team--fav' : ''}">
+      <div class="pm-odds__side pm-odds__side--t2 ${!t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t2Name}</div>
         <div class="pm-odds__pct">${t2Pct}% ${arrow2}</div>
-        <div class="pm-odds__ml">${mkt.moneyline2 || '--'}</div>
-        <div class="pm-odds__buy">Buy: ${buyPrice2}</div>
+        <div class="pm-odds__detail">${mkt.moneyline2 || '--'} · ${buyPrice2}</div>
       </div>
     </div>
-
     <div class="pm-prob-bar">
-      <div class="pm-prob-bar__fill pm-prob-bar__fill--t1" style="width:${t1Pct}%">
-        <span class="pm-prob-bar__label">${t1Pct}%</span>
-      </div>
-      <div class="pm-prob-bar__fill pm-prob-bar__fill--t2" style="width:${t2Pct}%">
-        <span class="pm-prob-bar__label">${t2Pct}%</span>
-      </div>
+      <div class="pm-prob-bar__fill pm-prob-bar__fill--t1" style="width:${t1Pct}%"></div>
+      <div class="pm-prob-bar__fill pm-prob-bar__fill--t2" style="width:${t2Pct}%"></div>
     </div>
 
     <div class="pm-stats">
