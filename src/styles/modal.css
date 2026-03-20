@@ -446,6 +446,275 @@
   color: var(--confidence-medium);
 }
 
+/* ===== Polymarket Live Odds Panel ===== */
+.pm-panel {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 50%, #f8fafc 100%);
+  transition: background 0.3s;
+}
+
+.pm-panel--flash {
+  animation: pm-flash 0.6s ease-out;
+}
+
+@keyframes pm-flash {
+  0% { background: #dbeafe; }
+  100% { background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 50%, #f8fafc 100%); }
+}
+
+.pm-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pm-panel__logo {
+  font-size: 16px;
+}
+
+.pm-panel__title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}
+
+.pm-panel__live-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--upset);
+  color: white;
+  letter-spacing: 0.5px;
+  animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+/* Live game state header */
+.pm-live-game {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.pm-live-game__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.pm-live-game__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--upset);
+  animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+.pm-live-game__label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--upset);
+  letter-spacing: 0.5px;
+}
+
+.pm-live-game__period {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 1px 6px;
+  background: var(--bg);
+  border-radius: 3px;
+}
+
+.pm-live-game__clock {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text);
+}
+
+.pm-live-game__score {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text);
+  letter-spacing: 2px;
+}
+
+/* Two-column odds display */
+.pm-odds {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 12px;
+}
+
+.pm-odds__team {
+  flex: 1;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  transition: all 0.3s;
+}
+
+.pm-odds__team--fav {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.pm-odds__vs {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-muted);
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.pm-odds__team-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pm-odds__pct {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  font-family: var(--font-mono);
+  line-height: 1.2;
+}
+
+.pm-odds__ml {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.pm-odds__buy {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+/* Delta arrows */
+.pm-delta {
+  font-size: 10px;
+  margin-left: 2px;
+}
+
+.pm-delta--up {
+  color: var(--confidence-very-high);
+}
+
+.pm-delta--down {
+  color: var(--upset);
+}
+
+/* Horizontal probability bar */
+.pm-prob-bar {
+  display: flex;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.pm-prob-bar__fill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.5s ease-out;
+  min-width: 30px;
+}
+
+.pm-prob-bar__fill--t1 {
+  background: linear-gradient(90deg, var(--primary), #3b82f6);
+  color: white;
+}
+
+.pm-prob-bar__fill--t2 {
+  background: linear-gradient(90deg, #ef4444, var(--upset));
+  color: white;
+}
+
+.pm-prob-bar__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3px;
+}
+
+/* Volume/Liquidity stats row */
+.pm-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.pm-stats__item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pm-stats__label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.pm-stats__value {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+/* Trader sentiment */
+.pm-sentiment {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-top: 8px;
+}
+
+.pm-sentiment__title {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.pm-sentiment__text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text);
+  font-style: italic;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .modal__teams {

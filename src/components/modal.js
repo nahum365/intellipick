@@ -2,12 +2,14 @@ import teamsData from '../data/teams.json';
 import { getPick } from '../engine/picks.js';
 import { cascadePick } from '../engine/propagation.js';
 import { getScoreForMatchup, onScoresUpdate } from '../engine/liveScores.js';
+import { getMarketData, onPolymarketUpdate } from '../engine/polymarket.js';
 
 let overlayEl = null;
 let currentOnPickChange = null;
 let currentMatchup = null;
 let currentOptions = null;
 let unsubScoreUpdate = null;
+let unsubPolymarket = null;
 
 function getTeamProfile(teamId) {
   return teamsData.teams.find(t => t.id === teamId) || null;
@@ -247,6 +249,108 @@ function buildScoreboardHtml(matchup, liveScore) {
   </div>`;
 }
 
+function buildPolymarketPanel(matchup) {
+  const mkt = getMarketData(matchup.id);
+  if (!mkt) return '';
+
+  const t1Name = matchup.team1?.name || 'TBD';
+  const t2Name = matchup.team2?.name || 'TBD';
+  const t1Pct = Math.round(mkt.team1Prob * 100);
+  const t2Pct = Math.round(mkt.team2Prob * 100);
+  const t1Fav = t1Pct >= t2Pct;
+
+  // Delta arrows
+  const d1 = mkt.team1ProbDelta || 0;
+  const d2 = mkt.team2ProbDelta || 0;
+  const arrow1 = d1 > 0.005 ? '<span class="pm-delta pm-delta--up">\u25B2</span>' : d1 < -0.005 ? '<span class="pm-delta pm-delta--down">\u25BC</span>' : '';
+  const arrow2 = d2 > 0.005 ? '<span class="pm-delta pm-delta--up">\u25B2</span>' : d2 < -0.005 ? '<span class="pm-delta pm-delta--down">\u25BC</span>' : '';
+
+  // Volume / liquidity formatting
+  const fmtK = (n) => {
+    if (!n || n <= 0) return '--';
+    if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return '$' + (n / 1000).toFixed(1) + 'K';
+    return '$' + Math.round(n);
+  };
+
+  // Buy price (bestAsk) as cents
+  const buyPrice1 = mkt.bestAsk ? Math.round(mkt.bestAsk * 100) + '\u00A2' : '--';
+  const buyPrice2 = mkt.bestAsk ? Math.round((1 - mkt.bestAsk) * 100) + '\u00A2' : '--';
+
+  // Live game state from Sports WS
+  let liveGameHtml = '';
+  if (mkt.live && mkt.gameScore) {
+    liveGameHtml = `
+      <div class="pm-live-game">
+        <div class="pm-live-game__header">
+          <span class="pm-live-game__dot"></span>
+          <span class="pm-live-game__label">LIVE</span>
+          ${mkt.gamePeriod ? `<span class="pm-live-game__period">${mkt.gamePeriod}</span>` : ''}
+          ${mkt.gameElapsed ? `<span class="pm-live-game__clock">${mkt.gameElapsed}</span>` : ''}
+        </div>
+        <div class="pm-live-game__score">${mkt.gameScore}</div>
+      </div>`;
+  }
+
+  // Sentiment
+  let sentimentHtml = '';
+  if (mkt.sentiment) {
+    sentimentHtml = `
+      <div class="pm-sentiment">
+        <div class="pm-sentiment__title">\uD83D\uDCAC Trader Sentiment</div>
+        <div class="pm-sentiment__text">${mkt.sentiment}</div>
+      </div>`;
+  }
+
+  return `<div class="pm-panel" data-matchup-id="${matchup.id}">
+    <div class="pm-panel__header">
+      <span class="pm-panel__logo">\u26A1</span>
+      <span class="pm-panel__title">Polymarket Live Odds</span>
+      ${mkt.live ? '<span class="pm-panel__live-badge">LIVE</span>' : ''}
+    </div>
+
+    ${liveGameHtml}
+
+    <div class="pm-odds">
+      <div class="pm-odds__team ${t1Fav ? 'pm-odds__team--fav' : ''}">
+        <div class="pm-odds__team-name">${t1Name}</div>
+        <div class="pm-odds__pct">${t1Pct}% ${arrow1}</div>
+        <div class="pm-odds__ml">${mkt.moneyline1 || '--'}</div>
+        <div class="pm-odds__buy">Buy: ${buyPrice1}</div>
+      </div>
+      <div class="pm-odds__vs">VS</div>
+      <div class="pm-odds__team ${!t1Fav ? 'pm-odds__team--fav' : ''}">
+        <div class="pm-odds__team-name">${t2Name}</div>
+        <div class="pm-odds__pct">${t2Pct}% ${arrow2}</div>
+        <div class="pm-odds__ml">${mkt.moneyline2 || '--'}</div>
+        <div class="pm-odds__buy">Buy: ${buyPrice2}</div>
+      </div>
+    </div>
+
+    <div class="pm-prob-bar">
+      <div class="pm-prob-bar__fill pm-prob-bar__fill--t1" style="width:${t1Pct}%">
+        <span class="pm-prob-bar__label">${t1Pct}%</span>
+      </div>
+      <div class="pm-prob-bar__fill pm-prob-bar__fill--t2" style="width:${t2Pct}%">
+        <span class="pm-prob-bar__label">${t2Pct}%</span>
+      </div>
+    </div>
+
+    <div class="pm-stats">
+      <div class="pm-stats__item">
+        <span class="pm-stats__label">Volume</span>
+        <span class="pm-stats__value">${fmtK(mkt.volume)}</span>
+      </div>
+      <div class="pm-stats__item">
+        <span class="pm-stats__label">Liquidity</span>
+        <span class="pm-stats__value">${fmtK(mkt.liquidity)}</span>
+      </div>
+    </div>
+
+    ${sentimentHtml}
+  </div>`;
+}
+
 function ensureOverlay() {
   if (overlayEl) return overlayEl;
   overlayEl = document.createElement('div');
@@ -296,6 +400,30 @@ export function openModal(matchup, options = {}) {
     }
   });
 
+  // Subscribe to Polymarket WS updates for live odds refresh
+  if (unsubPolymarket) unsubPolymarket();
+  unsubPolymarket = onPolymarketUpdate((detail) => {
+    if (!currentMatchup || !overlayEl || !overlayEl.classList.contains('modal-overlay--visible')) return;
+    if (detail && detail.matchupId && detail.matchupId !== currentMatchup.id) return;
+
+    const pmContainer = overlayEl.querySelector('.pm-panel');
+    const newPmHtml = buildPolymarketPanel(currentMatchup);
+    if (pmContainer && newPmHtml) {
+      pmContainer.outerHTML = newPmHtml;
+      // Trigger flash animation on the new element
+      const newEl = overlayEl.querySelector('.pm-panel');
+      if (newEl) {
+        newEl.classList.add('pm-panel--flash');
+        setTimeout(() => newEl.classList.remove('pm-panel--flash'), 600);
+      }
+    } else if (!pmContainer && newPmHtml) {
+      // Insert PM panel if it wasn't there before
+      const tactEl = overlayEl.querySelector('.modal__tactical');
+      const insertBefore = tactEl || overlayEl.querySelector('.modal__teams');
+      if (insertBefore) insertBefore.insertAdjacentHTML('beforebegin', newPmHtml);
+    }
+  });
+
   const recTeam = matchup.recommendedPick === matchup.team1?.id ? matchup.team1 : matchup.team2;
   const confClass = confidenceClass(matchup.confidence);
 
@@ -309,6 +437,7 @@ export function openModal(matchup, options = {}) {
 
   const liveScore = getScoreForMatchup(matchup.id);
   const scoreboardHtml = buildScoreboardHtml(matchup, liveScore);
+  const polymarketHtml = buildPolymarketPanel(matchup);
 
   overlay.innerHTML = `<div class="modal">
     <div class="modal__header">
@@ -321,6 +450,7 @@ export function openModal(matchup, options = {}) {
       ${matchup.category ? `<span class="modal__rec-category">${matchup.category}</span>` : ''}
     </div>` : ''}
     ${scoreboardHtml}
+    ${polymarketHtml}
     ${matchup.tacticalAdvantage ? `<div class="modal__tactical">
       <div class="modal__tactical-title">Matchup Analysis</div>
       <div class="modal__tactical-text">${matchup.tacticalAdvantage}</div>
@@ -388,5 +518,9 @@ export function closeModal() {
   if (unsubScoreUpdate) {
     unsubScoreUpdate();
     unsubScoreUpdate = null;
+  }
+  if (unsubPolymarket) {
+    unsubPolymarket();
+    unsubPolymarket = null;
   }
 }

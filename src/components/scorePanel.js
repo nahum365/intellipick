@@ -1,7 +1,7 @@
 import { getAllPicks } from '../engine/picks.js';
 import { computeScore, getUpsetAlerts } from '../engine/scoring.js';
 import { cascadePick, getR64Matchup, getRegionR64Matchups, getValidBracketIds } from '../engine/propagation.js';
-import { getFetchStatus } from '../engine/liveScores.js';
+import { getFetchStatus, getScoreForMatchup } from '../engine/liveScores.js';
 import { openModal } from './modal.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
 import teamsData from '../data/teams.json';
@@ -289,6 +289,21 @@ export function updateScorePanel(panel, onPickChange) {
     confSpan.style.cssText = 'font-size:9px;font-weight:700;color:var(--upset);flex-shrink:0';
     confSpan.textContent = `${u.confidencePercentage}%`;
     row.appendChild(confSpan);
+
+    // Outcome indicator (check or x) for final games
+    const liveScore = getScoreForMatchup(pickId);
+    if (liveScore && liveScore.status === 'final' && matchup) {
+      const upsetTeamIsTeam1 = u.team.id === matchup.team1?.id;
+      const upsetTeamScore = upsetTeamIsTeam1 ? liveScore.team1Score : liveScore.team2Score;
+      const otherScore = upsetTeamIsTeam1 ? liveScore.team2Score : liveScore.team1Score;
+      const upsetHit = upsetTeamScore > otherScore;
+
+      const outcomeIcon = document.createElement('span');
+      outcomeIcon.style.cssText = `font-size:12px;font-weight:800;flex-shrink:0;line-height:1;${upsetHit ? 'color:var(--confidence-very-high)' : 'color:var(--upset)'}`;
+      outcomeIcon.textContent = upsetHit ? '\u2713' : '\u2717';
+      outcomeIcon.title = upsetHit ? 'Upset hit!' : 'Upset missed';
+      row.appendChild(outcomeIcon);
+    }
 
     // Info button
     if (matchup) {
