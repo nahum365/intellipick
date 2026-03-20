@@ -257,6 +257,7 @@ function processEvents(events) {
 
     const period = event.status?.period || 0;
     const clock = event.status?.displayClock || '';
+    const gameDate = event.date || comp.date || null;
 
     scoreMap.set(matchupId, {
       status,
@@ -264,6 +265,7 @@ function processEvents(events) {
       period,
       team1Score,
       team2Score,
+      gameDate,
       odds: prevOdds.get(matchupId) || null,
     });
     console.log(`[ESPN] Matched ${teamIdA} vs ${teamIdB} -> ${matchupId} (${status}, ${team1Score}-${team2Score})`);
