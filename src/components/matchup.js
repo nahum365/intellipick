@@ -215,19 +215,19 @@ export function createMatchupCard(matchup) {
     card.appendChild(ipBar);
   }
 
-  // --- Polymarket odds (below IntelliPick) ---
-  const oddsData = liveScore && liveScore.odds;
-  if (oddsData) {
+  // --- Polymarket odds (below IntelliPick, read directly from polymarket module) ---
+  const polyData = hasTeams ? getMarketData(matchup.id) : null;
+  if (polyData && polyData.team1Prob && polyData.team2Prob) {
     const oddsBar = document.createElement('div');
-    oddsBar.className = 'matchup-card__odds-bar' + (oddsData.wsConnected ? ' matchup-card__odds-bar--live' : '');
+    oddsBar.className = 'matchup-card__odds-bar' + (polyData.live ? ' matchup-card__odds-bar--live' : '');
 
     const t1Pct = document.createElement('span');
     t1Pct.className = 'matchup-card__odds-pct';
-    const d1 = oddsData.team1ProbDelta || 0;
+    const d1 = polyData.team1ProbDelta || 0;
     const arrow1 = d1 > 0.005 ? '\u25B2' : d1 < -0.005 ? '\u25BC' : '';
     const cls1 = d1 > 0.005 ? ' matchup-card__odds-pct--up' : d1 < -0.005 ? ' matchup-card__odds-pct--down' : '';
     t1Pct.className += cls1;
-    t1Pct.textContent = oddsData.team1Prob + '%' + (arrow1 ? ' ' + arrow1 : '');
+    t1Pct.textContent = Math.round(polyData.team1Prob * 100) + '%' + (arrow1 ? ' ' + arrow1 : '');
 
     const source = document.createElement('span');
     source.className = 'matchup-card__odds-source';
@@ -235,11 +235,11 @@ export function createMatchupCard(matchup) {
 
     const t2Pct = document.createElement('span');
     t2Pct.className = 'matchup-card__odds-pct';
-    const d2 = oddsData.team2ProbDelta || 0;
+    const d2 = polyData.team2ProbDelta || 0;
     const arrow2 = d2 > 0.005 ? '\u25B2' : d2 < -0.005 ? '\u25BC' : '';
     const cls2 = d2 > 0.005 ? ' matchup-card__odds-pct--up' : d2 < -0.005 ? ' matchup-card__odds-pct--down' : '';
     t2Pct.className += cls2;
-    t2Pct.textContent = oddsData.team2Prob + '%' + (arrow2 ? ' ' + arrow2 : '');
+    t2Pct.textContent = Math.round(polyData.team2Prob * 100) + '%' + (arrow2 ? ' ' + arrow2 : '');
 
     oddsBar.appendChild(t1Pct);
     oddsBar.appendChild(source);

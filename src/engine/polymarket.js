@@ -33,21 +33,7 @@ const SERIES_ID = '10470'; // NCAA Men's Basketball
 
 async function fetchGammaEvents() {
   const url = `${GAMMA_BASE}/events?series_id=${SERIES_ID}&active=true&closed=false&limit=100`;
-  try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
-    if (!res.ok) {
-      // Try via proxy as fallback
-      return fetchGammaViaProxy(url);
-    }
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return fetchGammaViaProxy(url);
-  }
-}
-
-async function fetchGammaViaProxy(targetUrl) {
-  const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl);
+  const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
   try {
     const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
     if (r.ok) {

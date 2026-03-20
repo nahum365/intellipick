@@ -37,19 +37,13 @@ function timeAgo(ts) {
 
 function buildFetchStatusHtml() {
   const s = getFetchStatus();
-  const loading = s.espnLoading || s.polymarketLoading;
-
-  if (loading) {
+  if (s.espnLoading) {
     const spinner = '<span class="fetch-status__spinner"></span>';
-    const items = [];
-    if (s.espnLoading) items.push('ESPN');
-    if (s.polymarketLoading) items.push('Polymarket');
-    return `<div class="fetch-status">${spinner}<span class="fetch-status__text">Loading ${items.join(' &amp; ')} info&hellip;</span></div>`;
+    return `<div class="fetch-status">${spinner}<span class="fetch-status__text">Loading ESPN info&hellip;</span></div>`;
   }
 
   const parts = [];
   if (s.espnLastLoaded) parts.push(`ESPN ${timeAgo(s.espnLastLoaded)}`);
-  if (s.polymarketLastLoaded) parts.push(`Polymarket ${timeAgo(s.polymarketLastLoaded)}`);
   if (parts.length === 0) return '';
 
   return `<div class="fetch-status fetch-status--done"><span class="fetch-status__text">${parts.join(', ')}</span></div>`;

@@ -1,6 +1,6 @@
 import matchupsData from '../data/matchups.json';
 import { getR64Matchup, getGeneratedMatchup, getRegionR64Matchups, REGIONS } from './propagation.js';
-import { startPolymarket, stopPolymarket } from './polymarket.js';
+import { startPolymarket, stopPolymarket, onPolymarketUpdate } from './polymarket.js';
 
 // Map internal team IDs to ESPN shortDisplayName values
 const TEAM_ID_TO_ESPN = {
@@ -90,9 +90,7 @@ let pollIntervalId = null;
 // Fetch status tracking
 const fetchStatus = {
   espnLoading: false,
-  polymarketLoading: false,
   espnLastLoaded: null,
-  polymarketLastLoaded: null,
 };
 
 function normalizeStatus(espnStatus) {
@@ -215,11 +213,6 @@ function getMatchupTeamOrder(matchupId) {
 }
 
 function processEvents(events) {
-  // Preserve existing odds across ESPN refreshes
-  const prevOdds = new Map();
-  for (const [id, entry] of scoreMap) {
-    if (entry.odds) prevOdds.set(id, entry.odds);
-  }
   scoreMap.clear();
 
   let matched = 0, unmatched = 0;
@@ -268,7 +261,6 @@ function processEvents(events) {
       team1Score,
       team2Score,
       gameDate,
-      odds: prevOdds.get(matchupId) || null,
     });
     console.log(`[ESPN] Matched ${teamIdA} vs ${teamIdB} -> ${matchupId} (${status}, ${team1Score}-${team2Score})`);
     matched++;
@@ -277,282 +269,8 @@ function processEvents(events) {
   console.log(`[ESPN] processEvents: ${matched} matched, ${unmatched} unmatched out of ${events.length} events`);
 }
 
-// Convert Polymarket probability (0-1) to American odds
-function probToAmericanOdds(prob) {
-  if (prob == null || prob <= 0 || prob >= 1) return null;
-  if (prob >= 0.5) {
-    return String(Math.round(-100 * prob / (1 - prob)));
-  }
-  return '+' + Math.round(100 * (1 - prob) / prob);
-}
 
-// Normalize team name for fuzzy matching with Polymarket event titles
-function normalizeForMatch(name) {
-  if (!name || typeof name !== 'string') return '';
-  return name.toLowerCase()
-    .replace(/['']/g, '')
-    .replace(/\./g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
 
-// Build a list of all name variants for each team for Polymarket matching
-const TEAM_MATCH_NAMES = {};
-for (const [teamId, espnName] of Object.entries(TEAM_ID_TO_ESPN)) {
-  const names = new Set();
-  names.add(normalizeForMatch(espnName));
-  // Add the slug form (e.g. "north-carolina" -> "north carolina")
-  names.add(teamId.replace(/-/g, ' '));
-  // Common short forms
-  if (espnName.includes(' St')) names.add(normalizeForMatch(espnName.replace(' St', ' State')));
-  if (espnName.includes('State')) names.add(normalizeForMatch(espnName.replace(' State', ' St')));
-  TEAM_MATCH_NAMES[teamId] = [...names].filter(n => n.length >= 3);
-}
-
-// Try to match a Polymarket event to an internal matchup by checking if both team
-// names appear in the event title
-function matchPolymarketEvent(eventTitle) {
-  const normalized = normalizeForMatch(eventTitle);
-  if (!normalized) return null;
-
-  const matched = [];
-
-  for (const [teamId, nameVariants] of Object.entries(TEAM_MATCH_NAMES)) {
-    for (const variant of nameVariants) {
-      if (normalized.includes(variant)) {
-        matched.push(teamId);
-        break;
-      }
-    }
-  }
-
-  if (matched.length === 2) {
-    const matchupId = findMatchupIdForTeams(matched[0], matched[1]);
-    if (matchupId) {
-      return { matchupId, teamIds: matched };
-    }
-  }
-  return null;
-}
-
-// Parse outcome/price pairs from a Polymarket market object.
-// The Gamma API may return outcomes as:
-//   (a) tokens: [{outcome, price}, ...]
-//   (b) outcomes: ["Team A","Team B"] + outcomePrices: '["0.65","0.35"]'
-function parseMarketOutcomes(market) {
-  // Format (a): tokens array with per-token price
-  const tokens = market.tokens;
-  if (Array.isArray(tokens) && tokens.length >= 2 && typeof tokens[0] === 'object') {
-    return tokens.map(t => ({
-      name: t.outcome || t.value || '',
-      price: parseFloat(t.price ?? t.lastTradePrice ?? 0),
-    }));
-  }
-
-  // Format (b): parallel outcomes + outcomePrices arrays
-  const outcomes = market.outcomes;
-  let prices = market.outcomePrices;
-  if (Array.isArray(outcomes) && prices) {
-    if (typeof prices === 'string') {
-      try { prices = JSON.parse(prices); } catch { return []; }
-    }
-    if (Array.isArray(prices) && outcomes.length === prices.length) {
-      return outcomes.map((name, i) => ({
-        name: String(name),
-        price: parseFloat(prices[i]) || 0,
-      }));
-    }
-  }
-
-  return [];
-}
-
-// Rate-limited codetabs proxy — max 5 requests per second
-let _codetabsQueue = Promise.resolve();
-let _codetabsLastBatch = 0;
-let _codetabsBatchCount = 0;
-
-function fetchViaCodetabs(targetUrl) {
-  _codetabsQueue = _codetabsQueue.then(async () => {
-    const now = Date.now();
-    if (now - _codetabsLastBatch > 1000) {
-      _codetabsLastBatch = now;
-      _codetabsBatchCount = 0;
-    }
-    if (_codetabsBatchCount >= 5) {
-      const wait = 1000 - (now - _codetabsLastBatch);
-      if (wait > 0) await new Promise(r => setTimeout(r, wait));
-      _codetabsLastBatch = Date.now();
-      _codetabsBatchCount = 0;
-    }
-    _codetabsBatchCount++;
-
-    const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(targetUrl);
-    try {
-      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
-      if (r.ok) return r;
-    } catch {}
-    return null;
-  });
-  return _codetabsQueue;
-}
-
-// Fetch JSON from Polymarket via rate-limited codetabs proxy
-async function fetchPolymarketJson(targetUrl) {
-  const res = await fetchViaCodetabs(targetUrl);
-  if (!res) return [];
-  try {
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
-  } catch { return []; }
-}
-
-async function fetchPolymarketOdds() {
-  fetchStatus.polymarketLoading = true;
-  notifyListeners();
-  try {
-    const base = 'https://gamma-api.polymarket.com';
-
-    // Strategy: use multiple search approaches in parallel to find NCAA basketball events.
-    // The tag-based approach doesn't work (returns unrelated events), so we use:
-    // 1. Text search via _q parameter (Strapi convention)
-    // 2. Slug-based search
-    // 3. Paginated broad search to look beyond the top 100
-    const searches = [
-      // Text searches for NCAA basketball
-      `${base}/events?_q=NCAA&active=true&closed=false&limit=100`,
-      `${base}/events?_q=March+Madness&active=true&closed=false&limit=100`,
-      `${base}/events?_q=college+basketball&active=true&closed=false&limit=100`,
-      // Also try the markets endpoint with text search
-      `${base}/markets?_q=NCAA&active=true&closed=false&limit=100`,
-      `${base}/markets?_q=March+Madness&active=true&closed=false&limit=100`,
-      // Paginated broad event search (basketball events may be low-volume)
-      `${base}/events?active=true&closed=false&limit=100&offset=0`,
-      `${base}/events?active=true&closed=false&limit=100&offset=100`,
-      `${base}/events?active=true&closed=false&limit=100&offset=200`,
-      `${base}/events?active=true&closed=false&limit=100&offset=300`,
-      // Tag attempts
-      `${base}/events?tag=ncaa&active=true&closed=false&limit=100`,
-      `${base}/events?tag=march-madness&active=true&closed=false&limit=100`,
-      `${base}/events?tag=sports&active=true&closed=false&limit=100`,
-      `${base}/events?tag=ncaa-basketball&active=true&closed=false&limit=100`,
-    ];
-
-    const results = await Promise.all(searches.map(url => fetchPolymarketJson(url)));
-
-    // Collect all unique events by id.
-    // Markets endpoint returns market objects (no sub-markets array), so we normalize.
-    const seenIds = new Set();
-    const allEvents = [];
-    for (const data of results) {
-      for (const item of data) {
-        const id = item.id;
-        if (seenIds.has(id)) continue;
-        seenIds.add(id);
-        // If this came from /markets endpoint, wrap it as a pseudo-event
-        if (!item.markets && item.outcomes) {
-          allEvents.push({ id, title: item.question || '', markets: [item] });
-        } else {
-          allEvents.push(item);
-        }
-      }
-    }
-
-    console.log(`[Polymarket] Fetched ${allEvents.length} unique events/markets`);
-
-    // Log a sample of titles to help debug
-    const sampleTitles = allEvents.slice(0, 10).map(e => e.title || '(no title)');
-    console.log('[Polymarket] Sample titles:', sampleTitles);
-
-    let matchedCount = 0;
-    for (const event of allEvents) {
-      // Try matching by event title
-      const title = event.title || '';
-      let result = matchPolymarketEvent(title);
-
-      // Also try matching by individual market questions
-      if (!result && event.markets) {
-        for (const m of event.markets) {
-          result = matchPolymarketEvent(m.question || '');
-          if (result) break;
-        }
-      }
-
-      if (!result) continue;
-      matchedCount++;
-      console.log(`[Polymarket] Matched: "${title}" -> ${result.matchupId}`);
-
-      const { matchupId, teamIds } = result;
-      // Create a scoreMap entry if ESPN hasn't populated one yet
-      if (!scoreMap.has(matchupId)) {
-        scoreMap.set(matchupId, {
-          status: 'scheduled',
-          clock: '',
-          period: 0,
-          team1Score: 0,
-          team2Score: 0,
-          odds: null,
-        });
-      }
-      const existing = scoreMap.get(matchupId);
-
-      // Extract market prices from the event's markets
-      const markets = event.markets || [];
-      if (markets.length === 0) continue;
-
-      const market = markets[0];
-      const parsed = parseMarketOutcomes(market);
-      if (parsed.length < 2) continue;
-
-      // Figure out which outcome corresponds to which team
-      const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
-      const team1Names = TEAM_MATCH_NAMES[team1Id] || [];
-      const team2Names = TEAM_MATCH_NAMES[team2Id] || [];
-
-      function outcomeMatchesTeam(outcomeName, teamNames) {
-        for (const variant of teamNames) {
-          if (outcomeName.includes(variant) || variant.includes(outcomeName)) return true;
-        }
-        return false;
-      }
-
-      let team1Prob = null;
-      let team2Prob = null;
-
-      for (const { name, price } of parsed) {
-        if (price <= 0 || price >= 1) continue;
-        const outcomeName = normalizeForMatch(name);
-        if (!outcomeName) continue;
-
-        if (outcomeMatchesTeam(outcomeName, team1Names)) {
-          team1Prob = price;
-        } else if (outcomeMatchesTeam(outcomeName, team2Names)) {
-          team2Prob = price;
-        }
-      }
-
-      // If we only found one, infer the other
-      if (team1Prob && !team2Prob) team2Prob = 1 - team1Prob;
-      if (team2Prob && !team1Prob) team1Prob = 1 - team2Prob;
-
-      if (team1Prob && team2Prob) {
-        existing.odds = {
-          source: 'Polymarket',
-          team1Prob: Math.round(team1Prob * 100),
-          team2Prob: Math.round(team2Prob * 100),
-          moneyline1: probToAmericanOdds(team1Prob),
-          moneyline2: probToAmericanOdds(team2Prob),
-        };
-      }
-    }
-    console.log(`[Polymarket] Done. Matched ${matchedCount} events to bracket matchups.`);
-    fetchStatus.polymarketLastLoaded = Date.now();
-  } catch (err) {
-    console.warn('[Polymarket] Fetch error:', err);
-  } finally {
-    fetchStatus.polymarketLoading = false;
-  }
-}
 
 function notifyListeners() {
   for (const cb of listeners) {
@@ -619,16 +337,17 @@ async function fetchScores() {
     notifyListeners();
   }
 
-  // Fetch Polymarket odds separately — slower, non-blocking
-  fetchPolymarketOdds().then(() => notifyListeners());
 }
 
 export function startPolling() {
   fetchScores();
   pollIntervalId = setInterval(fetchScores, 30000);
 
-  // Start Polymarket WebSocket integration alongside polling
+  // Start Polymarket integration (series_id=10470 + CLOB WebSocket)
   startPolymarket().catch(err => console.warn('[Polymarket] Init error:', err));
+
+  // Trigger UI rerender when Polymarket data updates (data stays in polymarket.js)
+  onPolymarketUpdate(() => notifyListeners());
 }
 
 
