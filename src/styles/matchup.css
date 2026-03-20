@@ -16,10 +16,9 @@
 
 /* === Game state themes === */
 
-/* Live: red left accent, warm tint */
+/* Live: red border, warm tint */
 .matchup-card--live {
   border-color: var(--upset);
-  border-left: 3px solid var(--upset);
   background: var(--upset-bg);
 }
 
@@ -300,14 +299,14 @@
   color: var(--text-muted);
 }
 
-/* Final game prediction results — subtle left accent */
+/* Final game prediction results */
 .matchup-card--pick-correct {
-  border-left: 3px solid var(--confidence-very-high);
+  border-color: var(--confidence-very-high);
   opacity: 1;
 }
 
 .matchup-card--pick-incorrect {
-  border-left: 3px solid var(--upset);
+  border-color: var(--upset);
   opacity: 1;
 }
 
