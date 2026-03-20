@@ -14,44 +14,19 @@
   box-shadow: var(--shadow);
 }
 
-/* Live game shimmer effect */
+/* === Game state themes === */
+
+/* Live: red left accent, warm tint */
 .matchup-card--live {
   border-color: var(--upset);
-  box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.15);
-}
-
-.matchup-card--live::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgba(220, 38, 38, 0.04) 45%,
-    rgba(220, 38, 38, 0.08) 50%,
-    rgba(220, 38, 38, 0.04) 55%,
-    transparent 70%
-  );
-  background-size: 250% 100%;
-  animation: live-shimmer 2.5s ease-in-out infinite;
-}
-
-@keyframes live-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -50% 0; }
-}
-
-/* Confidence border colors */
-.matchup-card--very-high { border-color: var(--confidence-very-high); }
-.matchup-card--high { border-color: var(--confidence-high); }
-.matchup-card--medium { border-color: var(--confidence-medium); }
-
-/* Upset category */
-.matchup-card--upset {
-  border-color: var(--upset);
+  border-left: 3px solid var(--upset);
   background: var(--upset-bg);
+}
+
+/* Final: muted appearance */
+.matchup-card--final {
+  opacity: 0.8;
+  border-color: var(--border);
 }
 
 /* Header badges */
@@ -325,31 +300,14 @@
   color: var(--text-muted);
 }
 
-/* Prediction result indicators on card */
+/* Final game prediction results — subtle left accent */
 .matchup-card--pick-correct {
-  border-color: var(--confidence-very-high) !important;
+  border-left: 3px solid var(--confidence-very-high);
+  opacity: 1;
 }
 
 .matchup-card--pick-incorrect {
-  border-color: var(--upset) !important;
-}
-
-.matchup-card__prediction-badge {
-  padding: 1px 5px;
-  font-size: 8px;
-  font-weight: 800;
-  border-radius: 3px;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.matchup-card__prediction-badge--correct {
-  background: var(--confidence-very-high-bg);
-  color: var(--confidence-very-high);
-}
-
-.matchup-card__prediction-badge--incorrect {
-  background: var(--confidence-low-bg);
-  color: var(--upset);
+  border-left: 3px solid var(--upset);
+  opacity: 1;
 }
 
