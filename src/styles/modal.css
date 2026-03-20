@@ -517,66 +517,60 @@
 }
 
 /* Two-column odds display */
+/* Two-column odds with bar directly beneath */
 .pm-odds {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0;
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
-.pm-odds__team {
-  flex: 1;
+.pm-odds__side {
   text-align: center;
-  padding: 10px 8px;
-  border-radius: var(--radius);
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  transition: all 0.3s;
+  padding: 10px 8px 8px;
 }
 
-.pm-odds__team--fav {
-  border-color: var(--primary);
+.pm-odds__side--t1 {
+  border-radius: var(--radius) 0 0 0;
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.pm-odds__side--t2 {
+  border-radius: 0 var(--radius) 0 0;
+  background: rgba(220, 38, 38, 0.04);
+}
+
+.pm-odds__side--fav {
   background: var(--primary-light);
 }
 
-.pm-odds__vs {
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--text-muted);
-  padding: 0 8px;
-  flex-shrink: 0;
+.pm-odds__side--t2.pm-odds__side--fav {
+  background: rgba(220, 38, 38, 0.08);
 }
 
 .pm-odds__team-name {
   font-size: 11px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .pm-odds__pct {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--text);
   font-family: var(--font-mono);
   line-height: 1.2;
 }
 
-.pm-odds__ml {
-  font-size: 11px;
+.pm-odds__detail {
+  font-size: 10px;
   font-weight: 600;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
-
-.pm-odds__buy {
-  font-size: 9px;
   color: var(--text-muted);
-  margin-top: 4px;
-  font-weight: 600;
+  margin-top: 2px;
 }
 
 /* Delta arrows */
@@ -593,39 +587,26 @@
   color: var(--upset);
 }
 
-/* Horizontal probability bar */
+/* Probability bar — flush against odds above */
 .pm-prob-bar {
   display: flex;
-  height: 24px;
-  border-radius: var(--radius-sm);
+  height: 8px;
   overflow: hidden;
   margin-bottom: 12px;
-  font-size: 10px;
-  font-weight: 700;
+  border-radius: 0 0 var(--radius) var(--radius);
 }
 
 .pm-prob-bar__fill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: width 0.5s ease-out;
-  min-width: 30px;
+  min-width: 12px;
 }
 
 .pm-prob-bar__fill--t1 {
   background: linear-gradient(90deg, var(--primary), #3b82f6);
-  color: white;
 }
 
 .pm-prob-bar__fill--t2 {
   background: linear-gradient(90deg, #ef4444, var(--upset));
-  color: white;
-}
-
-.pm-prob-bar__label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.3px;
 }
 
 /* Volume/Liquidity stats row */

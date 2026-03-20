@@ -286,28 +286,20 @@ function buildPolymarketPanel(matchup) {
     ${liveGameHtml}
 
     <div class="pm-odds">
-      <div class="pm-odds__team ${t1Fav ? 'pm-odds__team--fav' : ''}">
+      <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t1Name}</div>
         <div class="pm-odds__pct">${t1Pct}% ${arrow1}</div>
-        <div class="pm-odds__ml">${mkt.moneyline1 || '--'}</div>
-        <div class="pm-odds__buy">Buy: ${buyPrice1}</div>
+        <div class="pm-odds__detail">${mkt.moneyline1 || '--'} · ${buyPrice1}</div>
       </div>
-      <div class="pm-odds__vs">VS</div>
-      <div class="pm-odds__team ${!t1Fav ? 'pm-odds__team--fav' : ''}">
+      <div class="pm-odds__side pm-odds__side--t2 ${!t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t2Name}</div>
         <div class="pm-odds__pct">${t2Pct}% ${arrow2}</div>
-        <div class="pm-odds__ml">${mkt.moneyline2 || '--'}</div>
-        <div class="pm-odds__buy">Buy: ${buyPrice2}</div>
+        <div class="pm-odds__detail">${mkt.moneyline2 || '--'} · ${buyPrice2}</div>
       </div>
     </div>
-
     <div class="pm-prob-bar">
-      <div class="pm-prob-bar__fill pm-prob-bar__fill--t1" style="width:${t1Pct}%">
-        <span class="pm-prob-bar__label">${t1Pct}%</span>
-      </div>
-      <div class="pm-prob-bar__fill pm-prob-bar__fill--t2" style="width:${t2Pct}%">
-        <span class="pm-prob-bar__label">${t2Pct}%</span>
-      </div>
+      <div class="pm-prob-bar__fill pm-prob-bar__fill--t1" style="width:${t1Pct}%"></div>
+      <div class="pm-prob-bar__fill pm-prob-bar__fill--t2" style="width:${t2Pct}%"></div>
     </div>
 
     <div class="pm-stats">
