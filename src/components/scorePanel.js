@@ -142,8 +142,8 @@ export function updateScorePanel(panel, onPickChange) {
     } else {
       // Hide stats
       anchorStats.style.display = 'none';
-      // Expand: animate from 0 to scrollHeight, capped at 60vh
-      const maxH = window.innerHeight * 0.6;
+      // Expand: animate from 0 to scrollHeight, capped at 50vh
+      const maxH = window.innerHeight * 0.5;
       const targetH = Math.min(body.scrollHeight, maxH);
       body.style.transition = 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
       body.style.height = targetH + 'px';
