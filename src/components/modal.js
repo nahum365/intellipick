@@ -231,9 +231,9 @@ function buildPolymarketPanel(matchup) {
     return '$' + Math.round(n);
   };
 
-  // Buy price (bestAsk) as cents
-  const buyPrice1 = mkt.bestAsk ? Math.round(mkt.bestAsk * 100) + '\u00A2' : '--';
-  const buyPrice2 = mkt.bestAsk ? Math.round((1 - mkt.bestAsk) * 100) + '\u00A2' : '--';
+  // Implied probability as cents (matches Polymarket's display)
+  const price1 = t1Pct + '\u00A2';
+  const price2 = t2Pct + '\u00A2';
 
   // Live game state from ESPN (authoritative source for scores)
   const espnScore = getScoreForMatchup(matchup.id);
@@ -279,12 +279,12 @@ function buildPolymarketPanel(matchup) {
       <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t1Name}</div>
         <div class="pm-odds__pct">${t1Pct}% ${arrow1}</div>
-        <div class="pm-odds__detail">${mkt.moneyline1 || '--'} · ${buyPrice1}</div>
+        <div class="pm-odds__detail">${mkt.moneyline1 || '--'} · ${price1}</div>
       </div>
       <div class="pm-odds__side pm-odds__side--t2 ${!t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t2Name}</div>
         <div class="pm-odds__pct">${t2Pct}% ${arrow2}</div>
-        <div class="pm-odds__detail">${mkt.moneyline2 || '--'} · ${buyPrice2}</div>
+        <div class="pm-odds__detail">${mkt.moneyline2 || '--'} · ${price2}</div>
       </div>
     </div>
     <div class="pm-prob-bar">
