@@ -34,7 +34,7 @@ function renderApp() {
   app.appendChild(header);
 
   // Score panel
-  scorePanelEl = createScorePanel(() => rerender());
+  scorePanelEl = createScorePanel();
 
   // Main content
   const main = document.createElement('div');

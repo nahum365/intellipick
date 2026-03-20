@@ -72,6 +72,7 @@ export function createMatchupCard(matchup) {
 
   if (isLive) classes += ' matchup-card--live';
   else if (isFinal) classes += ' matchup-card--final';
+  else if (hasTeams) classes += ' matchup-card--upcoming';
 
   card.className = classes;
 
