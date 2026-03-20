@@ -126,11 +126,10 @@ function renderApp() {
   bracketContainerEl.appendChild(bracket);
   main.appendChild(bracketContainerEl);
 
-  // On desktop, sidebar goes inside main-content (right column)
-  // On mobile, it goes between header and main (sticky shelf)
-  // We always place it before main; CSS handles the layout difference
-  app.appendChild(scorePanelEl);
+  // Desktop: sidebar is in right column via CSS grid
+  // Mobile: sidebar renders as bottom sheet (order:10 in CSS)
   app.appendChild(main);
+  app.appendChild(scorePanelEl);
 
   // Insights bar
   insightsBarEl = createInsightsBar();

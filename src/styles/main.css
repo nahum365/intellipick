@@ -243,68 +243,80 @@ body {
    Mobile layout (<= 768px)
    ============================ */
 @media (max-width: 768px) {
-  /* Header: compact for mobile */
+  /* Header: compact, thinner */
   .header {
-    padding: 10px 16px;
+    padding: 8px 12px;
     position: sticky;
     top: 0;
     z-index: 100;
+    gap: 8px;
   }
 
   .header__logo {
-    font-size: 17px;
+    font-size: 15px;
+  }
+
+  .header__controls {
+    gap: 6px;
   }
 
   .btn {
-    padding: 8px 12px;
-    font-size: 13px;
-    min-height: 36px;
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 32px;
+    border-radius: 6px;
   }
 
-  /* Main content: stack vertically, allow page scroll */
-  .main-content {
+  /* #app: single column, full height */
+  #app {
+    display: flex;
     flex-direction: column;
-    overflow: visible;
-    flex: none;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
   }
 
-  /* Bracket: full width, scroll horizontally */
+  /* Main content: fill remaining space, scroll bracket */
+  .main-content {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Bracket: fill space, internal scroll */
   .bracket-container {
-    flex: none;
+    flex: 1;
+    min-height: 0;
     overflow-x: auto;
-    overflow-y: visible;
-    padding: 12px;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding: 0;
   }
 
-  /* Sidebar: fixed shelf below header */
+  /* Sidebar: bottom sheet, not fixed at top */
   .score-sidebar {
     width: 100%;
     border-left: none;
-    border-bottom: 1px solid var(--border);
-    padding: 0 16px;
+    border-top: 1px solid var(--border);
+    padding: 0 12px;
     overflow: hidden;
-    position: fixed;
-    top: 57px;
-    left: 0;
-    right: 0;
-    z-index: 99;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    max-height: calc(100vh - 57px);
-  }
-
-  /* Spacer to push content below the fixed sidebar anchor */
-  .main-content {
-    margin-top: 60px;
+    position: relative;
+    z-index: 50;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+    flex-shrink: 0;
+    order: 10;
+    max-height: none;
   }
 
   /* Anchor stats strip */
   .score-sidebar__anchor-stats {
     display: flex;
-    gap: 18px;
+    gap: 16px;
     align-items: baseline;
     justify-content: center;
-    padding: 10px 0 2px;
+    padding: 8px 0 2px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
@@ -312,26 +324,26 @@ body {
   .score-sidebar__anchor-stat {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 3px;
   }
 
   .score-sidebar__anchor-stat-value {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
   }
 
   .score-sidebar__anchor-stat-label {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
     font-weight: 600;
   }
 
-  /* Add top padding to expanded body so "Bracket Score" isn't clipped */
   .score-sidebar__body {
-    padding-top: 8px;
+    padding-top: 6px;
+    -webkit-overflow-scrolling: touch;
   }
 
-  /* Grabber — always visible, sits below body */
+  /* Grabber */
   .score-sidebar__grabber {
     width: 100%;
     display: flex;
@@ -352,11 +364,6 @@ body {
 
   .score-sidebar__grabber:active .score-sidebar__grabber-bar {
     background: var(--primary);
-  }
-
-  /* Body: height animated via JS */
-  .score-sidebar__body {
-    -webkit-overflow-scrolling: touch;
   }
 
   /* Upset rows: touch-friendly */

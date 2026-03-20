@@ -191,7 +191,7 @@ function processEvents(events) {
   for (const [id, entry] of scoreMap) {
     if (entry.odds) prevOdds.set(id, entry.odds);
     // Keep entries that were created solely for Polymarket odds (no ESPN data)
-    if (entry.odds && entry._polymarketOnly) {
+    if (entry._polymarketOnly) {
       polymarketOnlyEntries.set(id, entry);
     }
   }
@@ -509,11 +509,22 @@ function notifyListeners() {
   }
 }
 
-async function fetchScores() {
+// Generate the NCAA tournament date range to fetch all game days.
+// Tournament typically runs ~3 weeks from mid-March through early April.
+function getTournamentDateRange() {
   const today = new Date();
-  const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
+  const year = today.getFullYear();
+  // Cover full tournament window: March 16 through April 10
+  const start = `${year}0316`;
+  const end = `${year}0410`;
+  return `${start}-${end}`;
+}
 
-  const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${dateStr}&groups=50&limit=365`;
+async function fetchScores() {
+  const dateRange = getTournamentDateRange();
+
+  // Use date range to fetch ALL tournament games (past, live, and upcoming)
+  const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${dateRange}&groups=50&limit=365`;
 
   // Fetch ESPN scores first, notify immediately so scores appear fast
   fetchStatus.espnLoading = true;
@@ -522,11 +533,13 @@ async function fetchScores() {
     const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
-      processEvents(data.events || []);
+      const events = data.events || [];
+      console.log(`[ESPN] Fetched ${events.length} events for date range ${dateRange}`);
+      processEvents(events);
       fetchStatus.espnLastLoaded = Date.now();
     }
-  } catch {
-    // Silent failure — bracket works without scores
+  } catch (err) {
+    console.warn('[ESPN] Fetch error:', err);
   } finally {
     fetchStatus.espnLoading = false;
     notifyListeners();
