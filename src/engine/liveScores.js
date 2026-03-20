@@ -75,6 +75,11 @@ const ESPN_TO_TEAM_ID = {};
 for (const [id, espnName] of Object.entries(TEAM_ID_TO_ESPN)) {
   ESPN_TO_TEAM_ID[espnName.toLowerCase()] = id;
 }
+// Extra aliases for ESPN name variants that don't match the canonical map
+ESPN_TO_TEAM_ID['miami oh'] = 'miami-oh';
+ESPN_TO_TEAM_ID['m-oh'] = 'miami-oh';
+ESPN_TO_TEAM_ID['miami (ohio)'] = 'miami-oh';
+ESPN_TO_TEAM_ID['miami-oh'] = 'miami-oh';
 
 // Score cache: matchupId -> normalized score object
 const scoreMap = new Map();
