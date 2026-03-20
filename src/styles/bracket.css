@@ -67,7 +67,7 @@
 
 .region__rounds {
   display: flex;
-  gap: 0;
+  gap: 8px;
   align-items: stretch;
 }
 
@@ -100,7 +100,7 @@
   flex-direction: column;
   justify-content: space-around;
   flex: 1;
-  gap: 4px;
+  gap: 8px;
 }
 
 /* Connectors between rounds */

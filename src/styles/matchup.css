@@ -16,9 +16,9 @@
 
 /* === Game state themes === */
 
-/* Not started: subtle blue left accent to indicate upcoming */
+/* Not started: blue border to indicate upcoming */
 .matchup-card--upcoming {
-  border-left: 3px solid var(--primary);
+  border-color: var(--primary);
 }
 
 /* Live: red border, warm tint */
