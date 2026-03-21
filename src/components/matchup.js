@@ -114,6 +114,11 @@ export function createMatchupCard(matchup) {
     let rowClasses = 'team-row';
     if (isRecommended) rowClasses += ' team-row--recommended';
     if (isExpected) rowClasses += ' team-row--expected';
+    if (isFinal && hasScore) {
+      const pts = isTop ? liveScore.team1Score : liveScore.team2Score;
+      const otherPts = isTop ? liveScore.team2Score : liveScore.team1Score;
+      if (pts < otherPts) rowClasses += ' team-row--loser';
+    }
     row.className = rowClasses;
 
     // Indicator: star for recommended, check/x for final results

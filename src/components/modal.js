@@ -1,6 +1,7 @@
 import teamsData from '../data/teams.json';
 import { getScoreForMatchup, onScoresUpdate } from '../engine/liveScores.js';
 import { getMarketData, getAssetPriceState, onPolymarketUpdate } from '../engine/polymarket.js';
+import { isMobile } from './tooltip.js';
 
 let overlayEl = null;
 let currentMatchup = null;
@@ -426,10 +427,14 @@ export function openModal(matchup, options = {}) {
   const scoreboardHtml = buildScoreboardHtml(matchup, liveScore);
   const polymarketHtml = buildPolymarketPanel(matchup);
 
+  const mobile = isMobile();
+  const closeIcon = mobile ? '\u2190' : '\u00D7';
+  const closeTitle = mobile ? 'Back' : 'Close';
+
   overlay.innerHTML = `<div class="modal">
     <div class="modal__header">
+      <button class="modal__close" title="${closeTitle}">${closeIcon}</button>
       <span class="modal__title">${title}</span>
-      <button class="modal__close" title="Close">\u00D7</button>
     </div>
     ${matchup.recommendedPick ? `<div class="modal__recommendation">
       <span class="modal__rec-pick">\u2605 Pick: ${recTeam ? recTeam.name : ''}</span>

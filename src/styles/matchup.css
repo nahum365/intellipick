@@ -4,7 +4,7 @@
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  font-size: 12px;
+  font-size: 14px;
   transition: border-color 0.2s, box-shadow 0.2s;
   position: relative;
   min-width: 180px;
@@ -43,15 +43,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px 6px;
+  padding: 4px 8px;
   background: var(--bg);
   border-bottom: 1px solid var(--border-light);
   gap: 4px;
-  min-height: 22px;
+  min-height: 26px;
 }
 
 .matchup-card__category {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.3px;
@@ -66,7 +66,7 @@
 }
 
 .matchup-card__confidence-badge {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   padding: 1px 5px;
   border-radius: 3px;
@@ -91,10 +91,10 @@
 
 /* Team row */
 .team-row {
-  padding: 4px 6px;
+  padding: 6px 8px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
   transition: background 0.15s;
   border-bottom: 1px solid var(--border-light);
@@ -125,14 +125,18 @@
   font-style: italic;
 }
 
+.team-row--loser {
+  opacity: 0.4;
+}
+
 .team-row--empty:hover {
   background: transparent;
 }
 
 .team-row__star {
   color: #f59e0b;
-  font-size: 11px;
-  width: 12px;
+  font-size: 13px;
+  width: 14px;
   flex-shrink: 0;
 }
 
@@ -147,17 +151,17 @@
 }
 
 .team-row__seed {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--text-secondary);
-  width: 18px;
+  width: 20px;
   text-align: center;
   flex-shrink: 0;
 }
 
 .team-row__name {
   flex: 1;
-  font-size: 11px;
+  font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -165,7 +169,7 @@
 }
 
 .team-row__record {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
   flex-shrink: 0;
 }
@@ -193,7 +197,7 @@
 
 /* Game status footer bar */
 .matchup-card__status-bar {
-  padding: 3px 6px;
+  padding: 4px 8px;
   background: var(--bg);
   border-top: 1px solid var(--border-light);
   display: flex;
@@ -208,7 +212,7 @@
 }
 
 .matchup-card__status-label {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.3px;
@@ -256,7 +260,7 @@
 
 /* Live score on team row */
 .team-row__score {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text-secondary);
@@ -286,8 +290,8 @@
 
 /* Polymarket odds bar — percentage display */
 .matchup-card__odds-bar {
-  padding: 3px 6px;
-  font-size: 9px;
+  padding: 4px 8px;
+  font-size: 10px;
   color: var(--text-secondary);
   background: var(--bg);
   border-top: 1px solid var(--border-light);
@@ -302,7 +306,7 @@
 }
 
 .matchup-card__odds-pct {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text);
@@ -317,7 +321,7 @@
 }
 
 .matchup-card__odds-source {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.3px;

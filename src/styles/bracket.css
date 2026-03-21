@@ -51,7 +51,7 @@
 }
 
 .region__header {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
   text-transform: uppercase;
   color: var(--text-secondary);
@@ -87,7 +87,7 @@
 }
 
 .round__header {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -150,7 +150,7 @@
 }
 
 .final-four__label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -165,7 +165,7 @@
 }
 
 .final-four__champion-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
   color: var(--confidence-very-high);

@@ -99,12 +99,12 @@ body {
 }
 
 .btn {
-  padding: 6px 14px;
+  padding: 7px 16px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s;
@@ -180,7 +180,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 14px;
   flex-shrink: 0;
   gap: 16px;
 }
@@ -204,7 +204,7 @@ body {
 .insights-bar__badge {
   padding: 2px 8px;
   border-radius: 10px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -232,7 +232,7 @@ body {
   padding: 6px 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
 }
 
