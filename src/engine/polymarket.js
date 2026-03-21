@@ -26,6 +26,50 @@ let clobReconnectTimer = null;
 let gammaInterval = null;
 
 // ---------------------------------------------------------------------------
+// Status tracking
+// ---------------------------------------------------------------------------
+const polyStatus = {
+  gammaState: 'idle',    // 'idle' | 'loading' | 'success' | 'failed'
+  clobState: 'idle',     // 'idle' | 'connected' | 'failed'
+};
+
+// ---------------------------------------------------------------------------
+// Debouncing — batch CLOB updates, only notify if displayed % changed
+// ---------------------------------------------------------------------------
+let debouncedMatchups = new Set();
+let debounceTimer = null;
+const DEBOUNCE_MS = 500;
+
+// Snapshot of last-notified rounded percentages per matchup
+const lastNotifiedPcts = new Map();
+
+function scheduleNotify(matchupId) {
+  debouncedMatchups.add(matchupId);
+  if (debounceTimer) return;
+  debounceTimer = setTimeout(flushDebouncedNotify, DEBOUNCE_MS);
+}
+
+function flushDebouncedNotify() {
+  debounceTimer = null;
+  const changed = [];
+  for (const mid of debouncedMatchups) {
+    const data = state.marketData.get(mid);
+    if (!data) continue;
+    const r1 = Math.round(data.team1Prob * 100);
+    const r2 = Math.round(data.team2Prob * 100);
+    const prev = lastNotifiedPcts.get(mid);
+    if (!prev || prev.r1 !== r1 || prev.r2 !== r2) {
+      lastNotifiedPcts.set(mid, { r1, r2 });
+      changed.push(mid);
+    }
+  }
+  debouncedMatchups.clear();
+  if (changed.length > 0) {
+    notifyListeners({ type: 'odds', matchupIds: changed });
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Gamma REST API — market discovery
 // ---------------------------------------------------------------------------
 const GAMMA_BASE = 'https://gamma-api.polymarket.com';
@@ -35,7 +79,7 @@ async function fetchGammaEvents() {
   const url = `${GAMMA_BASE}/events?series_id=${SERIES_ID}&active=true&closed=false&limit=100`;
   const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
   try {
-    const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(30000) });
+    const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(60000) });
     if (r.ok) {
       const data = await r.json();
       return Array.isArray(data) ? data : [];
@@ -307,6 +351,7 @@ function connectClobWs(assetIds) {
 
   clobWs.onopen = () => {
     console.log('[Polymarket CLOB WS] Connected');
+    polyStatus.clobState = 'connected';
     // Subscribe to all asset IDs
     const msg = JSON.stringify({
       action: 'subscribe',
@@ -341,12 +386,14 @@ function connectClobWs(assetIds) {
 
   clobWs.onclose = () => {
     console.log('[Polymarket CLOB WS] Disconnected');
+    polyStatus.clobState = 'failed';
     clearInterval(clobPingInterval);
     scheduleReconnect('clob', assetIds);
   };
 
   clobWs.onerror = () => {
     console.warn('[Polymarket CLOB WS] Error');
+    polyStatus.clobState = 'failed';
   };
 }
 
@@ -398,7 +445,7 @@ function handleClobPriceChange(change) {
 
   if (mapping) {
     updateMarketDataFromWs(mapping.matchupId);
-    notifyListeners({ type: 'odds', matchupId: mapping.matchupId });
+    scheduleNotify(mapping.matchupId);
   }
 }
 
@@ -490,39 +537,63 @@ export function getAssetPriceState(assetId) {
 /**
  * Start Polymarket integration: fetch Gamma, connect WebSockets
  */
+let lastAssetIds = [];
+
+async function doGammaFetch() {
+  polyStatus.gammaState = 'loading';
+  notifyListeners({ type: 'status' });
+
+  const events = await fetchGammaEvents();
+  if (events.length === 0) {
+    // Only mark failed if we never had a successful fetch
+    if (state.marketData.size === 0) {
+      polyStatus.gammaState = 'failed';
+    }
+    notifyListeners({ type: 'status' });
+    return [];
+  }
+
+  polyStatus.gammaState = 'success';
+  const assetIds = processGammaEvents(events);
+  lastAssetIds = assetIds;
+  console.log(`[Polymarket] Matched ${state.marketData.size} events to bracket. ${assetIds.length} asset IDs.`);
+  notifyListeners({ type: 'init' });
+  return assetIds;
+}
+
 export async function startPolymarket() {
   console.log('[Polymarket] Starting integration...');
 
-  // 1. Fetch events via Gamma REST
-  const events = await fetchGammaEvents();
-  console.log(`[Polymarket] Fetched ${events.length} events from Gamma API`);
+  const assetIds = await doGammaFetch();
 
-  const assetIds = processGammaEvents(events);
-  console.log(`[Polymarket] Matched ${state.marketData.size} events to bracket. ${assetIds.length} asset IDs.`);
-
-  // Notify with initial data
-  notifyListeners({ type: 'init' });
-
-  // 2. Connect CLOB WebSocket for live odds
+  // Connect CLOB WebSocket for live odds
   if (assetIds.length > 0) {
     connectClobWs(assetIds);
   }
 
-  // 3. Re-fetch Gamma every 60s to pick up new events
+  // Re-fetch Gamma every 60s to pick up new events
   gammaInterval = setInterval(async () => {
-    const freshEvents = await fetchGammaEvents();
-    const freshAssetIds = processGammaEvents(freshEvents);
-    notifyListeners({ type: 'refresh' });
-    // Reconnect CLOB if we have new assets
+    const freshAssetIds = await doGammaFetch();
     if (freshAssetIds.length > 0 && clobWs?.readyState !== WebSocket.OPEN) {
       connectClobWs(freshAssetIds);
     }
   }, 60000);
 }
 
+export async function refreshGamma() {
+  const assetIds = await doGammaFetch();
+  if (assetIds.length > 0) {
+    connectClobWs(assetIds);
+  }
+}
+
 /**
  * Stop all Polymarket connections
  */
+export function getPolymarketStatus() {
+  return { ...polyStatus };
+}
+
 export function stopPolymarket() {
   clearInterval(gammaInterval);
   clearInterval(clobPingInterval);
