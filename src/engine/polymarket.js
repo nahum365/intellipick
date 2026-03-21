@@ -161,6 +161,12 @@ function normalizeForMatch(name) {
 // Build team name variants from teams data
 import teamsData from '../data/teams.json';
 
+// Extra aliases for teams whose nickname differs from their full university name
+// (used when Polymarket spells out the full name instead of the nickname)
+const POLYMARKET_ALIASES = {
+  'uconn': ['connecticut', 'connecticut huskies'],
+};
+
 const TEAM_ID_TO_ESPN = {};
 const TEAM_MATCH_NAMES = {};
 for (const t of teamsData.teams) {
@@ -172,6 +178,8 @@ for (const t of teamsData.teams) {
   // Short name without university suffixes
   const short = t.name.replace(/ Blue Devils| Wildcats| Bulldogs| Tigers| Gators| Bears| Hoyas| Cavaliers| Volunteers| Crimson Tide| Boilermakers| Jayhawks| Longhorns| Spartans| Bruins| Huskies| Cardinals| Tar Heels| Fighting Illini| Buckeyes| Badgers| Hurricanes| Razorbacks| Mountaineers| Hawkeyes| Commodores| Cowboys| Aggies| Cougars| Gaels| Panthers| Red Raiders| Yellow Jackets| Friars| Bearcats| Cyclones/gi, '');
   if (short.trim().length >= 3) names.add(normalizeForMatch(short));
+  // Add any extra Polymarket-specific aliases
+  for (const alias of (POLYMARKET_ALIASES[t.id] || [])) names.add(alias);
   TEAM_MATCH_NAMES[t.id] = [...names].filter(n => n.length >= 3);
 }
 
