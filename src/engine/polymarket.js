@@ -120,6 +120,7 @@ function processGammaEvents(events) {
       const rawProb = parseFloat(prices[i]) || 0;
       state.prices.set(assetId, {
         prob: rawProb,
+        gammaProb: rawProb,
         bestBid: 0,
         bestAsk: 0,
         lastTradePrice: 0,
@@ -398,23 +399,34 @@ function connectClobWs(assetIds) {
 }
 
 /**
- * Compute the displayed probability the way Polymarket's UI does:
- *  - If spread (bestAsk - bestBid) <= 0.10: midpoint = (bid + ask) / 2
- *  - Otherwise: fall back to lastTradePrice
- *  - Final fallback: raw outcomePrices from Gamma
+ * Compute the displayed probability from CLOB order-book data.
+ *  1. Tight spread (≤ 0.10): midpoint of bid/ask
+ *  2. One-sided book: use the available side (ask-only or bid-only)
+ *  3. No usable book data: return null (caller should fall back to gamma)
+ *
+ * LTP is intentionally excluded — it can be hours/days stale and produces
+ * wildly incoherent results (e.g. 100% / 95% for a two-outcome market).
  */
 function computeDisplayProb(entry) {
-  const { bestBid, bestAsk, lastTradePrice, prob: rawProb } = entry;
-  if (bestBid > 0 && bestAsk > 0) {
+  const { bestBid, bestAsk } = entry;
+  const hasBid = bestBid > 0;
+  const hasAsk = bestAsk > 0;
+
+  if (hasBid && hasAsk) {
     const spread = bestAsk - bestBid;
     if (spread <= 0.10) {
       return (bestBid + bestAsk) / 2;
     }
+    // Wide spread — not reliable enough
+    return null;
   }
-  // Thin/empty book — use last trade price if available
-  if (lastTradePrice > 0 && lastTradePrice < 1) return lastTradePrice;
-  // Final fallback: Gamma outcomePrices
-  return rawProb;
+
+  // One-sided book: use what we have as a rough estimate
+  if (hasAsk) return bestAsk;
+  if (hasBid) return bestBid;
+
+  // No book data at all
+  return null;
 }
 
 /**
@@ -425,10 +437,10 @@ function handleClobPriceChange(change) {
   if (!change || !change.asset_id) return;
 
   const assetId = change.asset_id;
-  const existing = state.prices.get(assetId) || { prob: 0, bestBid: 0, bestAsk: 0, lastTradePrice: 0, volume: 0, liquidity: 0 };
+  const existing = state.prices.get(assetId) || { prob: 0, gammaProb: 0, bestBid: 0, bestAsk: 0, lastTradePrice: 0, volume: 0, liquidity: 0 };
   const mapping = state.assetToTeam.get(assetId);
 
-  // Update last trade price
+  // Update last trade price (kept for debug display, not used for prob)
   const tp = parseFloat(change.price);
   if (tp > 0 && tp < 1) {
     existing.lastTradePrice = tp;
@@ -438,9 +450,12 @@ function handleClobPriceChange(change) {
   const bid = parseFloat(change.best_bid);
   const ask = parseFloat(change.best_ask);
   if (bid > 0) existing.bestBid = bid;
+  else if (change.best_bid === '' || change.best_bid === '0') existing.bestBid = 0;
   if (ask > 0) existing.bestAsk = ask;
+  else if (change.best_ask === '' || change.best_ask === '0') existing.bestAsk = 0;
 
-  existing.prob = computeDisplayProb(existing);
+  // Compute CLOB-derived prob (may be null if book is unusable)
+  existing.clobProb = computeDisplayProb(existing);
   state.prices.set(assetId, existing);
 
   if (mapping) {
@@ -456,19 +471,45 @@ function updateMarketDataFromWs(matchupId) {
   const t1Price = data.team1AssetId ? state.prices.get(data.team1AssetId) : null;
   const t2Price = data.team2AssetId ? state.prices.get(data.team2AssetId) : null;
 
-  let anyChange = false;
+  const t1Clob = t1Price?.clobProb ?? null;
+  const t2Clob = t2Price?.clobProb ?? null;
 
-  if (t1Price) {
-    const prevProb = data.team1Prob;
-    data.team1Prob = t1Price.prob;
-    data.team1ProbDelta = t1Price.prob - prevProb;
-    if (Math.abs(data.team1ProbDelta) > 0.001) anyChange = true;
+  let newT1, newT2;
+
+  if (t1Clob != null && t2Clob != null) {
+    // Both sides have CLOB data — validate they sum close to 1
+    const sum = t1Clob + t2Clob;
+    if (sum > 0.85 && sum < 1.15) {
+      newT1 = t1Clob;
+      newT2 = t2Clob;
+    } else {
+      // Incoherent — reject this update, keep last valid state
+      return;
+    }
+  } else if (t1Clob != null) {
+    // Only team 1 has CLOB data — derive team 2
+    newT1 = t1Clob;
+    newT2 = 1 - t1Clob;
+  } else if (t2Clob != null) {
+    // Only team 2 has CLOB data — derive team 1
+    newT2 = t2Clob;
+    newT1 = 1 - t2Clob;
+  } else {
+    // No CLOB data yet — keep current state (gamma on first load)
+    return;
   }
-  if (t2Price) {
-    const prevProb = data.team2Prob;
-    data.team2Prob = t2Price.prob;
-    data.team2ProbDelta = t2Price.prob - prevProb;
-    if (Math.abs(data.team2ProbDelta) > 0.001) anyChange = true;
+
+  let anyChange = false;
+  const prevT1 = data.team1Prob;
+  const prevT2 = data.team2Prob;
+
+  data.team1Prob = newT1;
+  data.team2Prob = newT2;
+  data.team1ProbDelta = newT1 - prevT1;
+  data.team2ProbDelta = newT2 - prevT2;
+
+  if (Math.abs(data.team1ProbDelta) > 0.001 || Math.abs(data.team2ProbDelta) > 0.001) {
+    anyChange = true;
   }
 
   if (anyChange) {
