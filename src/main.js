@@ -5,8 +5,8 @@ import './styles/tooltip.css';
 import './styles/modal.css';
 
 import { createBracket } from './components/bracket.js';
-import { createScorePanel, updateScorePanel } from './components/scorePanel.js';
-import { createInsightsBar } from './components/insightsBar.js';
+import { createScorePanel } from './components/scorePanel.js';
+import { createInsightsBar, updateInsightsBar } from './components/insightsBar.js';
 import { startPolling, onScoresUpdate } from './engine/liveScores.js';
 import { getMarketData } from './engine/polymarket.js';
 const app = document.getElementById('app');
@@ -147,8 +147,8 @@ function updateOddsInPlace(matchupIds) {
  * Update only the status boxes in the sidebar without rebuilding everything.
  */
 function updateStatusOnly() {
-  if (scorePanelEl) {
-    updateScorePanel(scorePanelEl);
+  if (insightsBarEl) {
+    updateInsightsBar(insightsBarEl);
   }
 }
 
