@@ -80,6 +80,8 @@ ESPN_TO_TEAM_ID['miami oh'] = 'miami-oh';
 ESPN_TO_TEAM_ID['m-oh'] = 'miami-oh';
 ESPN_TO_TEAM_ID['miami (ohio)'] = 'miami-oh';
 ESPN_TO_TEAM_ID['miami-oh'] = 'miami-oh';
+ESPN_TO_TEAM_ID['cbu'] = 'california-baptist';
+ESPN_TO_TEAM_ID['ca baptist'] = 'california-baptist';
 
 // Score cache: matchupId -> normalized score object
 const scoreMap = new Map();
