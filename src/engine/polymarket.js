@@ -248,12 +248,22 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
   return {
     matchupId,
     slug: event.slug,
+    eventTitle: event.title || '',
+    marketQuestion: market.question || market.groupItemTitle || '',
+    conditionId: market.conditionId || '',
     team1Id,
     team2Id,
     team1Prob,
     team2Prob,
     team1AssetId,
     team2AssetId,
+    team1OutcomePrice: parseFloat(prices[outcomes.indexOf(
+      outcomes.find((o, i) => tokenIds[i] === team1AssetId)
+    )]) || 0,
+    team2OutcomePrice: parseFloat(prices[outcomes.indexOf(
+      outcomes.find((o, i) => tokenIds[i] === team2AssetId)
+    )]) || 0,
+    outcomes: [...outcomes],
     volume: parseFloat(market.volume) || 0,
     liquidity: parseFloat(market.liquidity) || 0,
     moneyline1: probToAmericanOdds(team1Prob),
@@ -400,15 +410,23 @@ function updateMarketDataFromWs(matchupId) {
   const t1Price = data.team1AssetId ? state.prices.get(data.team1AssetId) : null;
   const t2Price = data.team2AssetId ? state.prices.get(data.team2AssetId) : null;
 
+  let anyChange = false;
+
   if (t1Price) {
     const prevProb = data.team1Prob;
     data.team1Prob = t1Price.prob;
     data.team1ProbDelta = t1Price.prob - prevProb;
+    if (Math.abs(data.team1ProbDelta) > 0.001) anyChange = true;
   }
   if (t2Price) {
     const prevProb = data.team2Prob;
     data.team2Prob = t2Price.prob;
     data.team2ProbDelta = t2Price.prob - prevProb;
+    if (Math.abs(data.team2ProbDelta) > 0.001) anyChange = true;
+  }
+
+  if (anyChange) {
+    data.lastChangeTime = Date.now();
   }
 
   data.moneyline1 = probToAmericanOdds(data.team1Prob);
@@ -461,6 +479,13 @@ export function getMarketData(matchupId) {
  */
 export function getAllMarketData() {
   return state.marketData;
+}
+
+/**
+ * Get raw per-asset CLOB price state (for diagnostics)
+ */
+export function getAssetPriceState(assetId) {
+  return state.prices.get(assetId) || null;
 }
 
 /**

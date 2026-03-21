@@ -218,6 +218,7 @@ export function createMatchupCard(matchup) {
   // --- Polymarket odds (below IntelliPick, read directly from polymarket module) ---
   const polyData = hasTeams ? getMarketData(matchup.id) : null;
   if (polyData && polyData.team1Prob && polyData.team2Prob) {
+    const recentTick = polyData.lastChangeTime && (Date.now() - polyData.lastChangeTime < 2000);
     const oddsBar = document.createElement('div');
     oddsBar.className = 'matchup-card__odds-bar' + (polyData.live ? ' matchup-card__odds-bar--live' : '');
 
@@ -227,6 +228,9 @@ export function createMatchupCard(matchup) {
     const arrow1 = d1 > 0.005 ? '\u25B2' : d1 < -0.005 ? '\u25BC' : '';
     const cls1 = d1 > 0.005 ? ' matchup-card__odds-pct--up' : d1 < -0.005 ? ' matchup-card__odds-pct--down' : '';
     t1Pct.className += cls1;
+    if (recentTick && Math.abs(d1) > 0.001) {
+      t1Pct.classList.add(d1 > 0 ? 'tick-up' : 'tick-down');
+    }
     t1Pct.textContent = Math.round(polyData.team1Prob * 100) + '%' + (arrow1 ? ' ' + arrow1 : '');
 
     const source = document.createElement('span');
@@ -239,6 +243,9 @@ export function createMatchupCard(matchup) {
     const arrow2 = d2 > 0.005 ? '\u25B2' : d2 < -0.005 ? '\u25BC' : '';
     const cls2 = d2 > 0.005 ? ' matchup-card__odds-pct--up' : d2 < -0.005 ? ' matchup-card__odds-pct--down' : '';
     t2Pct.className += cls2;
+    if (recentTick && Math.abs(d2) > 0.001) {
+      t2Pct.classList.add(d2 > 0 ? 'tick-up' : 'tick-down');
+    }
     t2Pct.textContent = Math.round(polyData.team2Prob * 100) + '%' + (arrow2 ? ' ' + arrow2 : '');
 
     oddsBar.appendChild(t1Pct);

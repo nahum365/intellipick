@@ -1,6 +1,6 @@
 import teamsData from '../data/teams.json';
 import { getScoreForMatchup, onScoresUpdate } from '../engine/liveScores.js';
-import { getMarketData, onPolymarketUpdate } from '../engine/polymarket.js';
+import { getMarketData, getAssetPriceState, onPolymarketUpdate } from '../engine/polymarket.js';
 
 let overlayEl = null;
 let currentMatchup = null;
@@ -207,6 +207,17 @@ function buildScoreboardHtml(matchup, liveScore) {
   </div>`;
 }
 
+function buildAssetDebugRow(label, assetId) {
+  if (!assetId) return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">--</span></div>`;
+  const p = getAssetPriceState(assetId);
+  if (!p) return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">no data</span></div>`;
+  const bid = p.bestBid > 0 ? p.bestBid.toFixed(4) : '--';
+  const ask = p.bestAsk > 0 ? p.bestAsk.toFixed(4) : '--';
+  const ltp = p.lastTradePrice > 0 ? p.lastTradePrice.toFixed(4) : '--';
+  const spread = (p.bestBid > 0 && p.bestAsk > 0) ? (p.bestAsk - p.bestBid).toFixed(4) : '--';
+  return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">bid ${bid} / ask ${ask} (spread ${spread}) · ltp ${ltp}</span></div>`;
+}
+
 function buildPolymarketPanel(matchup) {
   const mkt = getMarketData(matchup.id);
   if (!mkt) return '';
@@ -217,11 +228,14 @@ function buildPolymarketPanel(matchup) {
   const t2Pct = Math.round(mkt.team2Prob * 100);
   const t1Fav = t1Pct >= t2Pct;
 
-  // Delta arrows
+  // Delta arrows + tick flash
   const d1 = mkt.team1ProbDelta || 0;
   const d2 = mkt.team2ProbDelta || 0;
+  const recentTick = mkt.lastChangeTime && (Date.now() - mkt.lastChangeTime < 2000);
   const arrow1 = d1 > 0.005 ? '<span class="pm-delta pm-delta--up">\u25B2</span>' : d1 < -0.005 ? '<span class="pm-delta pm-delta--down">\u25BC</span>' : '';
   const arrow2 = d2 > 0.005 ? '<span class="pm-delta pm-delta--up">\u25B2</span>' : d2 < -0.005 ? '<span class="pm-delta pm-delta--down">\u25BC</span>' : '';
+  const tick1 = recentTick && Math.abs(d1) > 0.001 ? (d1 > 0 ? ' tick-up' : ' tick-down') : '';
+  const tick2 = recentTick && Math.abs(d2) > 0.001 ? (d2 > 0 ? ' tick-up' : ' tick-down') : '';
 
   // Volume / liquidity formatting
   const fmtK = (n) => {
@@ -278,12 +292,12 @@ function buildPolymarketPanel(matchup) {
     <div class="pm-odds">
       <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t1Name}</div>
-        <div class="pm-odds__pct">${t1Pct}% ${arrow1}</div>
+        <div class="pm-odds__pct${tick1}">${t1Pct}% ${arrow1}</div>
         <div class="pm-odds__detail">${mkt.moneyline1 || '--'} · ${price1}</div>
       </div>
       <div class="pm-odds__side pm-odds__side--t2 ${!t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t2Name}</div>
-        <div class="pm-odds__pct">${t2Pct}% ${arrow2}</div>
+        <div class="pm-odds__pct${tick2}">${t2Pct}% ${arrow2}</div>
         <div class="pm-odds__detail">${mkt.moneyline2 || '--'} · ${price2}</div>
       </div>
     </div>
@@ -304,6 +318,23 @@ function buildPolymarketPanel(matchup) {
     </div>
 
     ${sentimentHtml}
+
+    <div class="pm-debug">
+      <div class="pm-debug__toggle" onclick="this.parentElement.classList.toggle('pm-debug--open')">
+        Market Details \u25BE
+      </div>
+      <div class="pm-debug__body">
+        ${mkt.eventTitle ? `<div class="pm-debug__row"><span class="pm-debug__label">Event</span><span class="pm-debug__value">${mkt.eventTitle}</span></div>` : ''}
+        ${mkt.marketQuestion ? `<div class="pm-debug__row"><span class="pm-debug__label">Question</span><span class="pm-debug__value">${mkt.marketQuestion}</span></div>` : ''}
+        ${mkt.outcomes ? `<div class="pm-debug__row"><span class="pm-debug__label">Outcomes</span><span class="pm-debug__value">${mkt.outcomes.join(' / ')}</span></div>` : ''}
+        <div class="pm-debug__row"><span class="pm-debug__label">Gamma Prices</span><span class="pm-debug__value">${mkt.team1OutcomePrice?.toFixed(4) || '--'} / ${mkt.team2OutcomePrice?.toFixed(4) || '--'}</span></div>
+        ${buildAssetDebugRow('Team 1 CLOB', mkt.team1AssetId)}
+        ${buildAssetDebugRow('Team 2 CLOB', mkt.team2AssetId)}
+        <div class="pm-debug__row"><span class="pm-debug__label">Display Prob</span><span class="pm-debug__value">${mkt.team1Prob?.toFixed(4) || '--'} / ${mkt.team2Prob?.toFixed(4) || '--'}</span></div>
+        ${mkt.conditionId ? `<div class="pm-debug__row"><span class="pm-debug__label">Condition ID</span><span class="pm-debug__value pm-debug__value--mono">${mkt.conditionId.slice(0, 12)}...</span></div>` : ''}
+        ${mkt.slug ? `<div class="pm-debug__row"><a class="pm-debug__link" href="https://polymarket.com/event/${mkt.slug}" target="_blank" rel="noopener">View on Polymarket \u2197</a></div>` : ''}
+      </div>
+    </div>
   </div>`;
 }
 
