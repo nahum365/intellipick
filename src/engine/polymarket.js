@@ -149,7 +149,9 @@ import { getR64Matchup, getGeneratedMatchup, getRegionR64Matchups, REGIONS } fro
 
 function normalizeForMatch(name) {
   if (!name || typeof name !== 'string') return '';
-  return name.toLowerCase()
+  return name
+    .replace(/&amp;/gi, '&')
+    .toLowerCase()
     .replace(/['']/g, '')
     .replace(/\./g, '')
     .replace(/\s+/g, ' ')
