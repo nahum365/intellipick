@@ -1,7 +1,8 @@
 import teamsData from '../data/teams.json';
 import { getRoundIndex } from '../engine/propagation.js';
-import { showTooltip, hideTooltip } from './tooltip.js';
+import { showTooltip, hideTooltip, isMobile } from './tooltip.js';
 import { openModal } from './modal.js';
+import { openBottomSheet } from './bottomSheet.js';
 import { getScoreForMatchup } from '../engine/liveScores.js';
 import { getMarketData } from '../engine/polymarket.js';
 
@@ -98,7 +99,7 @@ export function createMatchupCard(matchup) {
   }
 
   // Team rows
-  const renderTeamRow = (team, isTop) => {
+  const renderTeamRow = (team, isTop, isExpected) => {
     const row = document.createElement('div');
 
     if (!team) {
@@ -112,6 +113,7 @@ export function createMatchupCard(matchup) {
 
     let rowClasses = 'team-row';
     if (isRecommended) rowClasses += ' team-row--recommended';
+    if (isExpected) rowClasses += ' team-row--expected';
     row.className = rowClasses;
 
     // Indicator: star for recommended, check/x for final results
@@ -168,11 +170,15 @@ export function createMatchupCard(matchup) {
       row.appendChild(injuries);
     }
 
-    // Click -> open modal
+    // Click -> bottom sheet (mobile) or modal (desktop)
     row.style.cursor = 'pointer';
     row.addEventListener('click', (e) => {
       e.stopPropagation();
-      openModal(matchup, { scrollToTeamId: team.id });
+      if (isMobile()) {
+        openBottomSheet(team, profile, matchup);
+      } else {
+        openModal(matchup, { scrollToTeamId: team.id });
+      }
     });
 
     // Hover for tooltip
@@ -186,8 +192,8 @@ export function createMatchupCard(matchup) {
     return row;
   };
 
-  card.appendChild(renderTeamRow(matchup.team1, true));
-  card.appendChild(renderTeamRow(matchup.team2, false));
+  card.appendChild(renderTeamRow(matchup.team1, true, matchup.team1Expected));
+  card.appendChild(renderTeamRow(matchup.team2, false, matchup.team2Expected));
 
   // --- IntelliPick odds (always above Polymarket) ---
   if (hasPrediction && hasTeams) {
