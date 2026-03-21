@@ -400,36 +400,33 @@ export function openModal(matchup, options = {}) {
     const d1 = mkt.team1ProbDelta || 0;
     const d2 = mkt.team2ProbDelta || 0;
 
-    const updatePctEl = (side, pct, delta) => {
+    const updatePctEl = (side, pct) => {
       if (!side) return;
       const numEl = side.querySelector('.pm-odds__num');
       if (!numEl) return;
-      // Skip if the displayed integer didn't change
-      if (parseInt(numEl.textContent, 10) === pct) return;
+      const oldPct = parseInt(numEl.textContent, 10);
+      if (oldPct === pct) return;
 
+      const up = pct > oldPct;
       const pctEl = numEl.parentElement;
-      const arrowEl = pctEl.querySelector('.pm-delta');
-      const arrow = delta > 0.005
-        ? '<span class="pm-delta pm-delta--up">\u25B2</span>'
-        : delta < -0.005
-          ? '<span class="pm-delta pm-delta--down">\u25BC</span>'
-          : '';
 
       numEl.textContent = pct + '%';
-      if (arrowEl) arrowEl.remove();
-      if (arrow) pctEl.insertAdjacentHTML('beforeend', arrow);
+      pctEl.querySelector('.pm-delta')?.remove();
+      pctEl.insertAdjacentHTML('beforeend',
+        up ? '<span class="pm-delta pm-delta--up">\u25B2</span>'
+           : '<span class="pm-delta pm-delta--down">\u25BC</span>');
 
       numEl.classList.remove('tick-up', 'tick-down');
-      void numEl.offsetWidth; // restart animation
-      numEl.classList.add(delta > 0 ? 'tick-up' : 'tick-down');
+      void numEl.offsetWidth;
+      numEl.classList.add(up ? 'tick-up' : 'tick-down');
       setTimeout(() => {
         numEl.classList.remove('tick-up', 'tick-down');
         pctEl.querySelector('.pm-delta')?.remove();
       }, 1500);
     };
 
-    updatePctEl(pmContainer.querySelector('.pm-odds__side--t1'), t1Pct, d1);
-    updatePctEl(pmContainer.querySelector('.pm-odds__side--t2'), t2Pct, d2);
+    updatePctEl(pmContainer.querySelector('.pm-odds__side--t1'), t1Pct);
+    updatePctEl(pmContainer.querySelector('.pm-odds__side--t2'), t2Pct);
 
     // Prob bar
     const bar1 = pmContainer.querySelector('.pm-prob-bar__fill--t1');
