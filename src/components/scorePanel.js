@@ -1,6 +1,7 @@
 import { getUpsetAlerts } from '../engine/scoring.js';
 import { getR64Matchup, getRegionR64Matchups } from '../engine/propagation.js';
 import { getFetchStatus, getScoreForMatchup } from '../engine/liveScores.js';
+import { refreshGamma } from '../engine/polymarket.js';
 import { openModal } from './modal.js';
 import { showTooltip, hideTooltip } from './tooltip.js';
 import teamsData from '../data/teams.json';
@@ -35,18 +36,93 @@ function timeAgo(ts) {
   return `${Math.floor(mins / 60)}h ago`;
 }
 
-function buildFetchStatusHtml() {
+function buildStatusBoxes() {
   const s = getFetchStatus();
+  const container = document.createElement('div');
+  container.className = 'status-boxes';
+
+  // --- ESPN status box ---
+  const espnBox = document.createElement('div');
+  espnBox.className = 'status-box';
+
+  const espnBulb = document.createElement('span');
+  const espnLabel = document.createElement('span');
+  espnLabel.className = 'status-box__label';
+  espnLabel.textContent = 'ESPN';
+  const espnDetail = document.createElement('span');
+  espnDetail.className = 'status-box__detail';
+
   if (s.espnLoading) {
-    const spinner = '<span class="fetch-status__spinner"></span>';
-    return `<div class="fetch-status">${spinner}<span class="fetch-status__text">Loading ESPN info&hellip;</span></div>`;
+    espnBulb.className = 'status-box__bulb status-box__bulb--loading';
+    espnDetail.textContent = '';
+  } else if (s.espnExhausted) {
+    espnBulb.className = 'status-box__bulb status-box__bulb--red';
+    espnDetail.textContent = '(unavailable)';
+  } else if (s.espnFailed && s.espnNextRetryAt) {
+    espnBulb.className = 'status-box__bulb status-box__bulb--yellow';
+    const secsLeft = Math.max(0, Math.ceil((s.espnNextRetryAt - Date.now()) / 1000));
+    const attemptsLeft = s.espnRetryMax - s.espnRetryCount;
+    espnDetail.textContent = `(retry in ${secsLeft}s, ${attemptsLeft} left)`;
+  } else if (s.espnLastLoaded) {
+    espnBulb.className = 'status-box__bulb status-box__bulb--green';
+    espnDetail.textContent = `(${timeAgo(s.espnLastLoaded)})`;
+  } else {
+    espnBulb.className = 'status-box__bulb status-box__bulb--loading';
+    espnDetail.textContent = '';
   }
 
-  const parts = [];
-  if (s.espnLastLoaded) parts.push(`ESPN ${timeAgo(s.espnLastLoaded)}`);
-  if (parts.length === 0) return '';
+  espnBox.appendChild(espnBulb);
+  espnBox.appendChild(espnLabel);
+  espnBox.appendChild(espnDetail);
+  container.appendChild(espnBox);
 
-  return `<div class="fetch-status fetch-status--done"><span class="fetch-status__text">${parts.join(', ')}</span></div>`;
+  // --- Polymarket status box ---
+  const polyBox = document.createElement('div');
+  polyBox.className = 'status-box';
+
+  const polyBulb = document.createElement('span');
+  const polyLabel = document.createElement('span');
+  polyLabel.className = 'status-box__label';
+  polyLabel.textContent = 'Polymarket';
+  const polyDetail = document.createElement('span');
+  polyDetail.className = 'status-box__detail';
+
+  const poly = s.poly;
+  if (poly.gammaState === 'failed') {
+    polyBulb.className = 'status-box__bulb status-box__bulb--red';
+    polyDetail.textContent = '(unavailable)';
+  } else if (poly.gammaState === 'success' && poly.clobState === 'failed') {
+    polyBulb.className = 'status-box__bulb status-box__bulb--yellow';
+    polyDetail.textContent = '(no live updates)';
+    // Add refresh button
+    const refreshBtn = document.createElement('button');
+    refreshBtn.className = 'status-box__refresh-btn';
+    refreshBtn.title = 'Refresh Polymarket data';
+    refreshBtn.innerHTML = '&#x21bb;';
+    refreshBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      refreshGamma();
+    });
+    polyBox._refreshBtn = refreshBtn;
+  } else if (poly.gammaState === 'success' && poly.clobState === 'connected') {
+    polyBulb.className = 'status-box__bulb status-box__bulb--green';
+    polyDetail.textContent = '(live streaming)';
+  } else if (poly.gammaState === 'loading') {
+    polyBulb.className = 'status-box__bulb status-box__bulb--loading';
+    polyDetail.textContent = '(finding markets)';
+  } else {
+    // idle / initial state
+    polyBulb.className = 'status-box__bulb status-box__bulb--loading';
+    polyDetail.textContent = '(finding markets)';
+  }
+
+  polyBox.appendChild(polyBulb);
+  polyBox.appendChild(polyLabel);
+  polyBox.appendChild(polyDetail);
+  if (polyBox._refreshBtn) polyBox.appendChild(polyBox._refreshBtn);
+  container.appendChild(polyBox);
+
+  return container;
 }
 
 // Compute IntelliPick performance across all matchups with predictions
@@ -102,11 +178,8 @@ export function updateScorePanel(panel) {
   const body = document.createElement('div');
   body.className = 'score-sidebar__body';
 
-  // Fetch status
-  const statusContainer = document.createElement('div');
-  statusContainer.className = 'fetch-status-container';
-  statusContainer.innerHTML = buildFetchStatusHtml();
-  body.appendChild(statusContainer);
+  // Fetch status boxes
+  body.appendChild(buildStatusBoxes());
 
   // IntelliPick Performance section
   const perfSection = document.createElement('div');

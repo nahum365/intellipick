@@ -1,6 +1,6 @@
 import matchupsData from '../data/matchups.json';
 import { getR64Matchup, getGeneratedMatchup, getRegionR64Matchups, REGIONS } from './propagation.js';
-import { startPolymarket, stopPolymarket, onPolymarketUpdate } from './polymarket.js';
+import { startPolymarket, stopPolymarket, onPolymarketUpdate, getPolymarketStatus } from './polymarket.js';
 
 // Map internal team IDs to ESPN shortDisplayName values
 const TEAM_ID_TO_ESPN = {
@@ -91,7 +91,16 @@ let pollIntervalId = null;
 const fetchStatus = {
   espnLoading: false,
   espnLastLoaded: null,
+  espnFailed: false,
+  espnHasStaleData: false,
+  espnRetryCount: 0,
+  espnRetryMax: 5,
+  espnRetryInterval: 10000,
+  espnNextRetryAt: null,    // timestamp of next retry
+  espnExhausted: false,     // true when all retries used up
 };
+let espnRetryTimer = null;
+let espnCountdownInterval = null;
 
 function normalizeStatus(espnStatus) {
   if (!espnStatus || !espnStatus.type) return 'scheduled';
@@ -272,9 +281,9 @@ function processEvents(events) {
 
 
 
-function notifyListeners() {
+function notifyListeners(detail) {
   for (const cb of listeners) {
-    try { cb(); } catch {}
+    try { cb(detail); } catch {}
   }
 }
 
@@ -300,43 +309,88 @@ function getTournamentDatesToFetch() {
   return dates;
 }
 
-async function fetchScores() {
+async function fetchScoresInner() {
   const dates = getTournamentDatesToFetch();
 
-  fetchStatus.espnLoading = true;
-  notifyListeners();
-  try {
-    // Fetch all relevant dates in parallel
-    const fetches = dates.map(date =>
-      fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${date}&groups=50&limit=100`)
-        .then(r => r.ok ? r.json() : null)
-        .catch(() => null)
-    );
-    const results = await Promise.all(fetches);
+  const fetches = dates.map(date =>
+    fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${date}&groups=50&limit=100`)
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null)
+  );
+  const results = await Promise.all(fetches);
 
-    // Merge events, deduplicating by ESPN event ID
-    const seenIds = new Set();
-    const allEvents = [];
-    for (const data of results) {
-      if (!data) continue;
-      for (const event of (data.events || [])) {
-        if (!seenIds.has(event.id)) {
-          seenIds.add(event.id);
-          allEvents.push(event);
-        }
+  const seenIds = new Set();
+  const allEvents = [];
+  for (const data of results) {
+    if (!data) continue;
+    for (const event of (data.events || [])) {
+      if (!seenIds.has(event.id)) {
+        seenIds.add(event.id);
+        allEvents.push(event);
       }
     }
-
-    console.log(`[ESPN] Fetched ${allEvents.length} total events from ${dates.length} date queries`);
-    processEvents(allEvents);
-    fetchStatus.espnLastLoaded = Date.now();
-  } catch (err) {
-    console.warn('[ESPN] Fetch error:', err);
-  } finally {
-    fetchStatus.espnLoading = false;
-    notifyListeners();
   }
 
+  if (allEvents.length === 0 && results.every(r => r === null)) {
+    throw new Error('All ESPN requests failed');
+  }
+
+  console.log(`[ESPN] Fetched ${allEvents.length} total events from ${dates.length} date queries`);
+  processEvents(allEvents);
+  return allEvents.length;
+}
+
+function clearEspnRetry() {
+  clearTimeout(espnRetryTimer);
+  clearInterval(espnCountdownInterval);
+  espnRetryTimer = null;
+  espnCountdownInterval = null;
+}
+
+function scheduleEspnRetry() {
+  if (fetchStatus.espnRetryCount >= fetchStatus.espnRetryMax) {
+    fetchStatus.espnExhausted = true;
+    fetchStatus.espnNextRetryAt = null;
+    notifyListeners({ type: 'status' });
+    return;
+  }
+  fetchStatus.espnNextRetryAt = Date.now() + fetchStatus.espnRetryInterval;
+  // Tick every second to update countdown display
+  espnCountdownInterval = setInterval(() => notifyListeners({ type: 'status' }), 1000);
+  espnRetryTimer = setTimeout(() => {
+    clearInterval(espnCountdownInterval);
+    espnCountdownInterval = null;
+    fetchScores();
+  }, fetchStatus.espnRetryInterval);
+  notifyListeners({ type: 'status' });
+}
+
+async function fetchScores() {
+  fetchStatus.espnLoading = true;
+  fetchStatus.espnFailed = false;
+  clearEspnRetry();
+  notifyListeners({ type: 'status' });
+
+  try {
+    await fetchScoresInner();
+    fetchStatus.espnLastLoaded = Date.now();
+    fetchStatus.espnFailed = false;
+    fetchStatus.espnHasStaleData = true;
+    fetchStatus.espnRetryCount = 0;
+    fetchStatus.espnExhausted = false;
+    fetchStatus.espnNextRetryAt = null;
+  } catch (err) {
+    console.warn('[ESPN] Fetch error:', err);
+    fetchStatus.espnFailed = true;
+    fetchStatus.espnHasStaleData = fetchStatus.espnLastLoaded !== null;
+    fetchStatus.espnRetryCount++;
+    fetchStatus.espnLoading = false;
+    scheduleEspnRetry();
+    return;
+  } finally {
+    fetchStatus.espnLoading = false;
+  }
+  notifyListeners();
 }
 
 export function startPolling() {
@@ -346,8 +400,8 @@ export function startPolling() {
   // Start Polymarket integration (series_id=10470 + CLOB WebSocket)
   startPolymarket().catch(err => console.warn('[Polymarket] Init error:', err));
 
-  // Trigger UI rerender when Polymarket data updates (data stays in polymarket.js)
-  onPolymarketUpdate(() => notifyListeners());
+  // Pass polymarket update details through so the UI can do targeted updates
+  onPolymarketUpdate((detail) => notifyListeners(detail));
 }
 
 
@@ -380,7 +434,7 @@ export function getWinner(matchupId) {
 }
 
 export function getFetchStatus() {
-  return { ...fetchStatus };
+  return { ...fetchStatus, poly: getPolymarketStatus() };
 }
 
 export function onScoresUpdate(callback) {

@@ -75,6 +75,7 @@ export function createMatchupCard(matchup) {
   else if (hasTeams) classes += ' matchup-card--upcoming';
 
   card.className = classes;
+  card.dataset.matchupId = matchup.id;
 
   // Header (any round with prediction data)
   if (hasPrediction && matchup.category) {
