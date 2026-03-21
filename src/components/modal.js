@@ -326,6 +326,7 @@ function buildPolymarketPanel(matchup) {
       <div class="pm-debug__body">
         ${mkt.eventTitle ? `<div class="pm-debug__row"><span class="pm-debug__label">Event</span><span class="pm-debug__value">${mkt.eventTitle}</span></div>` : ''}
         ${mkt.marketQuestion ? `<div class="pm-debug__row"><span class="pm-debug__label">Question</span><span class="pm-debug__value">${mkt.marketQuestion}</span></div>` : ''}
+        <div class="pm-debug__row"><span class="pm-debug__label">Market Type</span><span class="pm-debug__value">${mkt.sportsMarketType || 'unknown'}</span></div>
         ${mkt.outcomes ? `<div class="pm-debug__row"><span class="pm-debug__label">Outcomes</span><span class="pm-debug__value">${mkt.outcomes.join(' / ')}</span></div>` : ''}
         <div class="pm-debug__row"><span class="pm-debug__label">Gamma Prices</span><span class="pm-debug__value">${mkt.team1OutcomePrice?.toFixed(4) || '--'} / ${mkt.team2OutcomePrice?.toFixed(4) || '--'}</span></div>
         ${buildAssetDebugRow('Team 1 CLOB', mkt.team1AssetId)}
