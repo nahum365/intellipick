@@ -569,6 +569,11 @@
   margin-left: 2px;
 }
 
+.pm-odds__pct .pm-delta {
+  font-size: 16px;
+  margin-left: 6px;
+}
+
 .pm-delta--up {
   color: var(--confidence-very-high);
 }
