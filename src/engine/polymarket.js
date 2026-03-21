@@ -60,7 +60,10 @@ function processGammaEvents(events) {
     const markets = event.markets || [];
     if (markets.length === 0) continue;
 
-    const market = markets[0];
+    // Prefer the moneyline market; fall back to first market if none tagged
+    const market = markets.find(m =>
+      (m.sportsMarketType || '').toLowerCase() === 'moneyline'
+    ) || markets[0];
     const outcomes = safeParse(market.outcomes);
     const prices = safeParse(market.outcomePrices);
     const tokenIds = safeParse(market.clobTokenIds);
@@ -251,6 +254,7 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
     eventTitle: event.title || '',
     marketQuestion: market.question || market.groupItemTitle || '',
     conditionId: market.conditionId || '',
+    sportsMarketType: market.sportsMarketType || 'unknown',
     team1Id,
     team2Id,
     team1Prob,
