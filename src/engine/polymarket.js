@@ -70,14 +70,17 @@ function processGammaEvents(events) {
     // Store initial prices from Gamma
     for (let i = 0; i < tokenIds.length; i++) {
       const assetId = tokenIds[i];
-      const prob = parseFloat(prices[i]) || 0;
-      state.prices.set(assetId, {
-        prob,
+      const rawProb = parseFloat(prices[i]) || 0;
+      const entry = {
+        prob: rawProb,
         bestBid: parseFloat(market.bestBid) || 0,
         bestAsk: parseFloat(market.bestAsk) || 0,
+        lastTradePrice: 0,
         volume: parseFloat(market.volume) || 0,
         liquidity: parseFloat(market.liquidity) || 0,
-      });
+      };
+      entry.prob = computeDisplayProb(entry);
+      state.prices.set(assetId, entry);
       allAssetIds.push(assetId);
     }
 
@@ -220,11 +223,13 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
     const matchesTeam2 = team2Names.some(v => normOutcome.includes(v) || v.includes(normOutcome));
 
     if (matchesTeam1 && !matchesTeam2) {
-      team1Prob = parseFloat(prices[i]) || 0;
       team1AssetId = tokenIds[i] || null;
+      const entry = team1AssetId ? state.prices.get(team1AssetId) : null;
+      team1Prob = entry ? entry.prob : (parseFloat(prices[i]) || 0);
     } else if (matchesTeam2 && !matchesTeam1) {
-      team2Prob = parseFloat(prices[i]) || 0;
       team2AssetId = tokenIds[i] || null;
+      const entry = team2AssetId ? state.prices.get(team2AssetId) : null;
+      team2Prob = entry ? entry.prob : (parseFloat(prices[i]) || 0);
     }
   }
 
@@ -253,8 +258,6 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
     team2AssetId,
     volume: parseFloat(market.volume) || 0,
     liquidity: parseFloat(market.liquidity) || 0,
-    bestBid: parseFloat(market.bestBid) || 0,
-    bestAsk: parseFloat(market.bestAsk) || 0,
     moneyline1: probToAmericanOdds(team1Prob),
     moneyline2: probToAmericanOdds(team2Prob),
     sentiment: event.eventMetadata?.context_description || null,
@@ -335,18 +338,38 @@ function connectClobWs(assetIds) {
   };
 }
 
+/**
+ * Compute the displayed probability the way Polymarket's UI does:
+ *  - If spread (bestAsk - bestBid) <= 0.10: midpoint = (bid + ask) / 2
+ *  - Otherwise: fall back to lastTradePrice
+ *  - Final fallback: raw outcomePrices from Gamma
+ */
+function computeDisplayProb(entry) {
+  const { bestBid, bestAsk, lastTradePrice, prob: rawProb } = entry;
+  if (bestBid > 0 && bestAsk > 0) {
+    const spread = bestAsk - bestBid;
+    if (spread <= 0.10) {
+      return (bestBid + bestAsk) / 2;
+    }
+  }
+  // Thin/empty book — use last trade price if available
+  if (lastTradePrice > 0 && lastTradePrice < 1) return lastTradePrice;
+  // Final fallback: Gamma outcomePrices
+  return rawProb;
+}
+
 function handleClobMessage(msg) {
   if (!msg || !msg.asset_id) return;
 
   const assetId = msg.asset_id;
-  const existing = state.prices.get(assetId) || { prob: 0, bestBid: 0, bestAsk: 0, volume: 0, liquidity: 0 };
+  const existing = state.prices.get(assetId) || { prob: 0, bestBid: 0, bestAsk: 0, lastTradePrice: 0, volume: 0, liquidity: 0 };
   const mapping = state.assetToTeam.get(assetId);
   let changed = false;
 
   if (msg.event === 'price_change' && msg.price) {
-    const newProb = parseFloat(msg.price);
-    if (newProb > 0 && newProb < 1 && Math.abs(newProb - existing.prob) > 0.001) {
-      existing.prob = newProb;
+    const tp = parseFloat(msg.price);
+    if (tp > 0 && tp < 1) {
+      existing.lastTradePrice = tp;
       changed = true;
     }
   }
@@ -361,7 +384,10 @@ function handleClobMessage(msg) {
     changed = true;
   }
 
-  state.prices.set(assetId, existing);
+  if (changed) {
+    existing.prob = computeDisplayProb(existing);
+    state.prices.set(assetId, existing);
+  }
 
   if (changed && mapping) {
     updateMarketDataFromWs(mapping.matchupId);
@@ -380,8 +406,6 @@ function updateMarketDataFromWs(matchupId) {
     const prevProb = data.team1Prob;
     data.team1Prob = t1Price.prob;
     data.team1ProbDelta = t1Price.prob - prevProb;
-    data.bestBid = t1Price.bestBid;
-    data.bestAsk = t1Price.bestAsk;
   }
   if (t2Price) {
     const prevProb = data.team2Prob;
