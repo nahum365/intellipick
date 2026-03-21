@@ -248,12 +248,22 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
   return {
     matchupId,
     slug: event.slug,
+    eventTitle: event.title || '',
+    marketQuestion: market.question || market.groupItemTitle || '',
+    conditionId: market.conditionId || '',
     team1Id,
     team2Id,
     team1Prob,
     team2Prob,
     team1AssetId,
     team2AssetId,
+    team1OutcomePrice: parseFloat(prices[outcomes.indexOf(
+      outcomes.find((o, i) => tokenIds[i] === team1AssetId)
+    )]) || 0,
+    team2OutcomePrice: parseFloat(prices[outcomes.indexOf(
+      outcomes.find((o, i) => tokenIds[i] === team2AssetId)
+    )]) || 0,
+    outcomes: [...outcomes],
     volume: parseFloat(market.volume) || 0,
     liquidity: parseFloat(market.liquidity) || 0,
     moneyline1: probToAmericanOdds(team1Prob),
@@ -469,6 +479,13 @@ export function getMarketData(matchupId) {
  */
 export function getAllMarketData() {
   return state.marketData;
+}
+
+/**
+ * Get raw per-asset CLOB price state (for diagnostics)
+ */
+export function getAssetPriceState(assetId) {
+  return state.prices.get(assetId) || null;
 }
 
 /**

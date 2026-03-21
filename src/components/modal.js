@@ -1,6 +1,6 @@
 import teamsData from '../data/teams.json';
 import { getScoreForMatchup, onScoresUpdate } from '../engine/liveScores.js';
-import { getMarketData, onPolymarketUpdate } from '../engine/polymarket.js';
+import { getMarketData, getAssetPriceState, onPolymarketUpdate } from '../engine/polymarket.js';
 
 let overlayEl = null;
 let currentMatchup = null;
@@ -207,6 +207,17 @@ function buildScoreboardHtml(matchup, liveScore) {
   </div>`;
 }
 
+function buildAssetDebugRow(label, assetId) {
+  if (!assetId) return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">--</span></div>`;
+  const p = getAssetPriceState(assetId);
+  if (!p) return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">no data</span></div>`;
+  const bid = p.bestBid > 0 ? p.bestBid.toFixed(4) : '--';
+  const ask = p.bestAsk > 0 ? p.bestAsk.toFixed(4) : '--';
+  const ltp = p.lastTradePrice > 0 ? p.lastTradePrice.toFixed(4) : '--';
+  const spread = (p.bestBid > 0 && p.bestAsk > 0) ? (p.bestAsk - p.bestBid).toFixed(4) : '--';
+  return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">bid ${bid} / ask ${ask} (spread ${spread}) · ltp ${ltp}</span></div>`;
+}
+
 function buildPolymarketPanel(matchup) {
   const mkt = getMarketData(matchup.id);
   if (!mkt) return '';
@@ -307,6 +318,23 @@ function buildPolymarketPanel(matchup) {
     </div>
 
     ${sentimentHtml}
+
+    <div class="pm-debug">
+      <div class="pm-debug__toggle" onclick="this.parentElement.classList.toggle('pm-debug--open')">
+        Market Details \u25BE
+      </div>
+      <div class="pm-debug__body">
+        ${mkt.eventTitle ? `<div class="pm-debug__row"><span class="pm-debug__label">Event</span><span class="pm-debug__value">${mkt.eventTitle}</span></div>` : ''}
+        ${mkt.marketQuestion ? `<div class="pm-debug__row"><span class="pm-debug__label">Question</span><span class="pm-debug__value">${mkt.marketQuestion}</span></div>` : ''}
+        ${mkt.outcomes ? `<div class="pm-debug__row"><span class="pm-debug__label">Outcomes</span><span class="pm-debug__value">${mkt.outcomes.join(' / ')}</span></div>` : ''}
+        <div class="pm-debug__row"><span class="pm-debug__label">Gamma Prices</span><span class="pm-debug__value">${mkt.team1OutcomePrice?.toFixed(4) || '--'} / ${mkt.team2OutcomePrice?.toFixed(4) || '--'}</span></div>
+        ${buildAssetDebugRow('Team 1 CLOB', mkt.team1AssetId)}
+        ${buildAssetDebugRow('Team 2 CLOB', mkt.team2AssetId)}
+        <div class="pm-debug__row"><span class="pm-debug__label">Display Prob</span><span class="pm-debug__value">${mkt.team1Prob?.toFixed(4) || '--'} / ${mkt.team2Prob?.toFixed(4) || '--'}</span></div>
+        ${mkt.conditionId ? `<div class="pm-debug__row"><span class="pm-debug__label">Condition ID</span><span class="pm-debug__value pm-debug__value--mono">${mkt.conditionId.slice(0, 12)}...</span></div>` : ''}
+        ${mkt.slug ? `<div class="pm-debug__row"><a class="pm-debug__link" href="https://polymarket.com/event/${mkt.slug}" target="_blank" rel="noopener">View on Polymarket \u2197</a></div>` : ''}
+      </div>
+    </div>
   </div>`;
 }
 
