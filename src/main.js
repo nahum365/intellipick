@@ -10,7 +10,8 @@ import { createScorePanel } from './components/scorePanel.js';
 import { createInsightsBar, updateInsightsBar } from './components/insightsBar.js';
 import { createMatchupCard } from './components/matchup.js';
 import { getRegionR64Matchups, getR64Matchup, getGeneratedMatchup, REGIONS } from './engine/propagation.js';
-import { startPolling, onScoresUpdate } from './engine/liveScores.js';
+import { startPolling, onScoresUpdate, getScoreForMatchup } from './engine/liveScores.js';
+import { closeModal } from './components/modal.js';
 import { getMarketData } from './engine/polymarket.js';
 const app = document.getElementById('app');
 
@@ -19,6 +20,7 @@ let insightsBarEl = null;
 let bracketContainerEl = null;
 let mobileRoundsEl = null;
 let selectedRound = 'R64';
+let userHasSelectedRound = false;
 
 const ROUND_TABS = [
   { key: 'R64', label: 'R64' },
@@ -31,6 +33,35 @@ const ROUND_TABS = [
 
 function laterRoundId(region, round, position) {
   return `${region.toLowerCase()}-r${round}-${position}`;
+}
+
+function getActiveRound() {
+  const roundOrder = ['R64', 'R32', 'S16', 'E8', 'F4', 'CHAMP'];
+
+  // 1. Find earliest round with any live/halftime game
+  for (const round of roundOrder) {
+    const matchups = getMobileMatchupsForRound(round).flatMap(g => g.items);
+    if (matchups.some(m => {
+      const score = getScoreForMatchup(m.id);
+      return score && (score.status === 'live' || score.status === 'halftime');
+    })) return round;
+  }
+
+  // 2. Find earliest round with any scheduled (not yet finished) game
+  for (const round of roundOrder) {
+    const matchups = getMobileMatchupsForRound(round).flatMap(g => g.items);
+    if (matchups.length > 0 && matchups.some(m => {
+      const score = getScoreForMatchup(m.id);
+      return !score || score.status === 'scheduled';
+    })) return round;
+  }
+
+  // 3. All done — return the latest round that has matchup data
+  for (let i = roundOrder.length - 1; i >= 0; i--) {
+    if (getMobileMatchupsForRound(roundOrder[i]).some(g => g.items.length > 0)) return roundOrder[i];
+  }
+
+  return 'R64';
 }
 
 function getMobileMatchupsForRound(roundKey) {
@@ -111,6 +142,9 @@ function renderApp() {
   const logo = document.createElement('div');
   logo.className = 'header__logo';
   logo.innerHTML = 'Intelli<span>Pick</span>';
+  logo.addEventListener('click', () => {
+    if (window.innerWidth <= 768) closeModal();
+  });
   header.appendChild(logo);
 
   // Hamburger button (visible only on mobile via CSS)
@@ -131,6 +165,7 @@ function renderApp() {
     tab.className = 'round-tab' + (rt.key === selectedRound ? ' round-tab--active' : '');
     tab.textContent = rt.label;
     tab.addEventListener('click', () => {
+      userHasSelectedRound = true;
       selectedRound = rt.key;
       // Update active tab
       tabsBar.querySelectorAll('.round-tab').forEach(t => t.classList.remove('round-tab--active'));
@@ -190,6 +225,11 @@ function renderApp() {
 }
 
 function rerender() {
+  // Auto-advance to the active round (unless user has manually chosen)
+  if (!userHasSelectedRound) {
+    selectedRound = getActiveRound();
+  }
+
   // Save scroll positions before re-render
   const savedScrolls = {};
   if (bracketContainerEl) {

@@ -21,6 +21,7 @@
 
   .header__logo {
     font-size: 17px;
+    cursor: pointer;
   }
 
   .hamburger-btn {
@@ -300,8 +301,9 @@
     padding: 10px 0;
   }
 
-  /* --- Modal: anchored below nav bar on mobile --- */
+  /* --- Modal: sits below nav bar on mobile (nav bar is not darkened) --- */
   .modal-overlay {
+    top: 49px; /* overlay starts below nav bar so it stays visible and undarkened */
     align-items: stretch;
     justify-content: stretch;
     padding: 0;
@@ -314,13 +316,22 @@
     max-height: none;
     border-radius: 0;
     margin: 0;
-    /* Push below the nav bar; header is ~49px */
-    margin-top: 49px;
   }
 
   .modal__header {
     flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
     border-radius: 0;
+  }
+
+  .modal__title {
+    font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
   }
 
   .modal__close {
@@ -328,6 +339,7 @@
     height: 44px;
     font-size: 22px;
     order: -1;
+    flex-shrink: 0;
   }
 
   .modal__teams {
