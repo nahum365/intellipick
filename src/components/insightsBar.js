@@ -1,6 +1,7 @@
 import { getUpsetAlerts } from '../engine/scoring.js';
-import { getScoreForMatchup } from '../engine/liveScores.js';
+import { getScoreForMatchup, getFetchStatus } from '../engine/liveScores.js';
 import { getR64Matchup } from '../engine/propagation.js';
+import { refreshGamma } from '../engine/polymarket.js';
 import matchupsData from '../data/matchups.json';
 
 function computeBarStats() {
@@ -98,5 +99,108 @@ export function updateInsightsBar(bar) {
       </div>`;
   }
 
-  bar.innerHTML = items;
+  // Build left side (stats items)
+  const left = document.createElement('div');
+  left.className = 'insights-bar__left';
+  left.innerHTML = items;
+
+  bar.innerHTML = '';
+  bar.appendChild(left);
+
+  // Build right side (status boxes)
+  bar.appendChild(buildStatusBoxes());
+}
+
+function timeAgo(ts) {
+  if (!ts) return null;
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 10) return 'just now';
+  if (diff < 60) return `${diff}s ago`;
+  const mins = Math.floor(diff / 60);
+  if (mins < 60) return `${mins}m ago`;
+  return `${Math.floor(mins / 60)}h ago`;
+}
+
+function buildStatusBoxes() {
+  const s = getFetchStatus();
+  const container = document.createElement('div');
+  container.className = 'status-boxes';
+
+  // --- ESPN ---
+  const espnBox = document.createElement('div');
+  espnBox.className = 'status-box';
+
+  const espnBulb = document.createElement('span');
+  const espnLabel = document.createElement('span');
+  espnLabel.className = 'status-box__label';
+  espnLabel.textContent = 'ESPN';
+  const espnDetail = document.createElement('span');
+  espnDetail.className = 'status-box__detail';
+
+  if (s.espnLoading) {
+    espnBulb.className = 'status-box__bulb status-box__bulb--loading';
+    espnDetail.textContent = '';
+  } else if (s.espnExhausted) {
+    espnBulb.className = 'status-box__bulb status-box__bulb--red';
+    espnDetail.textContent = '(unavailable)';
+  } else if (s.espnFailed && s.espnNextRetryAt) {
+    espnBulb.className = 'status-box__bulb status-box__bulb--yellow';
+    const secsLeft = Math.max(0, Math.ceil((s.espnNextRetryAt - Date.now()) / 1000));
+    const attemptsLeft = s.espnRetryMax - s.espnRetryCount;
+    espnDetail.textContent = `(retry in ${secsLeft}s, ${attemptsLeft} left)`;
+  } else if (s.espnLastLoaded) {
+    espnBulb.className = 'status-box__bulb status-box__bulb--green';
+    espnDetail.textContent = `(${timeAgo(s.espnLastLoaded)})`;
+  } else {
+    espnBulb.className = 'status-box__bulb status-box__bulb--loading';
+    espnDetail.textContent = '';
+  }
+
+  espnBox.appendChild(espnBulb);
+  espnBox.appendChild(espnLabel);
+  espnBox.appendChild(espnDetail);
+  container.appendChild(espnBox);
+
+  // --- Polymarket ---
+  const polyBox = document.createElement('div');
+  polyBox.className = 'status-box';
+
+  const polyBulb = document.createElement('span');
+  const polyLabel = document.createElement('span');
+  polyLabel.className = 'status-box__label';
+  polyLabel.textContent = 'Polymarket';
+  const polyDetail = document.createElement('span');
+  polyDetail.className = 'status-box__detail';
+
+  const poly = s.poly;
+  if (poly.gammaState === 'failed') {
+    polyBulb.className = 'status-box__bulb status-box__bulb--red';
+    polyDetail.textContent = '(unavailable)';
+  } else if (poly.gammaState === 'success' && poly.clobState === 'failed') {
+    polyBulb.className = 'status-box__bulb status-box__bulb--yellow';
+    polyDetail.textContent = '(no live updates)';
+    const refreshBtn = document.createElement('button');
+    refreshBtn.className = 'status-box__refresh-btn';
+    refreshBtn.title = 'Refresh Polymarket data';
+    refreshBtn.innerHTML = '&#x21bb;';
+    refreshBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      refreshGamma();
+    });
+    polyBox._refreshBtn = refreshBtn;
+  } else if (poly.gammaState === 'success' && poly.clobState === 'connected') {
+    polyBulb.className = 'status-box__bulb status-box__bulb--green';
+    polyDetail.textContent = '(live streaming)';
+  } else {
+    polyBulb.className = 'status-box__bulb status-box__bulb--loading';
+    polyDetail.textContent = '(finding markets)';
+  }
+
+  polyBox.appendChild(polyBulb);
+  polyBox.appendChild(polyLabel);
+  polyBox.appendChild(polyDetail);
+  if (polyBox._refreshBtn) polyBox.appendChild(polyBox._refreshBtn);
+  container.appendChild(polyBox);
+
+  return container;
 }
