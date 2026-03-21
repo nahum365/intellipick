@@ -480,13 +480,11 @@ function updateMarketDataFromWs(matchupId) {
     // Both sides have CLOB data — validate they sum close to 1
     const sum = t1Clob + t2Clob;
     if (sum > 0.85 && sum < 1.15) {
-      // Coherent: use CLOB probs
       newT1 = t1Clob;
       newT2 = t2Clob;
     } else {
-      // Incoherent (e.g. 0.9995 + 0.9480) — discard CLOB, use gamma
-      newT1 = t1Price?.gammaProb ?? data.team1Prob;
-      newT2 = t2Price?.gammaProb ?? data.team2Prob;
+      // Incoherent — reject this update, keep last valid state
+      return;
     }
   } else if (t1Clob != null) {
     // Only team 1 has CLOB data — derive team 2
@@ -497,9 +495,8 @@ function updateMarketDataFromWs(matchupId) {
     newT2 = t2Clob;
     newT1 = 1 - t2Clob;
   } else {
-    // No CLOB data — keep gamma
-    newT1 = t1Price?.gammaProb ?? data.team1Prob;
-    newT2 = t2Price?.gammaProb ?? data.team2Prob;
+    // No CLOB data yet — keep current state (gamma on first load)
+    return;
   }
 
   let anyChange = false;
