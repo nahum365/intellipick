@@ -141,7 +141,7 @@ export function createMatchupCard(matchup) {
     // Name
     const name = document.createElement('span');
     name.className = 'team-row__name';
-    name.textContent = profile?.name || team.name;
+    name.textContent = team.name;
     row.appendChild(name);
 
     // Record

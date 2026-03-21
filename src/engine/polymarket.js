@@ -253,7 +253,15 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
 
   if (matched.length < 2) return null;
 
-  const matchupId = findMatchupIdForTeams(matched[0], matched[1]);
+  // Try all pairs — a short name like "texas" can spuriously match inside
+  // "texas a&m", so the first pair may not be a valid bracket matchup.
+  let matchupId = null;
+  outer: for (let i = 0; i < matched.length; i++) {
+    for (let j = i + 1; j < matched.length; j++) {
+      matchupId = findMatchupIdForTeams(matched[i], matched[j]);
+      if (matchupId) break outer;
+    }
+  }
   if (!matchupId) return null;
 
   const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
