@@ -400,15 +400,23 @@ function updateMarketDataFromWs(matchupId) {
   const t1Price = data.team1AssetId ? state.prices.get(data.team1AssetId) : null;
   const t2Price = data.team2AssetId ? state.prices.get(data.team2AssetId) : null;
 
+  let anyChange = false;
+
   if (t1Price) {
     const prevProb = data.team1Prob;
     data.team1Prob = t1Price.prob;
     data.team1ProbDelta = t1Price.prob - prevProb;
+    if (Math.abs(data.team1ProbDelta) > 0.001) anyChange = true;
   }
   if (t2Price) {
     const prevProb = data.team2Prob;
     data.team2Prob = t2Price.prob;
     data.team2ProbDelta = t2Price.prob - prevProb;
+    if (Math.abs(data.team2ProbDelta) > 0.001) anyChange = true;
+  }
+
+  if (anyChange) {
+    data.lastChangeTime = Date.now();
   }
 
   data.moneyline1 = probToAmericanOdds(data.team1Prob);

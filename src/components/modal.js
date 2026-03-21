@@ -217,11 +217,14 @@ function buildPolymarketPanel(matchup) {
   const t2Pct = Math.round(mkt.team2Prob * 100);
   const t1Fav = t1Pct >= t2Pct;
 
-  // Delta arrows
+  // Delta arrows + tick flash
   const d1 = mkt.team1ProbDelta || 0;
   const d2 = mkt.team2ProbDelta || 0;
+  const recentTick = mkt.lastChangeTime && (Date.now() - mkt.lastChangeTime < 2000);
   const arrow1 = d1 > 0.005 ? '<span class="pm-delta pm-delta--up">\u25B2</span>' : d1 < -0.005 ? '<span class="pm-delta pm-delta--down">\u25BC</span>' : '';
   const arrow2 = d2 > 0.005 ? '<span class="pm-delta pm-delta--up">\u25B2</span>' : d2 < -0.005 ? '<span class="pm-delta pm-delta--down">\u25BC</span>' : '';
+  const tick1 = recentTick && Math.abs(d1) > 0.001 ? (d1 > 0 ? ' tick-up' : ' tick-down') : '';
+  const tick2 = recentTick && Math.abs(d2) > 0.001 ? (d2 > 0 ? ' tick-up' : ' tick-down') : '';
 
   // Volume / liquidity formatting
   const fmtK = (n) => {
@@ -278,12 +281,12 @@ function buildPolymarketPanel(matchup) {
     <div class="pm-odds">
       <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t1Name}</div>
-        <div class="pm-odds__pct">${t1Pct}% ${arrow1}</div>
+        <div class="pm-odds__pct${tick1}">${t1Pct}% ${arrow1}</div>
         <div class="pm-odds__detail">${mkt.moneyline1 || '--'} · ${price1}</div>
       </div>
       <div class="pm-odds__side pm-odds__side--t2 ${!t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t2Name}</div>
-        <div class="pm-odds__pct">${t2Pct}% ${arrow2}</div>
+        <div class="pm-odds__pct${tick2}">${t2Pct}% ${arrow2}</div>
         <div class="pm-odds__detail">${mkt.moneyline2 || '--'} · ${price2}</div>
       </div>
     </div>
