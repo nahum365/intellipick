@@ -265,6 +265,23 @@ function processEvents(events) {
     const clock = event.status?.displayClock || '';
     const gameDate = event.date || comp.date || null;
 
+    // Extract US broadcast channel(s) from ESPN
+    const broadcasts = [];
+    const geoBroadcasts = comp.geoBroadcasts || [];
+    for (const gb of geoBroadcasts) {
+      const name = gb.media?.shortName || gb.media?.name;
+      if (name) broadcasts.push(name);
+    }
+    // Fall back to the simpler broadcasts array if geoBroadcasts is empty
+    if (broadcasts.length === 0) {
+      for (const b of (comp.broadcasts || [])) {
+        for (const n of (b.names || [])) {
+          if (n) broadcasts.push(n);
+        }
+      }
+    }
+    const broadcastChannel = broadcasts.length > 0 ? broadcasts.join(' / ') : null;
+
     scoreMap.set(matchupId, {
       status,
       clock,
@@ -272,6 +289,7 @@ function processEvents(events) {
       team1Score,
       team2Score,
       gameDate,
+      broadcastChannel,
     });
     console.log(`[ESPN] Matched ${teamIdA} vs ${teamIdB} -> ${matchupId} (${status}, ${team1Score}-${team2Score})`);
     matched++;

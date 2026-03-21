@@ -187,10 +187,15 @@ function buildScoreboardHtml(matchup, liveScore) {
     }
   }
 
+  const channelHtml = liveScore.broadcastChannel
+    ? `<div class="modal__scoreboard-channel">${liveScore.broadcastChannel}</div>`
+    : '';
+
   return `<div class="modal__scoreboard">
     <div class="modal__scoreboard-status modal__scoreboard-status--${statusClass}">
       ${statusClass === 'live' ? '<span class="modal__live-dot"></span>' : ''}
       ${statusLabel}
+      ${channelHtml}
     </div>
     <div class="modal__scoreboard-scores">
       <div class="modal__scoreboard-team ${t1Leading ? 'modal__scoreboard-team--leading' : ''}">
