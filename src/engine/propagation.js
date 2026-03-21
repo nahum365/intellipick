@@ -5,7 +5,7 @@ import { getWinner, getScoreForMatchup } from './liveScores.js';
 // R64 matchups 0,1 -> R32 slot 0; matchups 2,3 -> R32 slot 1; etc.
 // Then R32 slots 0,1 -> S16 slot 0; etc.
 
-const ROUNDS = ['First Round', 'Second Round', 'Sweet 16', 'Elite Eight', 'Final Four', 'Championship'];
+const ROUNDS = ['First Round', 'Second Round', 'Sweet 16', 'Elite Eight', 'Final Four', 'National Championship'];
 const REGIONS = ['East', 'West', 'South', 'Midwest'];
 
 // Build the bracket tree from R64 matchups
@@ -188,7 +188,7 @@ export function getExpectedMatchup(matchupId) {
 
   // Check if there's prediction data for this specific matchup in the JSON
   const region = getMatchupRegion(matchupId);
-  const data = region ? findMatchupData(region, team1, team2) : null;
+  const data = findMatchupData(matchupId, region, team1, team2);
 
   return {
     id: matchupId,
@@ -204,9 +204,13 @@ export function getExpectedMatchup(matchupId) {
   };
 }
 
-// Look up a later-round matchup in the JSON data by canonical seed ID
-// e.g., region "South", seeds 3 and 11 -> looks for "south-3-11"
-function findMatchupData(region, team1, team2) {
+// Look up a matchup in the JSON data.
+// For region matchups: canonical seed ID e.g., "south-3-11"
+// For FF/Championship: direct ID lookup
+function findMatchupData(matchupId, region, team1, team2) {
+  if (matchupId === 'championship' || matchupId.startsWith('ff-')) {
+    return matchupsData.matchups.find(m => m.id === matchupId) || null;
+  }
   if (!team1 || !team2) return null;
   const lo = Math.min(team1.seed, team2.seed);
   const hi = Math.max(team1.seed, team2.seed);
@@ -271,7 +275,7 @@ export function getGeneratedMatchup(matchupId) {
 
   // Check if there's prediction data for this specific matchup in the JSON
   const region = getMatchupRegion(matchupId);
-  const data = region ? findMatchupData(region, team1, team2) : null;
+  const data = findMatchupData(matchupId, region, team1, team2);
 
   return {
     id: matchupId,
