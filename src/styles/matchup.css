@@ -8,6 +8,7 @@
   transition: border-color 0.2s, box-shadow 0.2s;
   position: relative;
   min-width: 180px;
+  width: 100%;
 }
 
 .matchup-card:hover {
