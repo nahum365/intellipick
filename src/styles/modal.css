@@ -61,6 +61,7 @@
   justify-content: center;
   transition: all 0.15s;
   font-family: var(--font);
+  order: 1;
 }
 
 .modal__close:hover {
