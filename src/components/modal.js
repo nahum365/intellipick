@@ -13,6 +13,13 @@ function getTeamProfile(teamId) {
   return teamsData.teams.find(t => t.id === teamId) || null;
 }
 
+// Canonical display name from teams.json, falling back to the matchup team name
+function teamDisplayName(team) {
+  if (!team) return 'TBD';
+  const profile = getTeamProfile(team.id);
+  return profile?.shortName || team.name || team.id;
+}
+
 function confidenceClass(confidence) {
   if (!confidence) return 'medium';
   const c = confidence.toLowerCase().replace(/\s+/g, '-');
@@ -161,8 +168,8 @@ function buildScoreboardHtml(matchup, liveScore) {
 
   const t1Leading = liveScore.team1Score > liveScore.team2Score;
   const t2Leading = liveScore.team2Score > liveScore.team1Score;
-  const t1Name = matchup.team1?.name || 'TBD';
-  const t2Name = matchup.team2?.name || 'TBD';
+  const t1Name = teamDisplayName(matchup.team1);
+  const t2Name = teamDisplayName(matchup.team2);
   const t1Seed = matchup.team1?.seed || '';
   const t2Seed = matchup.team2?.seed || '';
 
@@ -223,8 +230,8 @@ function buildPolymarketPanel(matchup) {
   const mkt = getMarketData(matchup.id);
   if (!mkt) return '';
 
-  const t1Name = matchup.team1?.name || 'TBD';
-  const t2Name = matchup.team2?.name || 'TBD';
+  const t1Name = teamDisplayName(matchup.team1);
+  const t2Name = teamDisplayName(matchup.team2);
   const t1Pct = Math.round(mkt.team1Prob * 100);
   const t2Pct = Math.round(mkt.team2Prob * 100);
   const t1Fav = t1Pct >= t2Pct;
@@ -418,9 +425,12 @@ export function openModal(matchup, options = {}) {
   const profile1 = matchup.team1 ? getTeamProfile(matchup.team1.id) : null;
   const profile2 = matchup.team2 ? getTeamProfile(matchup.team2.id) : null;
 
+  const t1DisplayName = teamDisplayName(matchup.team1);
+  const t2DisplayName = teamDisplayName(matchup.team2);
+
   let title = '';
   if (matchup.team1 && matchup.team2) {
-    title = `(${matchup.team1.seed}) ${matchup.team1.name} vs (${matchup.team2.seed}) ${matchup.team2.name}`;
+    title = `(${matchup.team1.seed}) ${t1DisplayName} vs (${matchup.team2.seed}) ${t2DisplayName}`;
   }
 
   const liveScore = getScoreForMatchup(matchup.id);
@@ -437,7 +447,7 @@ export function openModal(matchup, options = {}) {
       <span class="modal__title">${title}</span>
     </div>
     ${matchup.recommendedPick ? `<div class="modal__recommendation">
-      <span class="modal__rec-pick">\u2605 Pick: ${recTeam ? recTeam.name : ''}</span>
+      <span class="modal__rec-pick">\u2605 Pick: ${recTeam ? teamDisplayName(recTeam) : ''}</span>
       ${matchup.confidence ? `<span class="modal__rec-badge modal__rec-badge--${confClass}">${matchup.confidence} (${matchup.confidencePercentage}%)</span>` : ''}
       ${matchup.category ? `<span class="modal__rec-category">${matchup.category}</span>` : ''}
     </div>` : ''}
