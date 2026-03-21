@@ -1,5 +1,5 @@
-import { getAllPicks } from '../engine/picks.js';
 import { getRegionR64Matchups, getR64Matchup, getGeneratedMatchup, REGIONS } from '../engine/propagation.js';
+import { getWinner } from '../engine/liveScores.js';
 
 function laterRoundId(region, round, position) {
   return `${region.toLowerCase()}-r${round}-${position}`;
@@ -21,7 +21,6 @@ function matchupRow(team1Label, team2Label, pick) {
 
 // Build structured bracket text as a table
 export function generateBracketText() {
-  const picks = getAllPicks();
   const rows = []; // { team1, team2, pick } or { section } or { subsection }
 
   for (const region of REGIONS) {
@@ -34,7 +33,7 @@ export function generateBracketText() {
     for (let i = 0; i < 8; i++) {
       const m = getR64Matchup(r64Ids[i]);
       if (!m) continue;
-      const winner = picks[r64Ids[i]];
+      const winner = getWinner(r64Ids[i]);
       rows.push(matchupRow(teamLabel(m.team1), teamLabel(m.team2), winner ? teamLabel(winner) : null));
     }
 
@@ -43,10 +42,9 @@ export function generateBracketText() {
     for (let i = 0; i < 4; i++) {
       const id = laterRoundId(region, 2, i);
       const gen = getGeneratedMatchup(id);
-      const winner = picks[id];
       const t1 = gen && gen.team1 ? teamLabel(gen.team1) : 'TBD';
       const t2 = gen && gen.team2 ? teamLabel(gen.team2) : 'TBD';
-      rows.push(matchupRow(t1, t2, winner ? teamLabel(winner) : null));
+      rows.push(matchupRow(t1, t2, null));
     }
 
     // S16
@@ -54,20 +52,18 @@ export function generateBracketText() {
     for (let i = 0; i < 2; i++) {
       const id = laterRoundId(region, 3, i);
       const gen = getGeneratedMatchup(id);
-      const winner = picks[id];
       const t1 = gen && gen.team1 ? teamLabel(gen.team1) : 'TBD';
       const t2 = gen && gen.team2 ? teamLabel(gen.team2) : 'TBD';
-      rows.push(matchupRow(t1, t2, winner ? teamLabel(winner) : null));
+      rows.push(matchupRow(t1, t2, null));
     }
 
     // E8
     rows.push({ subsection: 'Elite Eight' });
     const e8Id = laterRoundId(region, 4, 0);
     const e8 = getGeneratedMatchup(e8Id);
-    const e8Winner = picks[e8Id];
     const e8t1 = e8 && e8.team1 ? teamLabel(e8.team1) : 'TBD';
     const e8t2 = e8 && e8.team2 ? teamLabel(e8.team2) : 'TBD';
-    rows.push(matchupRow(e8t1, e8t2, e8Winner ? teamLabel(e8Winner) : null));
+    rows.push(matchupRow(e8t1, e8t2, null));
   }
 
   // Final Four
@@ -75,23 +71,17 @@ export function generateBracketText() {
   for (let i = 0; i < 2; i++) {
     const id = `ff-${i}`;
     const gen = getGeneratedMatchup(id);
-    const winner = picks[id];
     const t1 = gen && gen.team1 ? teamLabel(gen.team1) : 'TBD';
     const t2 = gen && gen.team2 ? teamLabel(gen.team2) : 'TBD';
-    rows.push(matchupRow(t1, t2, winner ? teamLabel(winner) : null));
+    rows.push(matchupRow(t1, t2, null));
   }
 
   // Championship
   rows.push({ section: 'CHAMPIONSHIP' });
   const champGen = getGeneratedMatchup('championship');
-  const champWinner = picks['championship'];
   const ct1 = champGen && champGen.team1 ? teamLabel(champGen.team1) : 'TBD';
   const ct2 = champGen && champGen.team2 ? teamLabel(champGen.team2) : 'TBD';
-  rows.push(matchupRow(ct1, ct2, champWinner ? teamLabel(champWinner) : null));
-
-  if (champWinner) {
-    rows.push({ section: `CHAMPION: ${teamLabel(champWinner)}` });
-  }
+  rows.push(matchupRow(ct1, ct2, null));
 
   // Compute column widths from individual lines, not combined matchup strings
   let col1Width = 'Matchup'.length;

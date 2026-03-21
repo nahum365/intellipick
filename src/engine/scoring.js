@@ -1,5 +1,4 @@
 import matchupsData from '../data/matchups.json';
-import { getAllPicks } from './picks.js';
 import { getR64Matchup, getGeneratedMatchup, getRoundIndex, getRegionR64Matchups, getValidBracketIds, REGIONS } from './propagation.js';
 
 // Compute bracket score as geometric mean of confidence percentages for picked games
