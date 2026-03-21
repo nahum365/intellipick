@@ -328,11 +328,11 @@ function connectClobWs(assetIds) {
     if (raw === 'PONG' || raw === 'pong') return;
 
     try {
-      const messages = JSON.isArray ? JSON.parse(raw) : JSON.parse(raw);
-      const arr = Array.isArray(messages) ? messages : [messages];
-
-      for (const msg of arr) {
-        handleClobMessage(msg);
+      const msg = JSON.parse(raw);
+      if (msg.event_type === 'price_change' && Array.isArray(msg.price_changes)) {
+        for (const change of msg.price_changes) {
+          handleClobPriceChange(change);
+        }
       }
     } catch {
       // Non-JSON message, ignore
@@ -370,38 +370,33 @@ function computeDisplayProb(entry) {
   return rawProb;
 }
 
-function handleClobMessage(msg) {
-  if (!msg || !msg.asset_id) return;
+/**
+ * Handle a single entry from the price_changes array.
+ * Each entry has: { asset_id, price, size, side, hash, best_bid, best_ask }
+ */
+function handleClobPriceChange(change) {
+  if (!change || !change.asset_id) return;
 
-  const assetId = msg.asset_id;
+  const assetId = change.asset_id;
   const existing = state.prices.get(assetId) || { prob: 0, bestBid: 0, bestAsk: 0, lastTradePrice: 0, volume: 0, liquidity: 0 };
   const mapping = state.assetToTeam.get(assetId);
-  let changed = false;
 
-  if (msg.event === 'price_change' && msg.price) {
-    const tp = parseFloat(msg.price);
-    if (tp > 0 && tp < 1) {
-      existing.lastTradePrice = tp;
-      changed = true;
-    }
+  // Update last trade price
+  const tp = parseFloat(change.price);
+  if (tp > 0 && tp < 1) {
+    existing.lastTradePrice = tp;
   }
 
-  if (msg.event === 'book') {
-    if (msg.bids && msg.bids.length > 0) {
-      existing.bestBid = parseFloat(msg.bids[0].price) || existing.bestBid;
-    }
-    if (msg.asks && msg.asks.length > 0) {
-      existing.bestAsk = parseFloat(msg.asks[0].price) || existing.bestAsk;
-    }
-    changed = true;
-  }
+  // Update best bid/ask
+  const bid = parseFloat(change.best_bid);
+  const ask = parseFloat(change.best_ask);
+  if (bid > 0) existing.bestBid = bid;
+  if (ask > 0) existing.bestAsk = ask;
 
-  if (changed) {
-    existing.prob = computeDisplayProb(existing);
-    state.prices.set(assetId, existing);
-  }
+  existing.prob = computeDisplayProb(existing);
+  state.prices.set(assetId, existing);
 
-  if (changed && mapping) {
+  if (mapping) {
     updateMarketDataFromWs(mapping.matchupId);
     notifyListeners({ type: 'odds', matchupId: mapping.matchupId });
   }
