@@ -286,12 +286,12 @@ function buildPolymarketPanel(matchup) {
     <div class="pm-odds">
       <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t1Name}</div>
-        <div class="pm-odds__pct${tick1}">${t1Pct}% ${arrow1}</div>
+        <div class="pm-odds__pct"><span class="pm-odds__num${tick1}">${t1Pct}%</span>${arrow1}</div>
         <div class="pm-odds__detail">${mkt.moneyline1 || '--'} · ${price1}</div>
       </div>
       <div class="pm-odds__side pm-odds__side--t2 ${!t1Fav ? 'pm-odds__side--fav' : ''}">
         <div class="pm-odds__team-name">${t2Name}</div>
-        <div class="pm-odds__pct${tick2}">${t2Pct}% ${arrow2}</div>
+        <div class="pm-odds__pct"><span class="pm-odds__num${tick2}">${t2Pct}%</span>${arrow2}</div>
         <div class="pm-odds__detail">${mkt.moneyline2 || '--'} · ${price2}</div>
       </div>
     </div>
@@ -407,24 +407,36 @@ export function openModal(matchup, options = {}) {
     const d1 = mkt.team1ProbDelta || 0;
     const d2 = mkt.team2ProbDelta || 0;
 
-    const updatePctEl = (el, pct, delta) => {
-      if (!el) return;
+    const updatePctEl = (side, pct, delta) => {
+      if (!side) return;
+      const numEl = side.querySelector('.pm-odds__num');
+      if (!numEl) return;
+      // Skip if the displayed integer didn't change
+      if (parseInt(numEl.textContent, 10) === pct) return;
+
+      const pctEl = numEl.parentElement;
+      const arrowEl = pctEl.querySelector('.pm-delta');
       const arrow = delta > 0.005
         ? '<span class="pm-delta pm-delta--up">\u25B2</span>'
         : delta < -0.005
           ? '<span class="pm-delta pm-delta--down">\u25BC</span>'
           : '';
-      el.innerHTML = `${pct}% ${arrow}`;
-      if (Math.abs(delta) > 0.001) {
-        el.classList.remove('tick-up', 'tick-down');
-        void el.offsetWidth; // restart animation
-        el.classList.add(delta > 0 ? 'tick-up' : 'tick-down');
-        setTimeout(() => el.classList.remove('tick-up', 'tick-down'), 1500);
-      }
+
+      numEl.textContent = pct + '%';
+      if (arrowEl) arrowEl.remove();
+      if (arrow) pctEl.insertAdjacentHTML('beforeend', arrow);
+
+      numEl.classList.remove('tick-up', 'tick-down');
+      void numEl.offsetWidth; // restart animation
+      numEl.classList.add(delta > 0 ? 'tick-up' : 'tick-down');
+      setTimeout(() => {
+        numEl.classList.remove('tick-up', 'tick-down');
+        pctEl.querySelector('.pm-delta')?.remove();
+      }, 1500);
     };
 
-    updatePctEl(pmContainer.querySelector('.pm-odds__side--t1 .pm-odds__pct'), t1Pct, d1);
-    updatePctEl(pmContainer.querySelector('.pm-odds__side--t2 .pm-odds__pct'), t2Pct, d2);
+    updatePctEl(pmContainer.querySelector('.pm-odds__side--t1'), t1Pct, d1);
+    updatePctEl(pmContainer.querySelector('.pm-odds__side--t2'), t2Pct, d2);
 
     // Prob bar
     const bar1 = pmContainer.querySelector('.pm-prob-bar__fill--t1');
