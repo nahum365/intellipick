@@ -222,6 +222,17 @@
   gap: 4px;
 }
 
+.matchup-card__channel {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 4px;
+  letter-spacing: 0.3px;
+}
+
 .matchup-card__info-btn {
   width: 18px;
   height: 18px;

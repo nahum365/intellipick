@@ -298,6 +298,18 @@
 .modal__scoreboard-status--halftime { color: var(--confidence-medium); }
 .modal__scoreboard-status--final { color: var(--text-secondary); }
 
+.modal__scoreboard-channel {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 6px;
+  letter-spacing: 0.3px;
+}
+
 .modal__live-dot {
   width: 8px;
   height: 8px;

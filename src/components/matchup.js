@@ -273,6 +273,15 @@ export function createMatchupCard(matchup) {
   const statusLabel = document.createElement('span');
   statusLabel.className = 'matchup-card__status-label';
 
+  const appendChannel = () => {
+    if (liveScore?.broadcastChannel) {
+      const ch = document.createElement('span');
+      ch.className = 'matchup-card__channel';
+      ch.textContent = liveScore.broadcastChannel;
+      statusLabel.appendChild(ch);
+    }
+  };
+
   if (!hasTeams) {
     statusLabel.textContent = 'TBD';
   } else if (hasScore && (liveScore.status === 'live' || liveScore.status === 'halftime')) {
@@ -288,11 +297,13 @@ export function createMatchupCard(matchup) {
       text.textContent = `${liveScore.clock} ${periodLabel}`;
     }
     statusLabel.appendChild(text);
+    appendChannel();
   } else if (hasScore && liveScore.status === 'final') {
     const finalText = liveScore.period > 2 ? 'Final/OT' : 'Final';
     statusLabel.textContent = finalText;
   } else if (liveScore && liveScore.gameDate) {
     statusLabel.textContent = formatGameDate(liveScore.gameDate);
+    appendChannel();
   } else {
     statusLabel.textContent = 'TBD';
   }
