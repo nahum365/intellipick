@@ -250,26 +250,9 @@ function buildPolymarketPanel(matchup) {
   const price1 = t1Pct + '\u00A2';
   const price2 = t2Pct + '\u00A2';
 
-  // Live game state from ESPN (authoritative source for scores)
-  const espnScore = getScoreForMatchup(matchup.id);
-  const isLive = espnScore && (espnScore.status === 'live' || espnScore.status === 'halftime');
-  let liveGameHtml = '';
-  if (isLive) {
-    const periodLabel = espnScore.status === 'halftime' ? 'HT'
-      : espnScore.period > 2 ? 'OT'
-      : espnScore.period === 1 ? '1H' : '2H';
-    const clockStr = espnScore.status === 'halftime' ? '' : espnScore.clock;
-    liveGameHtml = `
-      <div class="pm-live-game">
-        <div class="pm-live-game__header">
-          <span class="pm-live-game__dot"></span>
-          <span class="pm-live-game__label">LIVE</span>
-          <span class="pm-live-game__period">${periodLabel}</span>
-          ${clockStr ? `<span class="pm-live-game__clock">${clockStr}</span>` : ''}
-        </div>
-        <div class="pm-live-game__score">${espnScore.team1Score} - ${espnScore.team2Score}</div>
-      </div>`;
-  }
+  // Live badge in header (score display is handled by the dedicated scoreboard section above)
+  const isLive = getScoreForMatchup(matchup.id);
+  const isLiveStatus = isLive && (isLive.status === 'live' || isLive.status === 'halftime');
 
   // Sentiment
   let sentimentHtml = '';
@@ -285,10 +268,8 @@ function buildPolymarketPanel(matchup) {
     <div class="pm-panel__header">
       <span class="pm-panel__logo">\u26A1</span>
       <span class="pm-panel__title">Polymarket Live Odds</span>
-      ${isLive ? '<span class="pm-panel__live-badge">LIVE</span>' : ''}
+      ${isLiveStatus ? '<span class="pm-panel__live-badge">LIVE</span>' : ''}
     </div>
-
-    ${liveGameHtml}
 
     <div class="pm-odds">
       <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? 'pm-odds__side--fav' : ''}">
