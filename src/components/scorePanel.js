@@ -1,5 +1,5 @@
 import { getUpsetAlerts } from '../engine/scoring.js';
-import { getR64Matchup, getRegionR64Matchups, getValidBracketIds } from '../engine/propagation.js';
+import { getR64Matchup, getRegionR64Matchups } from '../engine/propagation.js';
 import { getFetchStatus, getScoreForMatchup } from '../engine/liveScores.js';
 import { openModal } from './modal.js';
 import { showTooltip, hideTooltip } from './tooltip.js';

@@ -363,6 +363,22 @@ export function getScoreForMatchup(matchupId) {
   return scoreMap.get(matchupId) || null;
 }
 
+/**
+ * Get the winning team object from a final game.
+ * Returns { id, name, seed } of the winner, or null if game isn't final.
+ */
+export function getWinner(matchupId) {
+  const score = scoreMap.get(matchupId);
+  if (!score || score.status !== 'final') return null;
+
+  // Look up the matchup to get team objects
+  const r64 = getR64Matchup(matchupId);
+  if (r64 && r64.team1 && r64.team2) {
+    return score.team1Score > score.team2Score ? r64.team1 : r64.team2;
+  }
+  return null;
+}
+
 export function getFetchStatus() {
   return { ...fetchStatus };
 }

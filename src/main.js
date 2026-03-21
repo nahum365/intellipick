@@ -4,16 +4,11 @@ import './styles/matchup.css';
 import './styles/tooltip.css';
 import './styles/modal.css';
 
-import { loadPicks } from './engine/picks.js';
-import { getValidBracketIds } from './engine/propagation.js';
 import { createBracket } from './components/bracket.js';
 import { createScorePanel } from './components/scorePanel.js';
 import { createInsightsBar } from './components/insightsBar.js';
 import { startPolling, onScoresUpdate } from './engine/liveScores.js';
 const app = document.getElementById('app');
-
-// Load saved picks (clean up stale canonical IDs)
-loadPicks(getValidBracketIds());
 
 let scorePanelEl = null;
 let insightsBarEl = null;

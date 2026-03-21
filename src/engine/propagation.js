@@ -1,5 +1,5 @@
 import matchupsData from '../data/matchups.json';
-import { getPick, setPick, clearPick, getAllPicks } from './picks.js';
+import { getWinner, getScoreForMatchup } from './liveScores.js';
 
 // Bracket structure: matchups pair up in order within each region
 // R64 matchups 0,1 -> R32 slot 0; matchups 2,3 -> R32 slot 1; etc.
@@ -102,21 +102,18 @@ export function getDownstreamChain(matchupId) {
   return chain;
 }
 
-// When a pick is made, check if downstream picks need to be cleared
-export function cascadePick(matchupId, pickedTeam) {
-  const oldPick = getPick(matchupId);
-  setPick(matchupId, pickedTeam);
-
-  // If the pick changed, cascade clear downstream
-  if (oldPick && oldPick.id !== pickedTeam.id) {
-    const downstream = getDownstreamChain(matchupId);
-    for (const dsId of downstream) {
-      const dsPick = getPick(dsId);
-      if (dsPick && dsPick.id === oldPick.id) {
-        clearPick(dsId);
-      }
-    }
-  }
+// Get the winner of a later-round generated matchup from live scores.
+// For R64 matchups, delegates to liveScores.getWinner().
+// For later rounds, we need both teams resolved AND a final score.
+function getGeneratedWinner(matchupId) {
+  const roundIdx = getRoundIndex(matchupId);
+  if (roundIdx === 0) return getWinner(matchupId);
+  // For later rounds, only return a winner if we have final score data
+  const score = getScoreForMatchup(matchupId);
+  if (!score || score.status !== 'final') return null;
+  const gen = getGeneratedMatchup(matchupId);
+  if (!gen || !gen.team1 || !gen.team2) return null;
+  return score.team1Score > score.team2Score ? gen.team1 : gen.team2;
 }
 
 // Look up a later-round matchup in the JSON data by canonical seed ID
@@ -129,23 +126,23 @@ function findMatchupData(region, team1, team2) {
   return matchupsData.matchups.find(m => m.id === canonicalId) || null;
 }
 
-// Build a generated matchup for later rounds based on current picks
+// Build a generated matchup for later rounds based on game results
 export function getGeneratedMatchup(matchupId) {
   const roundIdx = getRoundIndex(matchupId);
   let team1 = null;
   let team2 = null;
 
   if (matchupId === 'championship') {
-    team1 = getPick('ff-0');
-    team2 = getPick('ff-1');
+    team1 = getGeneratedWinner('ff-0');
+    team2 = getGeneratedWinner('ff-1');
   } else if (matchupId.startsWith('ff-')) {
     const ffIdx = parseInt(matchupId.split('-')[1]);
     if (ffIdx === 0) {
-      team1 = getPick(laterRoundId('east', 4, 0));
-      team2 = getPick(laterRoundId('south', 4, 0));
+      team1 = getGeneratedWinner(laterRoundId('east', 4, 0));
+      team2 = getGeneratedWinner(laterRoundId('south', 4, 0));
     } else {
-      team1 = getPick(laterRoundId('west', 4, 0));
-      team2 = getPick(laterRoundId('midwest', 4, 0));
+      team1 = getGeneratedWinner(laterRoundId('west', 4, 0));
+      team2 = getGeneratedWinner(laterRoundId('midwest', 4, 0));
     }
   } else {
     // Find the two feeder matchups
@@ -153,18 +150,18 @@ export function getGeneratedMatchup(matchupId) {
     const pos = parseInt(matchupId.split('-').pop());
 
     if (roundIdx === 1) {
-      // R32: fed by R64 matchups at positions pos*2 and pos*2+1
+      // R32: fed by R64 game winners
       const r64s = getRegionR64Matchups(region);
-      team1 = getPick(r64s[pos * 2]);
-      team2 = getPick(r64s[pos * 2 + 1]);
+      team1 = getWinner(r64s[pos * 2]);
+      team2 = getWinner(r64s[pos * 2 + 1]);
     } else if (roundIdx === 2) {
-      // S16: fed by R32 at positions pos*2 and pos*2+1
-      team1 = getPick(laterRoundId(region, 2, pos * 2));
-      team2 = getPick(laterRoundId(region, 2, pos * 2 + 1));
+      // S16: fed by R32 winners
+      team1 = getGeneratedWinner(laterRoundId(region, 2, pos * 2));
+      team2 = getGeneratedWinner(laterRoundId(region, 2, pos * 2 + 1));
     } else if (roundIdx === 3) {
-      // E8: fed by S16 at positions 0 and 1
-      team1 = getPick(laterRoundId(region, 3, 0));
-      team2 = getPick(laterRoundId(region, 3, 1));
+      // E8: fed by S16 winners
+      team1 = getGeneratedWinner(laterRoundId(region, 3, 0));
+      team2 = getGeneratedWinner(laterRoundId(region, 3, 1));
     }
   }
 
