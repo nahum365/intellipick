@@ -125,6 +125,10 @@
   font-style: italic;
 }
 
+.team-row--loser {
+  opacity: 0.4;
+}
+
 .team-row--empty:hover {
   background: transparent;
 }
