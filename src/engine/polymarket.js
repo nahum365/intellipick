@@ -67,20 +67,18 @@ function processGammaEvents(events) {
 
     if (outcomes.length < 2 || tokenIds.length < 2) continue;
 
-    // Store initial prices from Gamma
+    // Store initial prices from Gamma (outcomePrices are per-outcome, use as-is)
     for (let i = 0; i < tokenIds.length; i++) {
       const assetId = tokenIds[i];
       const rawProb = parseFloat(prices[i]) || 0;
-      const entry = {
+      state.prices.set(assetId, {
         prob: rawProb,
-        bestBid: parseFloat(market.bestBid) || 0,
-        bestAsk: parseFloat(market.bestAsk) || 0,
+        bestBid: 0,
+        bestAsk: 0,
         lastTradePrice: 0,
         volume: parseFloat(market.volume) || 0,
         liquidity: parseFloat(market.liquidity) || 0,
-      };
-      entry.prob = computeDisplayProb(entry);
-      state.prices.set(assetId, entry);
+      });
       allAssetIds.push(assetId);
     }
 
