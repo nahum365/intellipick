@@ -4,7 +4,7 @@
   grid-template-columns: 1fr auto 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 0;
-  min-width: 1200px;
+  min-width: 1400px;
   min-height: 800px;
 }
 
@@ -81,7 +81,8 @@
   flex-direction: column;
   justify-content: space-around;
   gap: 4px;
-  min-width: 190px;
+  width: 220px;
+  flex-shrink: 0;
   position: relative;
 }
 

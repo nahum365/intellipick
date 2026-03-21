@@ -99,7 +99,7 @@ export function createMatchupCard(matchup) {
   }
 
   // Team rows
-  const renderTeamRow = (team, isTop) => {
+  const renderTeamRow = (team, isTop, isExpected) => {
     const row = document.createElement('div');
 
     if (!team) {
@@ -113,6 +113,7 @@ export function createMatchupCard(matchup) {
 
     let rowClasses = 'team-row';
     if (isRecommended) rowClasses += ' team-row--recommended';
+    if (isExpected) rowClasses += ' team-row--expected';
     row.className = rowClasses;
 
     // Indicator: star for recommended, check/x for final results
@@ -191,8 +192,8 @@ export function createMatchupCard(matchup) {
     return row;
   };
 
-  card.appendChild(renderTeamRow(matchup.team1, true));
-  card.appendChild(renderTeamRow(matchup.team2, false));
+  card.appendChild(renderTeamRow(matchup.team1, true, matchup.team1Expected));
+  card.appendChild(renderTeamRow(matchup.team2, false, matchup.team2Expected));
 
   // --- IntelliPick odds (always above Polymarket) ---
   if (hasPrediction && hasTeams) {

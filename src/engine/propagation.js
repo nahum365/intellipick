@@ -116,6 +116,94 @@ function getGeneratedWinner(matchupId) {
   return score.team1Score > score.team2Score ? gen.team1 : gen.team2;
 }
 
+// Get the "expected" winner — actual winner if final, else the recommendedPick.
+// This propagates IntelliPick's predicted bracket path through all rounds.
+function getExpectedWinnerR64(matchupId) {
+  // Actual winner takes priority
+  const actual = getWinner(matchupId);
+  if (actual) return actual;
+  // Fall back to recommended pick from prediction data
+  const matchup = matchupsData.matchups.find(m => m.id === matchupId);
+  if (!matchup || !matchup.recommendedPick) return null;
+  const pick = matchup.recommendedPick;
+  if (matchup.team1 && matchup.team1.id === pick) return matchup.team1;
+  if (matchup.team2 && matchup.team2.id === pick) return matchup.team2;
+  return null;
+}
+
+function getExpectedGeneratedWinner(matchupId) {
+  const roundIdx = getRoundIndex(matchupId);
+  if (roundIdx === 0) return getExpectedWinnerR64(matchupId);
+  // Actual winner if final
+  const score = getScoreForMatchup(matchupId);
+  if (score && score.status === 'final') {
+    const gen = getExpectedMatchup(matchupId);
+    if (gen && gen.team1 && gen.team2) {
+      return score.team1Score > score.team2Score ? gen.team1 : gen.team2;
+    }
+  }
+  // Fall back to recommended pick from expected matchup
+  const gen = getExpectedMatchup(matchupId);
+  if (!gen || !gen.recommendedPick) return null;
+  if (gen.team1 && gen.team1.id === gen.recommendedPick) return gen.team1;
+  if (gen.team2 && gen.team2.id === gen.recommendedPick) return gen.team2;
+  return null;
+}
+
+// Build an "expected" matchup using predicted winners (not just actual results).
+// Uses the same logic as getGeneratedMatchup but with expected winners.
+export function getExpectedMatchup(matchupId) {
+  const roundIdx = getRoundIndex(matchupId);
+  let team1 = null;
+  let team2 = null;
+
+  if (matchupId === 'championship') {
+    team1 = getExpectedGeneratedWinner('ff-0');
+    team2 = getExpectedGeneratedWinner('ff-1');
+  } else if (matchupId.startsWith('ff-')) {
+    const ffIdx = parseInt(matchupId.split('-')[1]);
+    if (ffIdx === 0) {
+      team1 = getExpectedGeneratedWinner(laterRoundId('east', 4, 0));
+      team2 = getExpectedGeneratedWinner(laterRoundId('south', 4, 0));
+    } else {
+      team1 = getExpectedGeneratedWinner(laterRoundId('west', 4, 0));
+      team2 = getExpectedGeneratedWinner(laterRoundId('midwest', 4, 0));
+    }
+  } else {
+    const region = getMatchupRegion(matchupId);
+    const pos = parseInt(matchupId.split('-').pop());
+
+    if (roundIdx === 1) {
+      const r64s = getRegionR64Matchups(region);
+      team1 = getExpectedWinnerR64(r64s[pos * 2]);
+      team2 = getExpectedWinnerR64(r64s[pos * 2 + 1]);
+    } else if (roundIdx === 2) {
+      team1 = getExpectedGeneratedWinner(laterRoundId(region, 2, pos * 2));
+      team2 = getExpectedGeneratedWinner(laterRoundId(region, 2, pos * 2 + 1));
+    } else if (roundIdx === 3) {
+      team1 = getExpectedGeneratedWinner(laterRoundId(region, 3, 0));
+      team2 = getExpectedGeneratedWinner(laterRoundId(region, 3, 1));
+    }
+  }
+
+  // Check if there's prediction data for this specific matchup in the JSON
+  const region = getMatchupRegion(matchupId);
+  const data = region ? findMatchupData(region, team1, team2) : null;
+
+  return {
+    id: matchupId,
+    round: ROUNDS[roundIdx],
+    team1: team1 ? { id: team1.id, name: team1.name, seed: team1.seed } : null,
+    team2: team2 ? { id: team2.id, name: team2.name, seed: team2.seed } : null,
+    recommendedPick: data ? data.recommendedPick : null,
+    category: data ? data.category : null,
+    confidence: data ? data.confidence : null,
+    confidencePercentage: data ? data.confidencePercentage : null,
+    tacticalAdvantage: data ? data.tacticalAdvantage : null,
+    expected: true, // flag so UI can style these differently if desired
+  };
+}
+
 // Look up a later-round matchup in the JSON data by canonical seed ID
 // e.g., region "South", seeds 3 and 11 -> looks for "south-3-11"
 function findMatchupData(region, team1, team2) {
@@ -126,11 +214,14 @@ function findMatchupData(region, team1, team2) {
   return matchupsData.matchups.find(m => m.id === canonicalId) || null;
 }
 
-// Build a generated matchup for later rounds based on game results
+// Build a generated matchup for later rounds based on game results.
+// Falls back to expected (predicted) teams when actual winners aren't available.
 export function getGeneratedMatchup(matchupId) {
   const roundIdx = getRoundIndex(matchupId);
   let team1 = null;
   let team2 = null;
+  let team1Expected = false;
+  let team2Expected = false;
 
   if (matchupId === 'championship') {
     team1 = getGeneratedWinner('ff-0');
@@ -165,6 +256,19 @@ export function getGeneratedMatchup(matchupId) {
     }
   }
 
+  // Fall back to expected (predicted) teams when actual winners unavailable
+  if (!team1 || !team2) {
+    const expected = getExpectedMatchup(matchupId);
+    if (!team1 && expected.team1) {
+      team1 = expected.team1;
+      team1Expected = true;
+    }
+    if (!team2 && expected.team2) {
+      team2 = expected.team2;
+      team2Expected = true;
+    }
+  }
+
   // Check if there's prediction data for this specific matchup in the JSON
   const region = getMatchupRegion(matchupId);
   const data = region ? findMatchupData(region, team1, team2) : null;
@@ -174,6 +278,8 @@ export function getGeneratedMatchup(matchupId) {
     round: ROUNDS[roundIdx],
     team1: team1 ? { id: team1.id, name: team1.name, seed: team1.seed } : null,
     team2: team2 ? { id: team2.id, name: team2.name, seed: team2.seed } : null,
+    team1Expected: team1Expected,
+    team2Expected: team2Expected,
     recommendedPick: data ? data.recommendedPick : null,
     category: data ? data.category : null,
     confidence: data ? data.confidence : null,
