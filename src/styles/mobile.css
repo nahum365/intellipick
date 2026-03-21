@@ -1,0 +1,347 @@
+/* ============================
+   Mobile layout (< 768px)
+   ============================ */
+
+@media (max-width: 768px) {
+
+  /* --- App grid: single column --- */
+  #app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport for mobile browsers */
+  }
+
+  /* --- Header: compact with hamburger --- */
+  .header {
+    padding: 10px 16px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .header__logo {
+    font-size: 17px;
+  }
+
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--text);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .hamburger-btn:active {
+    background: var(--bg);
+  }
+
+  /* --- Round tabs --- */
+  .round-tabs {
+    display: flex;
+    grid-column: 1;
+    grid-row: 2;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0; /* sticks below header when scrolling */
+    z-index: 90;
+  }
+
+  .round-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .round-tab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: var(--font);
+    transition: all 0.15s;
+  }
+
+  .round-tab:active {
+    transform: scale(0.96);
+  }
+
+  .round-tab--active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  /* --- Hide desktop bracket, show mobile rounds --- */
+  .bracket-container {
+    display: none !important;
+  }
+
+  .main-content {
+    grid-column: 1;
+    grid-row: 3;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+  }
+
+  .mobile-rounds {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 12px 80px;
+  }
+
+  .mobile-rounds__region-header {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    padding: 8px 4px 2px;
+    margin-top: 4px;
+  }
+
+  .mobile-rounds__region-header:first-child {
+    margin-top: 0;
+  }
+
+  /* --- Matchup cards: full-width --- */
+  .matchup-card {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .team-row {
+    min-height: 44px; /* touch-friendly tap target */
+  }
+
+  .matchup-card__info-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  /* --- Score sidebar → Drawer --- */
+  .score-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 85vw;
+    max-width: 340px;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 500;
+    background: var(--surface);
+    box-shadow: var(--shadow-xl);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    grid-column: unset;
+    grid-row: unset;
+  }
+
+  .drawer-open .score-sidebar {
+    transform: translateX(0);
+  }
+
+  .drawer-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 499;
+  }
+
+  .drawer-open .drawer-overlay {
+    display: block;
+  }
+
+  .drawer-close-btn {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    z-index: 1;
+  }
+
+  .drawer-close-btn__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .drawer-close-btn__x {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 18px;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+
+  /* --- Insights bar: compact --- */
+  .insights-bar {
+    grid-column: 1;
+    grid-row: 4;
+    padding: 6px 12px;
+    gap: 8px;
+  }
+
+  .insights-bar__left {
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .insights-bar__item span:not(.insights-bar__badge) {
+    display: none; /* hide labels, keep only badges on mobile */
+  }
+
+  .status-boxes {
+    gap: 6px;
+  }
+
+  .status-box__detail {
+    display: none; /* hide status detail text on mobile */
+  }
+
+  .status-box__label {
+    font-size: 10px;
+  }
+
+  /* --- Bottom sheet --- */
+  .bottom-sheet-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 600;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .bottom-sheet-overlay--visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 70vh;
+    background: var(--surface);
+    border-radius: 16px 16px 0 0;
+    z-index: 601;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .bottom-sheet--visible {
+    transform: translateY(0);
+  }
+
+  .bottom-sheet__handle {
+    width: 36px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 10px auto 6px;
+  }
+
+  .bottom-sheet__content {
+    padding: 0 16px 24px;
+  }
+
+  /* Reuse tooltip styles inside bottom sheet */
+  .bottom-sheet .tooltip__header {
+    border-radius: 0;
+    margin: 0 -16px;
+    padding: 12px 16px;
+  }
+
+  .bottom-sheet .tooltip__section {
+    padding: 10px 0;
+  }
+
+  /* --- Modal: full-screen on mobile --- */
+  .modal {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .modal__close {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+  }
+
+  .modal__teams {
+    flex-direction: column;
+  }
+
+  .modal__team-panel {
+    width: 100%;
+  }
+
+  /* --- Body scroll lock --- */
+  body.body-locked {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+}
+
+/* Hide mobile-only elements on desktop */
+@media (min-width: 769px) {
+  .hamburger-btn,
+  .round-tabs,
+  .mobile-rounds,
+  .drawer-overlay,
+  .drawer-close-btn,
+  .bottom-sheet-overlay,
+  .bottom-sheet {
+    display: none !important;
+  }
+}

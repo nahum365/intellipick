@@ -1,7 +1,8 @@
 import teamsData from '../data/teams.json';
 import { getRoundIndex } from '../engine/propagation.js';
-import { showTooltip, hideTooltip } from './tooltip.js';
+import { showTooltip, hideTooltip, isMobile } from './tooltip.js';
 import { openModal } from './modal.js';
+import { openBottomSheet } from './bottomSheet.js';
 import { getScoreForMatchup } from '../engine/liveScores.js';
 import { getMarketData } from '../engine/polymarket.js';
 
@@ -168,11 +169,15 @@ export function createMatchupCard(matchup) {
       row.appendChild(injuries);
     }
 
-    // Click -> open modal
+    // Click -> bottom sheet (mobile) or modal (desktop)
     row.style.cursor = 'pointer';
     row.addEventListener('click', (e) => {
       e.stopPropagation();
-      openModal(matchup, { scrollToTeamId: team.id });
+      if (isMobile()) {
+        openBottomSheet(team, profile, matchup);
+      } else {
+        openModal(matchup, { scrollToTeamId: team.id });
+      }
     });
 
     // Hover for tooltip

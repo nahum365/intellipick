@@ -127,7 +127,14 @@ function positionTooltip(anchor) {
   tip.style.top = top + 'px';
 }
 
+export { buildTooltipContent };
+
+export function isMobile() {
+  return window.innerWidth < 768;
+}
+
 export function showTooltip(team, profile, matchup, anchor) {
+  if (isMobile()) return; // No hover tooltips on touch devices
   clearTimeout(showTimeout);
   showTimeout = setTimeout(() => {
     const tip = ensureTooltip();

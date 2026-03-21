@@ -3,10 +3,13 @@ import './styles/bracket.css';
 import './styles/matchup.css';
 import './styles/tooltip.css';
 import './styles/modal.css';
+import './styles/mobile.css';
 
 import { createBracket } from './components/bracket.js';
 import { createScorePanel } from './components/scorePanel.js';
 import { createInsightsBar, updateInsightsBar } from './components/insightsBar.js';
+import { createMatchupCard } from './components/matchup.js';
+import { getRegionR64Matchups, getR64Matchup, getGeneratedMatchup, REGIONS } from './engine/propagation.js';
 import { startPolling, onScoresUpdate } from './engine/liveScores.js';
 import { getMarketData } from './engine/polymarket.js';
 const app = document.getElementById('app');
@@ -14,9 +17,92 @@ const app = document.getElementById('app');
 let scorePanelEl = null;
 let insightsBarEl = null;
 let bracketContainerEl = null;
+let mobileRoundsEl = null;
+let selectedRound = 'R64';
+
+const ROUND_TABS = [
+  { key: 'R64', label: 'R64' },
+  { key: 'R32', label: 'R32' },
+  { key: 'S16', label: 'S16' },
+  { key: 'E8', label: 'E8' },
+  { key: 'F4', label: 'F4' },
+  { key: 'CHAMP', label: 'Final' },
+];
+
+function laterRoundId(region, round, position) {
+  return `${region.toLowerCase()}-r${round}-${position}`;
+}
+
+function getMobileMatchupsForRound(roundKey) {
+  const matchups = [];
+  if (roundKey === 'R64') {
+    for (const region of REGIONS) {
+      const ids = getRegionR64Matchups(region);
+      matchups.push({ region, items: ids.map(id => getR64Matchup(id)).filter(Boolean) });
+    }
+  } else if (roundKey === 'R32') {
+    for (const region of REGIONS) {
+      const items = [];
+      for (let i = 0; i < 4; i++) items.push(getGeneratedMatchup(laterRoundId(region, 2, i)));
+      matchups.push({ region, items: items.filter(Boolean) });
+    }
+  } else if (roundKey === 'S16') {
+    for (const region of REGIONS) {
+      const items = [];
+      for (let i = 0; i < 2; i++) items.push(getGeneratedMatchup(laterRoundId(region, 3, i)));
+      matchups.push({ region, items: items.filter(Boolean) });
+    }
+  } else if (roundKey === 'E8') {
+    for (const region of REGIONS) {
+      const item = getGeneratedMatchup(laterRoundId(region, 4, 0));
+      if (item) matchups.push({ region, items: [item] });
+    }
+  } else if (roundKey === 'F4') {
+    const semi1 = getGeneratedMatchup('ff-0');
+    const semi2 = getGeneratedMatchup('ff-1');
+    const items = [semi1, semi2].filter(Boolean);
+    if (items.length) matchups.push({ region: 'Final Four', items });
+  } else if (roundKey === 'CHAMP') {
+    const champ = getGeneratedMatchup('championship');
+    if (champ) matchups.push({ region: 'Championship', items: [champ] });
+  }
+  return matchups;
+}
+
+function renderMobileRounds() {
+  if (!mobileRoundsEl) return;
+  mobileRoundsEl.innerHTML = '';
+  const groups = getMobileMatchupsForRound(selectedRound);
+  for (const group of groups) {
+    const header = document.createElement('div');
+    header.className = 'mobile-rounds__region-header';
+    header.textContent = group.region === 'Final Four' || group.region === 'Championship'
+      ? group.region
+      : group.region + ' Region';
+    mobileRoundsEl.appendChild(header);
+    for (const m of group.items) {
+      mobileRoundsEl.appendChild(createMatchupCard(m));
+    }
+  }
+}
+
+function toggleDrawer() {
+  app.classList.toggle('drawer-open');
+  if (app.classList.contains('drawer-open')) {
+    document.body.classList.add('body-locked');
+  } else {
+    document.body.classList.remove('body-locked');
+  }
+}
+
+function closeDrawer() {
+  app.classList.remove('drawer-open');
+  document.body.classList.remove('body-locked');
+}
 
 function renderApp() {
   app.innerHTML = '';
+  app.classList.remove('drawer-open');
 
   // Header
   const header = document.createElement('header');
@@ -27,25 +113,75 @@ function renderApp() {
   logo.innerHTML = 'Intelli<span>Pick</span>';
   header.appendChild(logo);
 
+  // Hamburger button (visible only on mobile via CSS)
+  const hamburger = document.createElement('button');
+  hamburger.className = 'hamburger-btn';
+  hamburger.innerHTML = '&#9776;';
+  hamburger.title = 'Stats & Performance';
+  hamburger.addEventListener('click', toggleDrawer);
+  header.appendChild(hamburger);
+
   app.appendChild(header);
+
+  // Round tabs (visible only on mobile via CSS)
+  const tabsBar = document.createElement('div');
+  tabsBar.className = 'round-tabs';
+  for (const rt of ROUND_TABS) {
+    const tab = document.createElement('button');
+    tab.className = 'round-tab' + (rt.key === selectedRound ? ' round-tab--active' : '');
+    tab.textContent = rt.label;
+    tab.addEventListener('click', () => {
+      selectedRound = rt.key;
+      // Update active tab
+      tabsBar.querySelectorAll('.round-tab').forEach(t => t.classList.remove('round-tab--active'));
+      tab.classList.add('round-tab--active');
+      renderMobileRounds();
+    });
+    tabsBar.appendChild(tab);
+  }
+  app.appendChild(tabsBar);
 
   // Score panel
   scorePanelEl = createScorePanel();
+
+  // Drawer close button header (inside sidebar, mobile only)
+  const drawerHeader = document.createElement('div');
+  drawerHeader.className = 'drawer-close-btn';
+  const drawerTitle = document.createElement('span');
+  drawerTitle.className = 'drawer-close-btn__title';
+  drawerTitle.textContent = 'IntelliPick Stats';
+  drawerHeader.appendChild(drawerTitle);
+  const drawerClose = document.createElement('button');
+  drawerClose.className = 'drawer-close-btn__x';
+  drawerClose.innerHTML = '&times;';
+  drawerClose.addEventListener('click', closeDrawer);
+  drawerHeader.appendChild(drawerClose);
+  scorePanelEl.insertBefore(drawerHeader, scorePanelEl.firstChild);
 
   // Main content
   const main = document.createElement('div');
   main.className = 'main-content';
 
-  // Bracket
+  // Desktop bracket
   bracketContainerEl = document.createElement('div');
   bracketContainerEl.className = 'bracket-container';
   const bracket = createBracket();
   bracketContainerEl.appendChild(bracket);
   main.appendChild(bracketContainerEl);
 
-  // Desktop: sidebar is in right column via CSS grid
-  // Mobile: sidebar renders as bottom sheet (order:10 in CSS)
+  // Mobile round list
+  mobileRoundsEl = document.createElement('div');
+  mobileRoundsEl.className = 'mobile-rounds';
+  main.appendChild(mobileRoundsEl);
+  renderMobileRounds();
+
+  // Drawer overlay (mobile only)
+  const drawerOverlay = document.createElement('div');
+  drawerOverlay.className = 'drawer-overlay';
+  drawerOverlay.addEventListener('click', closeDrawer);
+
   app.appendChild(main);
+  app.appendChild(drawerOverlay);
   app.appendChild(scorePanelEl);
 
   // Insights bar
@@ -64,6 +200,11 @@ function rerender() {
   if (sidebar) {
     savedScrolls.sidebarY = sidebar.scrollTop;
   }
+  const mainContent = document.querySelector('.main-content');
+  if (mainContent) {
+    savedScrolls.mainY = mainContent.scrollTop;
+  }
+  // Preserve selected round tab across re-renders (selectedRound is module-level)
 
   renderApp();
 
@@ -75,6 +216,10 @@ function rerender() {
   const newSidebar = document.querySelector('.score-sidebar');
   if (newSidebar) {
     newSidebar.scrollTop = savedScrolls.sidebarY || 0;
+  }
+  const newMain = document.querySelector('.main-content');
+  if (newMain) {
+    newMain.scrollTop = savedScrolls.mainY || 0;
   }
 }
 
