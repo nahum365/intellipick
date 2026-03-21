@@ -388,21 +388,53 @@ export function openModal(matchup, options = {}) {
     if (detail && detail.matchupId && detail.matchupId !== currentMatchup.id) return;
 
     const pmContainer = overlayEl.querySelector('.pm-panel');
-    const newPmHtml = buildPolymarketPanel(currentMatchup);
-    if (pmContainer && newPmHtml) {
-      pmContainer.outerHTML = newPmHtml;
-      // Trigger flash animation on the new element
-      const newEl = overlayEl.querySelector('.pm-panel');
-      if (newEl) {
-        newEl.classList.add('pm-panel--flash');
-        setTimeout(() => newEl.classList.remove('pm-panel--flash'), 600);
-      }
-    } else if (!pmContainer && newPmHtml) {
+    if (!pmContainer) {
       // Insert PM panel if it wasn't there before
-      const tactEl = overlayEl.querySelector('.modal__tactical');
-      const insertBefore = tactEl || overlayEl.querySelector('.modal__teams');
-      if (insertBefore) insertBefore.insertAdjacentHTML('beforebegin', newPmHtml);
+      const newPmHtml = buildPolymarketPanel(currentMatchup);
+      if (newPmHtml) {
+        const tactEl = overlayEl.querySelector('.modal__tactical');
+        const insertBefore = tactEl || overlayEl.querySelector('.modal__teams');
+        if (insertBefore) insertBefore.insertAdjacentHTML('beforebegin', newPmHtml);
+      }
+      return;
     }
+
+    const mkt = getMarketData(currentMatchup.id);
+    if (!mkt) return;
+
+    const t1Pct = Math.round(mkt.team1Prob * 100);
+    const t2Pct = Math.round(mkt.team2Prob * 100);
+    const d1 = mkt.team1ProbDelta || 0;
+    const d2 = mkt.team2ProbDelta || 0;
+
+    const updatePctEl = (el, pct, delta) => {
+      if (!el) return;
+      const arrow = delta > 0.005
+        ? '<span class="pm-delta pm-delta--up">\u25B2</span>'
+        : delta < -0.005
+          ? '<span class="pm-delta pm-delta--down">\u25BC</span>'
+          : '';
+      el.innerHTML = `${pct}% ${arrow}`;
+      if (Math.abs(delta) > 0.001) {
+        el.classList.remove('tick-up', 'tick-down');
+        void el.offsetWidth; // restart animation
+        el.classList.add(delta > 0 ? 'tick-up' : 'tick-down');
+        setTimeout(() => el.classList.remove('tick-up', 'tick-down'), 1500);
+      }
+    };
+
+    updatePctEl(pmContainer.querySelector('.pm-odds__side--t1 .pm-odds__pct'), t1Pct, d1);
+    updatePctEl(pmContainer.querySelector('.pm-odds__side--t2 .pm-odds__pct'), t2Pct, d2);
+
+    // Prob bar
+    const bar1 = pmContainer.querySelector('.pm-prob-bar__fill--t1');
+    const bar2 = pmContainer.querySelector('.pm-prob-bar__fill--t2');
+    if (bar1) bar1.style.width = t1Pct + '%';
+    if (bar2) bar2.style.width = t2Pct + '%';
+
+    // Favorite highlight
+    pmContainer.querySelector('.pm-odds__side--t1')?.classList.toggle('pm-odds__side--fav', t1Pct >= t2Pct);
+    pmContainer.querySelector('.pm-odds__side--t2')?.classList.toggle('pm-odds__side--fav', t2Pct > t1Pct);
   });
 
   const recTeam = matchup.recommendedPick === matchup.team1?.id ? matchup.team1 : matchup.team2;
