@@ -121,16 +121,16 @@
       "tacticalAdvantage": "CONFIRMED MATCHUP: High Point pulled off the First Round stunner over Wisconsin, but Arkansas brings a completely different level of SEC athleticism. Intellipick projects Darius Acuff Jr. and the Razorbacks' transition game to overwhelm the Panthers, safely avoiding a Cinderella run."
     },
     {
-      "id": "midwest-1-8",
+      "id": "midwest-1-9",
       "region": "Midwest",
       "round": "Second Round",
       "team1": { "id": "michigan", "name": "Michigan", "seed": 1 },
-      "team2": { "id": "georgia", "name": "Georgia", "seed": 8 },
+      "team2": { "id": "saint-louis", "name": "Saint Louis", "seed": 9 },
       "recommendedPick": "michigan",
-      "category": "Standard Matchup",
+      "category": "Standard Matchup / Spread Play",
       "confidence": "High",
-      "confidencePercentage": 86,
-      "tacticalAdvantage": "Georgia boasts an elite offense (89.8 PPG), but Michigan counters with the No. 1 adjusted defensive rating in the country. Intellipick and CBS Sports analysts project Michigan's 7-foot-7 rim protector, Aday Mara, to completely eliminate Georgia's interior scoring and fast-break opportunities, heavily skewing the matchup toward the Wolverines."
+      "confidencePercentage": 78,
+      "tacticalAdvantage": "CONFIRMED MATCHUP: Michigan is a consensus 12.5-point betting favorite with a -900 moneyline. Saint Louis ranks first nationally in effective field goal percentage (59.9%) and utilizes a five-out offense anchored by center Robbie Avila to pull opposing bigs from the paint. Consensus pundit analysis and betting trends favor Saint Louis to cover the spread due to their 40.2% team three-point shooting, but Michigan's top-five adjusted defensive efficiency and overwhelming frontcourt size with 7-foot-3 Aday Mara provide the definitive mathematical edge to win outright."
     },
     {
       "id": "midwest-4-12",
@@ -718,7 +718,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 77,
-      "tacticalAdvantage": "EXPECTED MATCHUP: KenPom ranks Michigan No. 3 overall nationally. Intellipick notes Sports Illustrated officially picked Michigan as a -120 favorite to win the Midwest Region. While Alabama features a high-powered offense, betting markets favor Michigan's defensive length (+370 to win National Title) to advance."
+      "tacticalAdvantage": "EXPECTED MATCHUP: Pundits point to a stark contrast in styles. Alabama boasts the nation's top scoring offense (averaging 91.7 points per game) but struggles significantly on defense. Betting markets heavily favor Michigan, pricing them at -130 to win the Midwest Region outright. Analysts project that Michigan's massive interior advantage and top-tier defensive efficiency will exploit Alabama's inability to get consistent stops, making the Wolverines the clear mathematical favorite to advance to the Elite Eight."
     },
     {
       "id": "midwest-6-2",
@@ -730,7 +730,7 @@
       "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 68,
-      "tacticalAdvantage": "EXPECTED MATCHUP: Iowa State ranks No. 6 in KenPom. Sports Illustrated analysts picked Iowa State (+245) to win the Midwest Region. Intellipick projects that Iowa State's elite turnover-forced rate (4th nationally) gives them the statistical edge over Tennessee's offensive rebounding."
+      "tacticalAdvantage": "EXPECTED MATCHUP: Iowa State enters as a strong betting favorite (+245 to win the Midwest Region) with overwhelming defensive metrics. Sports Illustrated analysis highlights that Iowa State forces turnovers on 21.9% of opponent possessions, ranking first among all power conference teams. While Tennessee's offense is potent, pundits predict Iowa State's 6th-ranked adjusted defensive efficiency and relentless perimeter pressure will sufficiently disrupt the Volunteers' rhythm, giving the Cyclones a definitive edge."
     },
     {
       "id": "midwest-1-2",
@@ -788,9 +788,9 @@
       "team2": { "id": "houston", "name": "Houston", "seed": 2 },
       "recommendedPick": "duke",
       "category": "Standard Matchup",
-      "confidence": "Medium",
-      "confidencePercentage": 62,
-      "tacticalAdvantage": "EXPECTED MATCHUP: Duke holds the No. 1 overall ranking in KenPom adjusted efficiency. Intellipick cites DraftKings listing Duke at +350 to win the National Championship, significantly shorter odds than Houston (+1000). Duke's overwhelming frontcourt talent gives them the advantage."
+      "confidence": "High",
+      "confidencePercentage": 74,
+      "tacticalAdvantage": "EXPECTED MATCHUP: Betting markets position Duke as the overall tournament favorite at +325 to win the national championship, while Houston lags at +1100. Pundits at BetMGM highlight Duke freshman Cameron Boozer, who averages 22.5 points and 10.2 rebounds per game, as the definitive difference-maker. Houston's elite defense will keep it competitive, but Duke's top-ranked efficiency and star power provide the market-backed edge."
     },
     {
       "id": "ff-2",
@@ -802,7 +802,7 @@
       "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 55,
-      "tacticalAdvantage": "EXPECTED MATCHUP: A clash of two dominant No. 1 seeds. Intellipick notes Arizona is the current overall betting favorite (+380 at DraftKings) to win the National Championship, narrowly edging out Michigan (+370 at some books, but Arizona leads volume). Arizona's top-five efficiency marks make them the slight statistical favorite."
+      "tacticalAdvantage": "EXPECTED MATCHUP: A true heavyweight bout. Current odds list both Michigan and Arizona at +375 to win the national title. However, analysts at Covers.com emphasize that Arizona has the easier path, is peaking at the right time, and has freshmen hitting their stride at full strength. Arizona's relentless tempo gives them the slightest edge over Michigan's massive size in a razor-thin contest."
     },
     {
       "id": "champ",
@@ -810,11 +810,11 @@
       "round": "National Championship",
       "team1": { "id": "duke", "name": "Duke", "seed": 1 },
       "team2": { "id": "arizona", "name": "Arizona", "seed": 1 },
-      "recommendedPick": "arizona",
+      "recommendedPick": "duke",
       "category": "Standard Matchup",
-      "confidence": "High",
-      "confidencePercentage": 70,
-      "tacticalAdvantage": "EXPECTED MATCHUP: Arizona entered the tournament on a 23-game winning streak and currently sits as a consensus top betting favorite alongside Duke. Intellipick projects Arizona's dominant +17.4 average scoring margin and elite two-way play to give them the mathematical and market-backed edge to win the 2026 National Championship."
+      "confidence": "Medium",
+      "confidencePercentage": 60,
+      "tacticalAdvantage": "EXPECTED MATCHUP: The ultimate showdown between the two top betting favorites. While Arizona has dominated the West, Duke remains the consensus overall betting favorite at +325 to win the 2026 National Championship. Pundits note Duke's impeccable form, entering the tournament 29-2, and the overwhelming presence of Cameron Boozer. The analytics and sharp money align on Duke to cut down the nets."
     }
   ]
 }
