@@ -551,6 +551,11 @@
   line-height: 1.2;
 }
 
+.pm-odds__num {
+  display: inline;
+  border-radius: 3px;
+}
+
 .pm-odds__detail {
   font-size: 10px;
   font-weight: 600;
