@@ -4,6 +4,7 @@ import './styles/matchup.css';
 import './styles/tooltip.css';
 import './styles/modal.css';
 import './styles/mobile.css';
+import './styles/dashboard.css';
 
 import { createBracket } from './components/bracket.js';
 import { createScorePanel } from './components/scorePanel.js';
@@ -13,6 +14,7 @@ import { getRegionR64Matchups, getR64Matchup, getGeneratedMatchup, REGIONS } fro
 import { startPolling, onScoresUpdate, getScoreForMatchup } from './engine/liveScores.js';
 import { closeModal } from './components/modal.js';
 import { getMarketData } from './engine/polymarket.js';
+import { showDashboard } from './components/dashboard.js';
 const app = document.getElementById('app');
 
 let scorePanelEl = null;
@@ -339,6 +341,9 @@ function updateStatusOnly() {
 
 // Initial render
 renderApp();
+
+// Show dashboard on first visit (skipped if already dismissed this session)
+showDashboard();
 
 // Start live score polling
 startPolling();

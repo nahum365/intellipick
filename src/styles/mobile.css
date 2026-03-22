@@ -288,6 +288,7 @@
     max-height: none;
     border-radius: 0;
     margin: 0;
+    padding-top: 8px;
   }
 
   .modal__header {
