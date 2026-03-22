@@ -261,16 +261,24 @@ export function getGeneratedMatchup(matchupId) {
   }
 
   // Fall back to expected (predicted) teams when actual winners unavailable
-  if (!team1 || !team2) {
-    const expected = getExpectedMatchup(matchupId);
-    if (!team1 && expected.team1) {
-      team1 = expected.team1;
-      team1Expected = true;
-    }
-    if (!team2 && expected.team2) {
-      team2 = expected.team2;
-      team2Expected = true;
-    }
+  const expected = getExpectedMatchup(matchupId);
+  if (!team1 && expected.team1) {
+    team1 = expected.team1;
+    team1Expected = true;
+  }
+  if (!team2 && expected.team2) {
+    team2 = expected.team2;
+    team2Expected = true;
+  }
+
+  // Ghost picks: actual winner known but differs from IntelliPick's prediction
+  let team1GhostPick = null;
+  let team2GhostPick = null;
+  if (!team1Expected && team1 && expected.team1 && team1.id !== expected.team1.id) {
+    team1GhostPick = { id: expected.team1.id, name: expected.team1.name, seed: expected.team1.seed };
+  }
+  if (!team2Expected && team2 && expected.team2 && team2.id !== expected.team2.id) {
+    team2GhostPick = { id: expected.team2.id, name: expected.team2.name, seed: expected.team2.seed };
   }
 
   // Check if there's prediction data for this specific matchup in the JSON
@@ -284,6 +292,8 @@ export function getGeneratedMatchup(matchupId) {
     team2: team2 ? { id: team2.id, name: team2.name, seed: team2.seed } : null,
     team1Expected: team1Expected,
     team2Expected: team2Expected,
+    team1GhostPick,
+    team2GhostPick,
     recommendedPick: data ? data.recommendedPick : null,
     category: data ? data.category : null,
     confidence: data ? data.confidence : null,

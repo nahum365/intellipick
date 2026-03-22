@@ -130,6 +130,25 @@
   opacity: 0.4;
 }
 
+.team-row--ghost {
+  padding: 1px 8px 3px 24px;
+  cursor: default;
+  border-bottom: none;
+  min-height: unset;
+}
+
+.team-row--ghost:hover {
+  background: transparent;
+}
+
+.team-row__ghost-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-style: italic;
+  opacity: 0.75;
+}
+
 .team-row--empty:hover {
   background: transparent;
 }
