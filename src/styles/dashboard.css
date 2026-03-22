@@ -1,0 +1,252 @@
+/* Dashboard overlay — sits above everything on first load */
+.dashboard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: var(--bg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.dashboard-overlay--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Header */
+.dashboard__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow);
+}
+
+.dashboard__logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+
+.dashboard__logo span {
+  color: var(--primary);
+}
+
+.dashboard__view-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.dashboard__view-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* Body */
+.dashboard__body {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+
+/* Narrative */
+.dashboard__narrative {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.dashboard__narrative strong {
+  color: var(--text);
+}
+
+/* Stats row */
+.dashboard__stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.dashboard__stat-chip {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: center;
+}
+
+.dashboard__stat-chip__value {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.dashboard__stat-chip__label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+}
+
+/* Section headers */
+.dashboard__section-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Games grid */
+.dashboard__games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+/* Empty state */
+.dashboard__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 32px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Upset list */
+.dashboard__upset-list {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.dashboard__upset-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+
+.dashboard__upset-row:last-child {
+  border-bottom: none;
+}
+
+.dashboard__upset-row__teams {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboard__upset-row__conf {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--upset);
+  flex-shrink: 0;
+}
+
+.dashboard__upset-row__outcome {
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.dashboard__upset-row__outcome--hit {
+  color: var(--confidence-very-high);
+}
+
+.dashboard__upset-row__outcome--miss {
+  color: var(--upset);
+}
+
+.dashboard__upset-row__round {
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Section spacing */
+.dashboard__section {
+  margin-bottom: 32px;
+}
+
+/* Mobile overrides */
+@media (max-width: 768px) {
+  .dashboard__header {
+    padding: 10px 16px;
+  }
+
+  .dashboard__logo {
+    font-size: 17px;
+  }
+
+  .dashboard__view-btn {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
+
+  .dashboard__body {
+    padding: 16px 16px 48px;
+  }
+
+  .dashboard__narrative {
+    padding: 16px;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .dashboard__stats-row {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .dashboard__stat-chip {
+    padding: 12px 8px;
+  }
+
+  .dashboard__stat-chip__value {
+    font-size: 22px;
+  }
+
+  .dashboard__stat-chip__label {
+    font-size: 9px;
+  }
+
+  .dashboard__games-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+}
