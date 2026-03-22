@@ -210,32 +210,41 @@
     cursor: pointer;
   }
 
-  /* --- Insights bar: compact --- */
+  /* --- Insights bar: two-row mobile layout --- */
   .insights-bar {
     grid-column: 1;
     grid-row: 4;
-    padding: 6px 12px;
-    gap: 8px;
+    padding: 8px 12px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    gap: 6px;
+  }
+
+  .insights-bar__main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
   }
 
   .insights-bar__left {
-    font-size: 11px;
-    gap: 8px;
-  }
-
-  .insights-bar__item span:not(.insights-bar__badge) {
-    display: none; /* hide labels, keep only badges on mobile */
+    font-size: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
   .status-boxes {
     gap: 6px;
+    flex-wrap: wrap;
   }
 
   .status-box__detail {
-    display: none; /* hide status detail text on mobile */
+    font-size: 10px;
   }
 
   .status-box__label {
+    font-size: 10px;
+  }
+
+  .insights-bar__footer {
     font-size: 10px;
   }
 
