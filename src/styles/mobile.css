@@ -247,11 +247,16 @@
     font-size: 10px;
   }
 
+  .status-boxes {
+    order: 1;
+  }
+
   .insights-bar__footer {
     position: static;
     transform: none;
     font-size: 10px;
     text-align: center;
+    order: 2;
   }
 
   /* --- Bottom sheet --- */

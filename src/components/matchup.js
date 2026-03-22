@@ -105,6 +105,12 @@ export function createMatchupCard(matchup) {
     if (!team) {
       row.className = 'team-row team-row--empty';
       row.innerHTML = '<span class="team-row__name">TBD</span>';
+      if (ghostPick) {
+        const ghost = document.createElement('div');
+        ghost.className = 'team-row__ghost';
+        ghost.textContent = `${ghostPick.seed} ${ghostPick.name}`;
+        row.appendChild(ghost);
+      }
       return row;
     }
 
