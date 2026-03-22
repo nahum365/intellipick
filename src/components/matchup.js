@@ -99,7 +99,7 @@ export function createMatchupCard(matchup) {
   }
 
   // Team rows
-  const renderTeamRow = (team, isTop, isExpected) => {
+  const renderTeamRow = (team, isTop, isExpected, ghostPick) => {
     const row = document.createElement('div');
 
     if (!team) {
@@ -194,23 +194,19 @@ export function createMatchupCard(matchup) {
       hideTooltip();
     });
 
+    // Append ghost pick inside the row if provided
+    if (ghostPick) {
+      const ghost = document.createElement('div');
+      ghost.className = 'team-row__ghost';
+      ghost.textContent = `${ghostPick.seed} ${ghostPick.name}`;
+      row.appendChild(ghost);
+    }
+
     return row;
   };
 
-  const renderGhostRow = (ghostTeam) => {
-    const row = document.createElement('div');
-    row.className = 'team-row team-row--ghost';
-    const label = document.createElement('span');
-    label.className = 'team-row__ghost-label';
-    label.textContent = `${ghostTeam.seed} ${ghostTeam.name}`;
-    row.appendChild(label);
-    return row;
-  };
-
-  card.appendChild(renderTeamRow(matchup.team1, true, matchup.team1Expected));
-  if (matchup.team1GhostPick) card.appendChild(renderGhostRow(matchup.team1GhostPick));
-  card.appendChild(renderTeamRow(matchup.team2, false, matchup.team2Expected));
-  if (matchup.team2GhostPick) card.appendChild(renderGhostRow(matchup.team2GhostPick));
+  card.appendChild(renderTeamRow(matchup.team1, true, matchup.team1Expected, matchup.team1GhostPick));
+  card.appendChild(renderTeamRow(matchup.team2, false, matchup.team2Expected, matchup.team2GhostPick));
 
   // --- IntelliPick odds (always above Polymarket) ---
   if (hasPrediction && hasTeams) {
