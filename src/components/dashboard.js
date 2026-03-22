@@ -199,8 +199,7 @@ export function isDashboardDismissed() {
 export function showDashboard() {
   if (isDashboardDismissed()) return;
 
-  const app = document.getElementById('app');
-  if (!app) return;
+  if (!document.body) return;
 
   const overlay = document.createElement('div');
   overlay.className = 'dashboard-overlay';
@@ -368,7 +367,7 @@ export function showDashboard() {
   }
 
   overlay.appendChild(body);
-  app.appendChild(overlay);
+  document.body.appendChild(overlay);
 
   // Trigger fade-in after paint
   requestAnimationFrame(() => {
