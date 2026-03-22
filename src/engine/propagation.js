@@ -204,6 +204,74 @@ export function getExpectedMatchup(matchupId) {
   };
 }
 
+// Get the purely predicted winner for an R64 matchup (ignores actual results).
+function getPredictedWinnerR64(matchupId) {
+  const matchup = matchupsData.matchups.find(m => m.id === matchupId);
+  if (!matchup || !matchup.recommendedPick) return null;
+  const pick = matchup.recommendedPick;
+  if (matchup.team1 && matchup.team1.id === pick) return matchup.team1;
+  if (matchup.team2 && matchup.team2.id === pick) return matchup.team2;
+  return null;
+}
+
+// Get the purely predicted winner for a generated matchup (ignores actual results).
+function getPredictedGeneratedWinner(matchupId) {
+  const roundIdx = getRoundIndex(matchupId);
+  if (roundIdx === 0) return getPredictedWinnerR64(matchupId);
+  const gen = getPredictedMatchup(matchupId);
+  if (!gen || !gen.recommendedPick) return null;
+  if (gen.team1 && gen.team1.id === gen.recommendedPick) return gen.team1;
+  if (gen.team2 && gen.team2.id === gen.recommendedPick) return gen.team2;
+  return null;
+}
+
+// Build a matchup using only IntelliPick predictions (no actual results).
+// Used to compute ghost picks — what IntelliPick predicted vs what actually happened.
+function getPredictedMatchup(matchupId) {
+  const roundIdx = getRoundIndex(matchupId);
+  let team1 = null;
+  let team2 = null;
+
+  if (matchupId === 'championship') {
+    team1 = getPredictedGeneratedWinner('ff-0');
+    team2 = getPredictedGeneratedWinner('ff-1');
+  } else if (matchupId.startsWith('ff-')) {
+    const ffIdx = parseInt(matchupId.split('-')[1]);
+    if (ffIdx === 0) {
+      team1 = getPredictedGeneratedWinner(laterRoundId('east', 4, 0));
+      team2 = getPredictedGeneratedWinner(laterRoundId('south', 4, 0));
+    } else {
+      team1 = getPredictedGeneratedWinner(laterRoundId('west', 4, 0));
+      team2 = getPredictedGeneratedWinner(laterRoundId('midwest', 4, 0));
+    }
+  } else {
+    const region = getMatchupRegion(matchupId);
+    const pos = parseInt(matchupId.split('-').pop());
+
+    if (roundIdx === 1) {
+      const r64s = getRegionR64Matchups(region);
+      team1 = getPredictedWinnerR64(r64s[pos * 2]);
+      team2 = getPredictedWinnerR64(r64s[pos * 2 + 1]);
+    } else if (roundIdx === 2) {
+      team1 = getPredictedGeneratedWinner(laterRoundId(region, 2, pos * 2));
+      team2 = getPredictedGeneratedWinner(laterRoundId(region, 2, pos * 2 + 1));
+    } else if (roundIdx === 3) {
+      team1 = getPredictedGeneratedWinner(laterRoundId(region, 3, 0));
+      team2 = getPredictedGeneratedWinner(laterRoundId(region, 3, 1));
+    }
+  }
+
+  const region = getMatchupRegion(matchupId);
+  const data = findMatchupData(matchupId, region, team1, team2);
+
+  return {
+    id: matchupId,
+    team1: team1 ? { id: team1.id, name: team1.name, seed: team1.seed } : null,
+    team2: team2 ? { id: team2.id, name: team2.name, seed: team2.seed } : null,
+    recommendedPick: data ? data.recommendedPick : null,
+  };
+}
+
 // Look up a matchup in the JSON data.
 // For region matchups: canonical seed ID e.g., "south-3-11"
 // For FF/Championship: direct ID lookup
@@ -271,14 +339,18 @@ export function getGeneratedMatchup(matchupId) {
     team2Expected = true;
   }
 
-  // Ghost picks: actual winner known but differs from IntelliPick's prediction
+  // Ghost picks: actual winner known but differs from IntelliPick's prediction.
+  // Use getPredictedMatchup (pure prediction, ignoring results) to compare.
   let team1GhostPick = null;
   let team2GhostPick = null;
-  if (!team1Expected && team1 && expected.team1 && team1.id !== expected.team1.id) {
-    team1GhostPick = { id: expected.team1.id, name: expected.team1.name, seed: expected.team1.seed };
-  }
-  if (!team2Expected && team2 && expected.team2 && team2.id !== expected.team2.id) {
-    team2GhostPick = { id: expected.team2.id, name: expected.team2.name, seed: expected.team2.seed };
+  if (!team1Expected || !team2Expected) {
+    const predicted = getPredictedMatchup(matchupId);
+    if (!team1Expected && team1 && predicted.team1 && team1.id !== predicted.team1.id) {
+      team1GhostPick = { id: predicted.team1.id, name: predicted.team1.name, seed: predicted.team1.seed };
+    }
+    if (!team2Expected && team2 && predicted.team2 && team2.id !== predicted.team2.id) {
+      team2GhostPick = { id: predicted.team2.id, name: predicted.team2.name, seed: predicted.team2.seed };
+    }
   }
 
   // Check if there's prediction data for this specific matchup in the JSON

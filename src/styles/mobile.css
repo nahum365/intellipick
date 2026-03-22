@@ -221,7 +221,7 @@
 
   .insights-bar__main {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     gap: 6px;
   }
 
@@ -229,11 +229,13 @@
     font-size: 12px;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   .status-boxes {
     gap: 6px;
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   .status-box__detail {
@@ -246,6 +248,11 @@
 
   .insights-bar__footer {
     font-size: 10px;
+    margin-left: 0;
+    text-align: center;
+    width: 100%;
+    border-top: 1px solid var(--border-light);
+    padding-top: 6px;
   }
 
   /* --- Bottom sheet --- */
