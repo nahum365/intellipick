@@ -183,16 +183,16 @@ body {
 
 .insights-bar__main {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 12px 16px;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .insights-bar__footer {
   font-size: 11px;
   color: var(--text-muted);
-  white-space: nowrap;
+  text-align: center;
+  margin-top: 4px;
 }
 
 .insights-bar__footer-link {
