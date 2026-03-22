@@ -409,16 +409,16 @@
       "tacticalAdvantage": "DraftKings explicitly flags this as a primary upset watch, laying St. John's at a competitive -3.5 spread. Analytics highlight St. John's massive rebounding advantage as the perfect antidote to a Kansas squad leaning entirely on freshman Darryn Peterson."
     },
     {
-      "id": "east-3-6",
+      "id": "east-3-11",
       "region": "East",
       "round": "Second Round",
       "team1": { "id": "michigan-state", "name": "Michigan State", "seed": 3 },
-      "team2": { "id": "louisville", "name": "Louisville", "seed": 6 },
+      "team2": { "id": "south-florida", "name": "South Florida", "seed": 11 },
       "recommendedPick": "michigan-state",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 76,
-      "tacticalAdvantage": "Michigan State secured a gritty 77-69 win over Louisville, advancing to their 17th Sweet 16 under Tom Izzo. Social media buzzed over Jeremy Fears Jr.'s 16 assists, proving the Spartans' half-court execution is Final Four caliber."
+      "confidencePercentage": 75,
+      "tacticalAdvantage": "Replacing the obsolete matchup following South Florida's first-round upset, Michigan State opens as a strong favorite against the Bulls. Betting markets project Tom Izzo's disciplined half-court execution and rebounding advantage will successfully slow down South Florida's blistering pace to secure a Sweet 16 berth."
     },
     {
       "id": "east-2-7",
