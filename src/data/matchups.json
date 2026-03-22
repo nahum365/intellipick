@@ -1,6 +1,646 @@
 {
   "matchups": [
     {
+      "id": "east-1-16",
+      "region": "East",
+      "round": "First Round",
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "siena",
+        "name": "Siena",
+        "seed": 16
+      },
+      "recommendedPick": "duke",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 99,
+      "tacticalAdvantage": "Duke entered as a massive 27.5-point favorite and the BetMGM consensus pick to win the tournament. They suffered a historic scare, trailing 43-32 at halftime, before Cameron Boozer's 22 points fueled an 11-0 run to secure the 71-65 win. Oddsmakers severely dinged Duke's title odds from +300 to +425 following the sluggish performance."
+    },
+    {
+      "id": "east-8-9",
+      "region": "East",
+      "round": "First Round",
+      "team1": {
+        "id": "ohio-state",
+        "name": "Ohio State",
+        "seed": 8
+      },
+      "team2": {
+        "id": "tcu",
+        "name": "TCU",
+        "seed": 9
+      },
+      "recommendedPick": "tcu",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 66,
+      "tacticalAdvantage": "TCU closed as a slight moneyline underdog but capitalized on Ohio State's 174th-ranked defense. Pundits praised Xavier Edmonds' game-winning layup with 4.3 seconds remaining, cashing tickets for Horned Frogs backers in a tight 66-64 battle."
+    },
+    {
+      "id": "east-5-12",
+      "region": "East",
+      "round": "First Round",
+      "team1": {
+        "id": "st-johns",
+        "name": "St. John's",
+        "seed": 5
+      },
+      "team2": {
+        "id": "northern-iowa",
+        "name": "Northern Iowa",
+        "seed": 12
+      },
+      "recommendedPick": "st-johns",
+      "category": "Poisoned Value Trap (Avoid Upset)",
+      "confidence": "High",
+      "confidencePercentage": 85,
+      "tacticalAdvantage": "Despite heavy public betting on the 12-over-5 upset, St. John's easily covered the spread in a 79-53 rout. Zuby Ejiofor's 14-point, 11-rebound double-double validated analytics models that flagged Northern Iowa's rebounding deficit as a fatal flaw."
+    },
+    {
+      "id": "east-4-13",
+      "region": "East",
+      "round": "First Round",
+      "team1": {
+        "id": "kansas",
+        "name": "Kansas",
+        "seed": 4
+      },
+      "team2": {
+        "id": "california-baptist",
+        "name": "California Baptist",
+        "seed": 13
+      },
+      "recommendedPick": "kansas",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Kansas closed as 14.5-point favorites. While they led by as many as 26, a massive late 19-2 run by CBU rewarded backdoor cover bettors. Darryn Peterson's 28 points proved the talent gap was insurmountable, but sharp money accurately targeted the spread vulnerability."
+    },
+    {
+      "id": "east-6-11",
+      "region": "East",
+      "round": "First Round",
+      "team1": {
+        "id": "louisville",
+        "name": "Louisville",
+        "seed": 6
+      },
+      "team2": {
+        "id": "south-florida",
+        "name": "South Florida",
+        "seed": 11
+      },
+      "recommendedPick": "south-florida",
+      "category": "High-Conviction Upset",
+      "confidence": "High",
+      "confidencePercentage": 75,
+      "tacticalAdvantage": "The model aggressively targeted USF based on their blistering pace. While Louisville ultimately survived 83-79, USF erased a 23-point deficit down to four points, easily covering the spread and proving the sharp money logic correct."
+    },
+    {
+      "id": "east-3-14",
+      "region": "East",
+      "round": "First Round",
+      "team1": {
+        "id": "michigan-state",
+        "name": "Michigan State",
+        "seed": 3
+      },
+      "team2": {
+        "id": "north-dakota-state",
+        "name": "North Dakota State",
+        "seed": 14
+      },
+      "recommendedPick": "michigan-state",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 88,
+      "tacticalAdvantage": "Michigan State entered as 16.5-point favorites and demolished NDSU 92-67. CBS Sports pundits emphasized Tom Izzo's elite 15-11 ATS historical record in the Round of 64, as the Spartans shot 58.9% and dominated the paint."
+    },
+    {
+      "id": "east-7-10",
+      "region": "East",
+      "round": "First Round",
+      "team1": {
+        "id": "ucla",
+        "name": "UCLA",
+        "seed": 7
+      },
+      "team2": {
+        "id": "ucf",
+        "name": "UCF",
+        "seed": 10
+      },
+      "recommendedPick": "ucla",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "UCLA secured a 75-71 victory despite missing leading scorer Tyler Bilodeau. DraftKings analysts noted that Eric Dailey Jr.'s unexpected 20-point performance saved the Bruins from a popular public upset pick in a tight 7-vs-10 matchup."
+    },
+    {
+      "id": "east-2-15",
+      "region": "East",
+      "round": "First Round",
+      "team1": {
+        "id": "uconn",
+        "name": "UConn",
+        "seed": 2
+      },
+      "team2": {
+        "id": "furman",
+        "name": "Furman",
+        "seed": 15
+      },
+      "recommendedPick": "uconn",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 96,
+      "tacticalAdvantage": "UConn easily covered the 20.5-point spread in an 82-71 win. Tarris Reed Jr. made NCAA history by becoming one of the only players ever to record a 31-point, 27-rebound game, proving UConn's overwhelming size advantage to the betting public."
+    },
+    {
+      "id": "west-1-16",
+      "region": "West",
+      "round": "First Round",
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "liu",
+        "name": "LIU",
+        "seed": 16
+      },
+      "recommendedPick": "arizona",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 99,
+      "tacticalAdvantage": "Arizona decimated LIU 92-58. Following Duke's struggles, BetMGM data shows massive handle shifting to Arizona, who leaped to +350 co-favorites to win the National Championship alongside Michigan."
+    },
+    {
+      "id": "west-8-9",
+      "region": "West",
+      "round": "First Round",
+      "team1": {
+        "id": "villanova",
+        "name": "Villanova",
+        "seed": 8
+      },
+      "team2": {
+        "id": "utah-state",
+        "name": "Utah State",
+        "seed": 9
+      },
+      "recommendedPick": "utah-state",
+      "category": "Statistical Favorite",
+      "confidence": "Medium",
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "Utah State cashed as the sharp money value play, defeating Villanova 86-76. Mason Falslev's 22 points exploited Villanova's variance-heavy scheme exactly as pre-tournament KenPom analytics predicted."
+    },
+    {
+      "id": "west-5-12",
+      "region": "West",
+      "round": "First Round",
+      "team1": {
+        "id": "wisconsin",
+        "name": "Wisconsin",
+        "seed": 5
+      },
+      "team2": {
+        "id": "high-point",
+        "name": "High Point",
+        "seed": 12
+      },
+      "recommendedPick": "wisconsin",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 72,
+      "tacticalAdvantage": "Wisconsin was heavily favored, but High Point pulled off the 83-82 stunner. Twitter erupted after Chase Johnston's fast-break layup with 11.7 seconds left cashed massive +450 moneyline tickets, ruining brackets nationwide."
+    },
+    {
+      "id": "west-4-13",
+      "region": "West",
+      "round": "First Round",
+      "team1": {
+        "id": "arkansas",
+        "name": "Arkansas",
+        "seed": 4
+      },
+      "team2": {
+        "id": "hawaii",
+        "name": "Hawai'i",
+        "seed": 13
+      },
+      "recommendedPick": "arkansas",
+      "category": "Sharp Money Target / Spread Play",
+      "confidence": "High",
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Arkansas demolished Hawai'i 97-78, crushing the spread. Analysts highlighted the Razorbacks' ridiculous 22 dunks in transition as proof that their SEC-level athleticism is vastly underpriced in the current futures market."
+    },
+    {
+      "id": "west-6-11",
+      "region": "West",
+      "round": "First Round",
+      "team1": {
+        "id": "byu",
+        "name": "BYU",
+        "seed": 6
+      },
+      "team2": {
+        "id": "texas",
+        "name": "Texas",
+        "seed": 11
+      },
+      "recommendedPick": "texas",
+      "category": "High-Conviction Upset",
+      "confidence": "High",
+      "confidencePercentage": 72,
+      "tacticalAdvantage": "The model perfectly identified Texas as a +2.5 underdog value play. Matas Vokietaitis posted 23 points and 16 rebounds in a 79-71 victory, cashing First Four momentum against an over-seeded BYU roster exactly as Action Network predicted."
+    },
+    {
+      "id": "west-3-14",
+      "region": "West",
+      "round": "First Round",
+      "team1": {
+        "id": "gonzaga",
+        "name": "Gonzaga",
+        "seed": 3
+      },
+      "team2": {
+        "id": "kennesaw-state",
+        "name": "Kennesaw State",
+        "seed": 14
+      },
+      "recommendedPick": "gonzaga",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 92,
+      "tacticalAdvantage": "Gonzaga covered the massive 20.5-point spread in a 73-64 win over Kennesaw State. Pundits noted that Graham Ike's 19 points anchored a crucial 14-2 second-half run, keeping the Bulldogs' title hopes intact for the weekend."
+    },
+    {
+      "id": "west-7-10",
+      "region": "West",
+      "round": "First Round",
+      "team1": {
+        "id": "miami-fl",
+        "name": "Miami (Fla.)",
+        "seed": 7
+      },
+      "team2": {
+        "id": "missouri",
+        "name": "Missouri",
+        "seed": 10
+      },
+      "recommendedPick": "miami-fl",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "Miami closed out Missouri 80-66 via a dominant 12-0 run late. Head coach Jai Lucas received heavy praise on social media for exploiting Missouri's tired legs, validating the sharp money that backed Miami's superior KenPom ranking."
+    },
+    {
+      "id": "west-2-15",
+      "region": "West",
+      "round": "First Round",
+      "team1": {
+        "id": "purdue",
+        "name": "Purdue",
+        "seed": 2
+      },
+      "team2": {
+        "id": "queens",
+        "name": "Queens",
+        "seed": 15
+      },
+      "recommendedPick": "purdue",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 96,
+      "tacticalAdvantage": "Purdue annihilated Queens 104-71, easily covering the 25.5-point spread. Braden Smith setting the Division I career assist record caused Purdue's National Championship odds to drastically shorten from +3500 to +1600 overnight on BetMGM."
+    },
+    {
+      "id": "midwest-1-16",
+      "region": "Midwest",
+      "round": "First Round",
+      "team1": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "team2": {
+        "id": "howard",
+        "name": "Howard",
+        "seed": 16
+      },
+      "recommendedPick": "michigan",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 97,
+      "tacticalAdvantage": "Michigan dismantled Howard 101-80. Bettors are heavily backing the Wolverines, who now hold the highest ticket and handle percentages nationwide at BetMGM, moving them to +325 co-favorites for the national title."
+    },
+    {
+      "id": "midwest-8-9",
+      "region": "Midwest",
+      "round": "First Round",
+      "team1": {
+        "id": "georgia",
+        "name": "Georgia",
+        "seed": 8
+      },
+      "team2": {
+        "id": "saint-louis",
+        "name": "Saint Louis",
+        "seed": 9
+      },
+      "recommendedPick": "georgia",
+      "category": "Statistical Favorite / Sharp Money",
+      "confidence": "Medium",
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "While sharp money backed Georgia, Saint Louis defied the metrics with a 102-77 blowout. DraftKings analysts highlighted Saint Louis hitting 55.7% from the field to absolutely obliterate Georgia's defensive game plan."
+    },
+    {
+      "id": "midwest-5-12",
+      "region": "Midwest",
+      "round": "First Round",
+      "team1": {
+        "id": "texas-tech",
+        "name": "Texas Tech",
+        "seed": 5
+      },
+      "team2": {
+        "id": "akron",
+        "name": "Akron",
+        "seed": 12
+      },
+      "recommendedPick": "akron",
+      "category": "High-Conviction Upset",
+      "confidence": "Medium",
+      "confidencePercentage": 66,
+      "tacticalAdvantage": "The model favored Akron for an upset, but Texas Tech dominated 91-71. The Red Raiders hit 11-of-20 from deep, proving to bettors that they can survive the loss of injured star JT Toppin through elite perimeter variance."
+    },
+    {
+      "id": "midwest-4-13",
+      "region": "Midwest",
+      "round": "First Round",
+      "team1": {
+        "id": "alabama",
+        "name": "Alabama",
+        "seed": 4
+      },
+      "team2": {
+        "id": "hofstra",
+        "name": "Hofstra",
+        "seed": 13
+      },
+      "recommendedPick": "alabama",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 82,
+      "tacticalAdvantage": "Alabama cruised past Hofstra 90-70. CBS Sports pundits praised Labaron Philon's 29-point outburst as proof that the Crimson Tide can cover spreads and maintain their No. 1 rated offense even without starting guard Aden Holloway."
+    },
+    {
+      "id": "midwest-6-11",
+      "region": "Midwest",
+      "round": "First Round",
+      "team1": {
+        "id": "tennessee",
+        "name": "Tennessee",
+        "seed": 6
+      },
+      "team2": {
+        "id": "miami-oh",
+        "name": "Miami (OH)",
+        "seed": 11
+      },
+      "recommendedPick": "tennessee",
+      "category": "Poisoned Value Trap (Avoid Upset)",
+      "confidence": "High",
+      "confidencePercentage": 86,
+      "tacticalAdvantage": "Tennessee crushed Miami (OH) 78-56, successfully avoiding a very trendy public upset pick. Analysts noted Tennessee's overwhelming SEC-caliber length and athleticism easily stifled Miami's perimeter attack, cashing the favorite tickets easily."
+    },
+    {
+      "id": "midwest-3-14",
+      "region": "Midwest",
+      "round": "First Round",
+      "team1": {
+        "id": "virginia",
+        "name": "Virginia",
+        "seed": 3
+      },
+      "team2": {
+        "id": "wright-state",
+        "name": "Wright State",
+        "seed": 14
+      },
+      "recommendedPick": "virginia",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 88,
+      "tacticalAdvantage": "Virginia held off Wright State 82-73. NBC Sports highlighted Virginia as one of the most underrated squads in the field, utilizing an 11-0 closing run to cover the -17.5 spread and reward sharp bettors."
+    },
+    {
+      "id": "midwest-7-10",
+      "region": "Midwest",
+      "round": "First Round",
+      "team1": {
+        "id": "kentucky",
+        "name": "Kentucky",
+        "seed": 7
+      },
+      "team2": {
+        "id": "santa-clara",
+        "name": "Santa Clara",
+        "seed": 10
+      },
+      "recommendedPick": "santa-clara",
+      "category": "Statistical Favorite",
+      "confidence": "Medium",
+      "confidencePercentage": 66,
+      "tacticalAdvantage": "The model's tight upset prediction narrowly missed as Kentucky survived Santa Clara 89-84 in a wild overtime thriller. Twitter exploded over Otega Oweh's banked 40-foot buzzer-beater that destroyed Santa Clara moneyline tickets."
+    },
+    {
+      "id": "midwest-2-15",
+      "region": "Midwest",
+      "round": "First Round",
+      "team1": {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "seed": 2
+      },
+      "team2": {
+        "id": "tennessee-state",
+        "name": "Tennessee State",
+        "seed": 15
+      },
+      "recommendedPick": "iowa-state",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 95,
+      "tacticalAdvantage": "Iowa State annihilated Tennessee State 108-74, easily covering the -24.5 spread. Action Network considers Iowa State an absolute lock at -130 to reach the Elite Eight given their No. 4 national defensive ranking."
+    },
+    {
+      "id": "south-1-16",
+      "region": "South",
+      "round": "First Round",
+      "team1": {
+        "id": "florida",
+        "name": "Florida",
+        "seed": 1
+      },
+      "team2": {
+        "id": "prairie-view-am",
+        "name": "Prairie View A&M",
+        "seed": 16
+      },
+      "recommendedPick": "florida",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 97,
+      "tacticalAdvantage": "Florida destroyed Prairie View 114-55 in the second-largest margin of victory in tournament history. BetMGM reports Florida has leapfrogged Houston in liability, now sitting at +700 to repeat as National Champions."
+    },
+    {
+      "id": "south-8-9",
+      "region": "South",
+      "round": "First Round",
+      "team1": {
+        "id": "clemson",
+        "name": "Clemson",
+        "seed": 8
+      },
+      "team2": {
+        "id": "iowa",
+        "name": "Iowa",
+        "seed": 9
+      },
+      "recommendedPick": "iowa",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 66,
+      "tacticalAdvantage": "Iowa secured a 67-61 victory by dominating the glass with a +13 rebounding margin. Analysts correctly identified Iowa as a sharp metric play against a physically battered Clemson roster."
+    },
+    {
+      "id": "south-5-12",
+      "region": "South",
+      "round": "First Round",
+      "team1": {
+        "id": "vanderbilt",
+        "name": "Vanderbilt",
+        "seed": 5
+      },
+      "team2": {
+        "id": "mcneese",
+        "name": "McNeese",
+        "seed": 12
+      },
+      "recommendedPick": "vanderbilt",
+      "category": "Poisoned Value Trap (Avoid Upset)",
+      "confidence": "High",
+      "confidencePercentage": 81,
+      "tacticalAdvantage": "Vanderbilt safely bypassed the trendy 12-over-5 trap, winning 78-68. Oddsmakers continue to flag Vanderbilt as a massive dark horse, holding the highest analytical ceiling among 5-seeds."
+    },
+    {
+      "id": "south-4-13",
+      "region": "South",
+      "round": "First Round",
+      "team1": {
+        "id": "nebraska",
+        "name": "Nebraska",
+        "seed": 4
+      },
+      "team2": {
+        "id": "troy",
+        "name": "Troy",
+        "seed": 13
+      },
+      "recommendedPick": "nebraska",
+      "category": "Value Underdog / Spread Play",
+      "confidence": "High",
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Nebraska won its first NCAA Tournament game ever, dismantling Troy 76-47. Pundits praised the Cornhuskers for hitting 14 three-pointers, establishing serious momentum for futures bettors holding their +10000 title slips."
+    },
+    {
+      "id": "south-6-11",
+      "region": "South",
+      "round": "First Round",
+      "team1": {
+        "id": "north-carolina",
+        "name": "North Carolina",
+        "seed": 6
+      },
+      "team2": {
+        "id": "vcu",
+        "name": "VCU",
+        "seed": 11
+      },
+      "recommendedPick": "vcu",
+      "category": "High-Conviction Upset",
+      "confidence": "Very High",
+      "confidencePercentage": 88,
+      "tacticalAdvantage": "VCU erased a 19-point deficit to stun North Carolina 82-78 in overtime. The model aggressively targeted UNC's late-season regression, and VCU cashed massive +250 moneyline tickets to become the darling of the first round."
+    },
+    {
+      "id": "south-3-14",
+      "region": "South",
+      "round": "First Round",
+      "team1": {
+        "id": "illinois",
+        "name": "Illinois",
+        "seed": 3
+      },
+      "team2": {
+        "id": "penn",
+        "name": "Penn",
+        "seed": 14
+      },
+      "recommendedPick": "illinois",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 87,
+      "tacticalAdvantage": "Illinois covered the massive -24.5 spread, scoring a program-record 105 points against Penn. DraftKings data indicates sharp bettors are heavily targeting Illinois at +1600 to win the region."
+    },
+    {
+      "id": "south-7-10",
+      "region": "South",
+      "round": "First Round",
+      "team1": {
+        "id": "saint-marys",
+        "name": "Saint Mary's",
+        "seed": 7
+      },
+      "team2": {
+        "id": "texas-am",
+        "name": "Texas A&M",
+        "seed": 10
+      },
+      "recommendedPick": "saint-marys",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 66,
+      "tacticalAdvantage": "Texas A&M completely dictated the tempo, upsetting Saint Mary's 63-50. Social media praised the Aggies' physical defense, which shut down the analytical edge Saint Mary's held entering the tournament."
+    },
+    {
+      "id": "south-2-15",
+      "region": "South",
+      "round": "First Round",
+      "team1": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
+      "team2": {
+        "id": "idaho",
+        "name": "Idaho",
+        "seed": 15
+      },
+      "recommendedPick": "houston",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 96,
+      "tacticalAdvantage": "Houston effortlessly covered the -23.5 spread, suffocating Idaho 78-47. BetMGM reported a massive $50,000 futures bet on Houston to win the title, confirming the Cougars are the sharpest defensive liability on the board."
+    },
+    {
       "id": "east-1-9",
       "region": "East",
       "round": "Second Round",
@@ -18,7 +658,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 88,
-      "tacticalAdvantage": "Duke advanced to the Sweet 16 with an 81-58 win over TCU. After a quiet first half, Cameron Boozer erupted for 17 of his 19 points in the second half, sparking a massive 37-14 run to securely hit the Intellipick prediction."
+      "tacticalAdvantage": "Duke bounced back from their R64 scare, shooting 61.5% in the second half to crush TCU 81-58. Pundits noted Cameron Boozer's dominance inside completely erased any concerns, solidifying Duke as the odds-on favorite (+475) to reach the Elite Eight."
     },
     {
       "id": "east-4-5",
@@ -38,7 +678,7 @@
       "category": "Upset",
       "confidence": "High",
       "confidencePercentage": 72,
-      "tacticalAdvantage": "KenPom officially flags this as one of the most likely Second Round upsets. The analytics heavily favor St. John's, ranking them No. 17 overall compared to Kansas at No. 21. Intellipick models emphasize that St. John's ranks 28th nationally in offensive rebounding, perfectly positioning them to exploit a notoriously thin Kansas frontcourt that relies too heavily on freshman Darryn Peterson."
+      "tacticalAdvantage": "DraftKings explicitly flags this as a primary upset watch, laying St. John's at a competitive -3.5 spread. Analytics highlight St. John's massive rebounding advantage as the perfect antidote to a Kansas squad leaning entirely on freshman Darryn Peterson."
     },
     {
       "id": "east-3-6",
@@ -58,7 +698,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 76,
-      "tacticalAdvantage": "Michigan State secured a 77-69 victory. Jeremy Fears Jr. set a program NCAA Tournament record with 16 assists, repeatedly feeding Coen Carr (21 points, 10 rebounds) to validate the model's projected edge in half-court execution."
+      "tacticalAdvantage": "Michigan State secured a gritty 77-69 win over Louisville, advancing to their 17th Sweet 16 under Tom Izzo. Social media buzzed over Jeremy Fears Jr.'s 16 assists, proving the Spartans' half-court execution is Final Four caliber."
     },
     {
       "id": "east-2-7",
@@ -78,7 +718,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 82,
-      "tacticalAdvantage": "UConn is a dynastic machine with top-tier two-way efficiency. While UCLA's Tyler Bilodeau provides steady scoring, Intellipick notes UConn ranks significantly higher across all major metrics. DraftKings oddsmakers consistently project UConn as a heavy favorite against any team outside the top 10 due to their overwhelming perimeter length and depth under Dan Hurley."
+      "tacticalAdvantage": "UConn (-4.5) remains the betting favorite, heavily backed by sharp action to cover against UCLA. Pundits project Dan Hurley's dynastic depth and length will overwhelm a Bruins roster trying to compensate for the loss of Tyler Bilodeau."
     },
     {
       "id": "west-1-9",
@@ -98,7 +738,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 92,
-      "tacticalAdvantage": "Arizona ranks in the top five of both offensive and defensive efficiency metrics on KenPom and entered the tournament with 23 straight wins. The Athletic’s bracket models and Intellipick universally predict Arizona's sheer size advantage in the paint and relentless tempo will overpower Utah State's experienced but undersized backcourt."
+      "tacticalAdvantage": "Arizona (-11.5) is now tied with Michigan as the +350 overall title favorite. Betting markets are overwhelmingly fading Utah State, citing Arizona's blistering tempo and massive +17.4 season scoring margin as insurmountable."
     },
     {
       "id": "west-4-12",
@@ -118,7 +758,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 82,
-      "tacticalAdvantage": "Arkansas holds a narrow 37-33 lead at halftime. Intellipick projected Darius Acuff Jr. and the Razorbacks' transition game to safely overpower the Panthers, but High Point is once again proving to be a dangerous Cinderella threat."
+      "tacticalAdvantage": "Arkansas enters as a heavy -12.5 favorite over Cinderella squad High Point. While High Point relies heavily on 3-point variance, CBS Sports analysts predict Arkansas's sheer SEC athleticism and transition game will abruptly end the Panthers' magical run."
     },
     {
       "id": "west-3-11",
@@ -138,7 +778,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 80,
-      "tacticalAdvantage": "Texas pulled off a 74-68 upset over Gonzaga. While Intellipick correctly favored Gonzaga's efficiency on paper, Texas rode First Four momentum and timely shooting from Jordan Pope to close out the Bulldogs in Portland."
+      "tacticalAdvantage": "While the model picked Gonzaga with high confidence, Texas ruined brackets globally by pulling off the 74-68 upset. Pundits highlighted Matas Vokietaitis's length neutralizing Graham Ike, capitalizing on sharp money trends favoring the Longhorns."
     },
     {
       "id": "west-2-7",
@@ -150,7 +790,7 @@
         "seed": 2
       },
       "team2": {
-        "id": "miami-fla",
+        "id": "miami-fl",
         "name": "Miami (Fla.)",
         "seed": 7
       },
@@ -158,7 +798,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 84,
-      "tacticalAdvantage": "Purdue sits at No. 8 in KenPom and possesses a massive interior size advantage. Miami (No. 31 KenPom) relies heavily on guard play, but Intellipick and Torvik models explicitly favor Purdue's historical ability to generate free-throw attempts and dominate the offensive glass against undersized ACC opponents."
+      "tacticalAdvantage": "Purdue is a solid -7.5 favorite after an unbelievable 104-point offensive showing in R64. Action Network analysts love Purdue (+105 to reach Elite Eight), citing Miami's undersized frontcourt as a massive vulnerability against the Boilermakers."
     },
     {
       "id": "midwest-1-9",
@@ -178,7 +818,7 @@
       "category": "Standard Matchup / Spread Play",
       "confidence": "High",
       "confidencePercentage": 78,
-      "tacticalAdvantage": "Michigan dominated Saint Louis 95-72 to hit the Intellipick prediction. Aday Mara and Yaxel Lendeborg anchored an overwhelming interior advantage, punctuated by multiple highlight-reel dunks that showcased the severe talent disparity."
+      "tacticalAdvantage": "Michigan validated their +325 co-favorite title odds, destroying Saint Louis 95-72. 7-foot-3 center Aday Mara registered 16 points and 4 blocks, proving to bettors that Michigan's size advantage is historically dominant."
     },
     {
       "id": "midwest-4-5",
@@ -198,7 +838,7 @@
       "category": "Standard Matchup",
       "confidence": "Medium",
       "confidencePercentage": 65,
-      "tacticalAdvantage": "Expect a high-scoring track meet. Texas Tech shot the lights out (55% from three) in R64, but Alabama possesses the No. 1 scoring offense in the country. Intellipick favors the Crimson Tide's overwhelming pace and depth to simply outscore the Red Raiders."
+      "tacticalAdvantage": "Pundits project this as the highest-scoring game of the weekend. Texas Tech shoots the lights out, but betting markets lean heavily toward Alabama's No. 1 ranked scoring offense to simply outpace the Toppin-less Red Raiders."
     },
     {
       "id": "midwest-3-6",
@@ -218,7 +858,7 @@
       "category": "Upset",
       "confidence": "High",
       "confidencePercentage": 70,
-      "tacticalAdvantage": "KenPom specifically flags this as a highly probable Second Round upset. Tennessee (No. 16 KenPom) holds an edge over Virginia (No. 13 KenPom) in offensive rebounding and dynamic scoring. Intellipick consensus points out that Virginia is statistically the weakest 3-seed in the field, making Tennessee's top-15 defense and the scoring punch of NBA prospect Nate Ament the decisive factors."
+      "tacticalAdvantage": "KenPom consistently flags Virginia as statistically vulnerable. Tennessee's top-15 defense and overwhelming SEC athleticism make them a highly popular sharp pick on Covers.com to secure the minor seeding upset."
     },
     {
       "id": "midwest-2-7",
@@ -238,7 +878,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 74,
-      "tacticalAdvantage": "Kentucky survived an emotional overtime thriller against Santa Clara, but faces a massive step up in defensive pressure. Intellipick identifies Iowa State's elite turnover-forced rate (4th nationally) as the primary catalyst to disrupt Kentucky's half-court sets and secure the win."
+      "tacticalAdvantage": "Iowa State is a steady -4.5 favorite. NBC Sports lock them at -130 to reach the Elite Eight, pointing to their elite 21.9% defensive turnover rate as a nightmare scenario for a Kentucky squad recovering from an overtime thriller."
     },
     {
       "id": "south-1-9",
@@ -258,7 +898,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 94,
-      "tacticalAdvantage": "Florida is the defending national champion and ranks No. 4 in KenPom. Iowa's defense is statistically unequipped to handle Florida's transition speed or interior athleticism. Bracketologists and Intellipick unanimously project Florida to cruise through this matchup due to a glaring talent disparity."
+      "tacticalAdvantage": "Florida is laying a massive -10.5 spread against Iowa. After winning their opener by 59 points, the defending champs are generating immense handle on BetMGM, with pundits uniformly agreeing Iowa lacks the transition speed to keep up."
     },
     {
       "id": "south-4-5",
@@ -278,7 +918,7 @@
       "category": "Upset",
       "confidence": "High",
       "confidencePercentage": 74,
-      "tacticalAdvantage": "Currently a tight defensive battle, Vanderbilt trails Nebraska 41-36 late in the second half. Intellipick's model heavily favored Vanderbilt's free-throw shooting and frontcourt, but they will need a clutch rally to hit this mathematical upset pick."
+      "tacticalAdvantage": "This game holds incredible leverage for the South region. Vanderbilt's No. 12 overall KenPom rating makes them an analytical favorite against a Nebraska team riding pure emotion; sharp bettors are aggressively backing Vandy's physical frontcourt."
     },
     {
       "id": "south-3-11",
@@ -298,7 +938,7 @@
       "category": "Standard Matchup",
       "confidence": "High",
       "confidencePercentage": 82,
-      "tacticalAdvantage": "Illinois cruised to a 76-55 victory. The Illini utilized their overwhelming size and shooting advantage to pull away early, exactly as Intellipick projected against a VCU squad lacking the requisite offensive firepower."
+      "tacticalAdvantage": "Illinois systematically dismantled VCU 76-55, easily covering. Analysts on CBS Sports highlighted Andrej Stojakovic's 16 off-the-bench points as proof that Illinois' depth is far too immense for mid-major Cinderellas to handle."
     },
     {
       "id": "south-2-10",
@@ -315,4 +955,310 @@
         "seed": 10
       },
       "recommendedPick": "houston",
-      "category": "Standard Matchup
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 85,
+      "tacticalAdvantage": "Houston eviscerated Texas A&M 88-57 in a game that was over by halftime. Kelvin Sampson's elite perimeter defense validated bettors holding +1100 title tickets, asserting the Cougars as the team to beat in the South."
+    },
+    {
+      "id": "east-1-5",
+      "region": "East",
+      "round": "Sweet 16",
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "st-johns",
+        "name": "St. John's",
+        "seed": 5
+      },
+      "recommendedPick": "duke",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 76,
+      "tacticalAdvantage": "Despite their R64 scare, Duke rebounded with a 61.5% shooting half to crush TCU. Pundits at BetMGM still heavily favor Duke's No. 2 overall defense and star power to easily bypass St. John's rebounding scheme."
+    },
+    {
+      "id": "east-2-3",
+      "region": "East",
+      "round": "Sweet 16",
+      "team1": {
+        "id": "uconn",
+        "name": "UConn",
+        "seed": 2
+      },
+      "team2": {
+        "id": "michigan-state",
+        "name": "Michigan State",
+        "seed": 3
+      },
+      "recommendedPick": "uconn",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "Tom Izzo brings the Spartans to their 17th Sweet 16, but UConn's dynastic presence remains terrifying. Oddsmakers give UConn the mathematical edge, noting their overwhelming two-way efficiency dwarfs Michigan State's transition defense."
+    },
+    {
+      "id": "west-1-4",
+      "region": "West",
+      "round": "Sweet 16",
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "arkansas",
+        "name": "Arkansas",
+        "seed": 4
+      },
+      "recommendedPick": "arizona",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 75,
+      "tacticalAdvantage": "Arizona has surged to +350 co-favorites to win the National Championship. While Arkansas boasts transition speed, Covers.com analytics universally favor Arizona's massive +17.4 average scoring margin to secure the Elite Eight berth."
+    },
+    {
+      "id": "west-2-11",
+      "region": "West",
+      "round": "Sweet 16",
+      "team1": {
+        "id": "purdue",
+        "name": "Purdue",
+        "seed": 2
+      },
+      "team2": {
+        "id": "texas",
+        "name": "Texas",
+        "seed": 11
+      },
+      "recommendedPick": "purdue",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 78,
+      "tacticalAdvantage": "Texas shocked the world by beating Gonzaga, but Purdue is a schematic nightmare. NBC Sports analysts emphasize that Braden Smith and Purdue's massive frontcourt will induce foul trouble for Texas, making the Boilermakers a solid +105 value to reach the Elite Eight."
+    },
+    {
+      "id": "midwest-1-4",
+      "region": "Midwest",
+      "round": "Sweet 16",
+      "team1": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "team2": {
+        "id": "alabama",
+        "name": "Alabama",
+        "seed": 4
+      },
+      "recommendedPick": "michigan",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 77,
+      "tacticalAdvantage": "Michigan (-130 to win region) dominated Saint Louis and sits atop all rating systems. Pundits project that Michigan's top-tier defensive efficiency and immense interior size will violently exploit Alabama's inability to get consistent stops."
+    },
+    {
+      "id": "midwest-2-6",
+      "region": "Midwest",
+      "round": "Sweet 16",
+      "team1": {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "seed": 2
+      },
+      "team2": {
+        "id": "tennessee",
+        "name": "Tennessee",
+        "seed": 6
+      },
+      "recommendedPick": "iowa-state",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 68,
+      "tacticalAdvantage": "Iowa State remains a massive betting favorite (+245 to win region). Sports Illustrated highlights their 21.9% defensive turnover rate, predicting it will completely disrupt Tennessee's offensive rhythm and secure a Cyclone victory."
+    },
+    {
+      "id": "south-1-5",
+      "region": "South",
+      "round": "Sweet 16",
+      "team1": {
+        "id": "florida",
+        "name": "Florida",
+        "seed": 1
+      },
+      "team2": {
+        "id": "vanderbilt",
+        "name": "Vanderbilt",
+        "seed": 5
+      },
+      "recommendedPick": "florida",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 65,
+      "tacticalAdvantage": "Vanderbilt defeated Florida in the SEC title game, but BetMGM projects the Gators (+700 to win Title) will win the rematch on a neutral court, driven by unmatched transition speed."
+    },
+    {
+      "id": "south-2-3",
+      "region": "South",
+      "round": "Sweet 16",
+      "team1": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
+      "team2": {
+        "id": "illinois",
+        "name": "Illinois",
+        "seed": 3
+      },
+      "recommendedPick": "houston",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 72,
+      "tacticalAdvantage": "Houston (+1100 to win title) is BetMGM's biggest liability. Their 88-57 drubbing of Texas A&M proved their suffocating defense will neutralize Illinois' perimeter scoring, providing a clear mathematical edge."
+    },
+    {
+      "id": "east-1-2",
+      "region": "East",
+      "round": "Elite Eight",
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "uconn",
+        "name": "UConn",
+        "seed": 2
+      },
+      "recommendedPick": "duke",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 55,
+      "tacticalAdvantage": "A heavyweight showdown. Despite early struggles, Duke's +425 futures odds reflect unmatched star power. Analysts project Cameron Boozer to edge out UConn's depth in a razor-thin contest for the Final Four."
+    },
+    {
+      "id": "west-1-2",
+      "region": "West",
+      "round": "Elite Eight",
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "purdue",
+        "name": "Purdue",
+        "seed": 2
+      },
+      "recommendedPick": "arizona",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 55,
+      "tacticalAdvantage": "Purdue has surged to +1600, but Arizona is tied for the overall tournament favorite (+350). DraftKings sentiment heavily favors Arizona's top-10 shooting efficiency to outpace Purdue's interior-heavy attack."
+    },
+    {
+      "id": "midwest-1-2",
+      "region": "Midwest",
+      "round": "Elite Eight",
+      "team1": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "team2": {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "seed": 2
+      },
+      "recommendedPick": "michigan",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 55,
+      "tacticalAdvantage": "Michigan is the consensus betting favorite (-130) to win the Midwest. While Iowa State is an analytical darling, Michigan's immense 7-foot-3 size advantage and 50.7% field-goal rate make them the sharp data-driven pick to advance."
+    },
+    {
+      "id": "south-1-2",
+      "region": "South",
+      "round": "Elite Eight",
+      "team1": {
+        "id": "florida",
+        "name": "Florida",
+        "seed": 1
+      },
+      "team2": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
+      "recommendedPick": "houston",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 60,
+      "tacticalAdvantage": "Florida holds shorter title odds (+700), but Houston (+1100) carries massive sharp money liability. Pundits predict Houston's physically suffocating guards will end the defending champions' run in a brutal, low-scoring war."
+    },
+    {
+      "id": "ff-0",
+      "region": "Final Four",
+      "round": "Final Four",
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
+      "recommendedPick": "duke",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 74,
+      "tacticalAdvantage": "Houston boasts the best defense in the field, but Duke's offensive ceiling is simply too high. BetMGM highlights Cameron Boozer's ability to create his own shot as the definitive market-backed edge to reach the Championship."
+    },
+    {
+      "id": "ff-1",
+      "region": "Final Four",
+      "round": "Final Four",
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "recommendedPick": "arizona",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 55,
+      "tacticalAdvantage": "The ultimate clash between the +350 co-favorites. While Michigan leads the handle percentage, analysts at Covers.com note Arizona's unrelenting tempo and superior guard play give them the slightest edge over Michigan's massive size."
+    },
+    {
+      "id": "championship",
+      "region": "Championship",
+      "round": "National Championship",
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "recommendedPick": "duke",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 60,
+      "tacticalAdvantage": "Arizona has leapfrogged Duke in the DraftKings futures market, but Duke's raw talent is undeniable. Overcoming a historic Round 1 scare proved their resilience, and sharp money continues to back Cameron Boozer's sheer dominance to cut down the nets."
+    }
+  ]
+}
