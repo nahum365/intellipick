@@ -177,22 +177,26 @@ body {
   background: var(--surface);
   border-top: 1px solid var(--border);
   padding: 10px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   font-size: 14px;
   flex-shrink: 0;
 }
 
 .insights-bar__main {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
 }
 
 .insights-bar__footer {
   font-size: 11px;
   color: var(--text-muted);
-  white-space: nowrap;
-  margin-left: auto;
+  text-align: center;
+  border-top: 1px solid var(--border-light);
+  padding-top: 6px;
 }
 
 .insights-bar__footer-link {

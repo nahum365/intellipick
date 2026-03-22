@@ -248,11 +248,6 @@
 
   .insights-bar__footer {
     font-size: 10px;
-    margin-left: 0;
-    text-align: center;
-    width: 100%;
-    border-top: 1px solid var(--border-light);
-    padding-top: 6px;
   }
 
   /* --- Bottom sheet --- */
