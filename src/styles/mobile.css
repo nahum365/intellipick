@@ -248,7 +248,10 @@
   }
 
   .insights-bar__footer {
+    position: static;
+    transform: none;
     font-size: 10px;
+    text-align: center;
   }
 
   /* --- Bottom sheet --- */
