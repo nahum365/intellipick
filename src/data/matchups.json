@@ -1,235 +1,318 @@
 {
   "matchups": [
     {
-      "id": "east-1-16",
+      "id": "east-1-9",
       "region": "East",
-      "round": "First Round",
-      "team1": { "id": "duke", "name": "Duke", "seed": 1 },
-      "team2": { "id": "siena", "name": "Siena", "seed": 16 },
+      "round": "Second Round",
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "tcu",
+        "name": "TCU",
+        "seed": 9
+      },
       "recommendedPick": "duke",
       "category": "Standard Matchup",
       "confidence": "Very High",
-      "confidencePercentage": 99,
-      "tacticalAdvantage": "Duke defeated Siena 71-65. Siena led 43-32 at halftime, but Duke used an 11-0 run in the final 8 minutes to win. Cameron Boozer recorded 22 points and 13 rebounds (AP News). Intellipick correctly identified Boozer as the overwhelming anchor."
+      "confidencePercentage": 88,
+      "tacticalAdvantage": "Duke advanced to the Sweet 16 with an 81-58 win over TCU. After a quiet first half, Cameron Boozer erupted for 17 of his 19 points in the second half, sparking a massive 37-14 run to securely hit the Intellipick prediction."
     },
     {
-      "id": "east-8-9",
+      "id": "east-4-5",
       "region": "East",
-      "round": "First Round",
-      "team1": { "id": "ohio-state", "name": "Ohio State", "seed": 8 },
-      "team2": { "id": "tcu", "name": "TCU", "seed": 9 },
-      "recommendedPick": "tcu",
-      "category": "Standard Matchup",
-      "confidence": "Medium",
-      "confidencePercentage": 66,
-      "tacticalAdvantage": "TCU defeated Ohio State 66-64. Xavier Edmonds scored a game-winning layup with 4.3 seconds remaining. Intellipick correctly favored TCU's physical style, which heavily exploited Ohio State's 174th-ranked defensive efficiency."
-    },
-    {
-      "id": "east-5-12",
-      "region": "East",
-      "round": "First Round",
-      "team1": { "id": "st-johns", "name": "St. John's", "seed": 5 },
-      "team2": { "id": "northern-iowa", "name": "Northern Iowa", "seed": 12 },
+      "round": "Second Round",
+      "team1": {
+        "id": "kansas",
+        "name": "Kansas",
+        "seed": 4
+      },
+      "team2": {
+        "id": "st-johns",
+        "name": "St. John's",
+        "seed": 5
+      },
       "recommendedPick": "st-johns",
-      "category": "Poisoned Value Trap (Avoid Upset)",
+      "category": "Upset",
       "confidence": "High",
-      "confidencePercentage": 85,
-      "tacticalAdvantage": "St. John's defeated Northern Iowa 79-53, starting the game on a 13-0 run. Zuby Ejiofor recorded 14 points and 11 rebounds. Intellipick accurately assessed St. John's offensive rebounding advantage to correctly advise avoiding the trendy upset trap."
+      "confidencePercentage": 72,
+      "tacticalAdvantage": "KenPom officially flags this as one of the most likely Second Round upsets. The analytics heavily favor St. John's, ranking them No. 17 overall compared to Kansas at No. 21. Intellipick models emphasize that St. John's ranks 28th nationally in offensive rebounding, perfectly positioning them to exploit a notoriously thin Kansas frontcourt that relies too heavily on freshman Darryn Peterson."
     },
     {
-      "id": "east-4-13",
+      "id": "east-3-6",
       "region": "East",
-      "round": "First Round",
-      "team1": { "id": "kansas", "name": "Kansas", "seed": 4 },
-      "team2": { "id": "california-baptist", "name": "California Baptist", "seed": 13 },
-      "recommendedPick": "kansas",
-      "category": "Standard Matchup",
-      "confidence": "High",
-      "confidencePercentage": 80,
-      "tacticalAdvantage": "Kansas defeated California Baptist 68-60. Kansas initially led by 26 points before CBU cut the lead to six. Darryn Peterson scored 28 points. Intellipick accurately highlighted Peterson as the definitive talent gap."
-    },
-    {
-      "id": "east-6-11",
-      "region": "East",
-      "round": "First Round",
-      "team1": { "id": "louisville", "name": "Louisville", "seed": 6 },
-      "team2": { "id": "south-florida", "name": "South Florida", "seed": 11 },
-      "recommendedPick": "south-florida",
-      "category": "High-Conviction Upset",
-      "confidence": "High",
-      "confidencePercentage": 75,
-      "tacticalAdvantage": "Louisville ultimately defeated South Florida 83-79. Although the Intellipick outright upset prediction fell short, the model correctly anticipated South Florida's blistering pace causing massive disruption, as USF erased a 23-point deficit down to four points late."
-    },
-    {
-      "id": "east-3-14",
-      "region": "East",
-      "round": "First Round",
-      "team1": { "id": "michigan-state", "name": "Michigan State", "seed": 3 },
-      "team2": { "id": "north-dakota-state", "name": "North Dakota State", "seed": 14 },
+      "round": "Second Round",
+      "team1": {
+        "id": "michigan-state",
+        "name": "Michigan State",
+        "seed": 3
+      },
+      "team2": {
+        "id": "louisville",
+        "name": "Louisville",
+        "seed": 6
+      },
       "recommendedPick": "michigan-state",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 88,
-      "tacticalAdvantage": "Michigan State defeated North Dakota State 92-67, shooting 58.9% from the floor and scoring 44 points in the paint. Intellipick correctly anticipated Michigan State's top-tier efficiency effortlessly overwhelming the Summit League champions."
+      "confidencePercentage": 76,
+      "tacticalAdvantage": "Michigan State secured a 77-69 victory. Jeremy Fears Jr. set a program NCAA Tournament record with 16 assists, repeatedly feeding Coen Carr (21 points, 10 rebounds) to validate the model's projected edge in half-court execution."
     },
     {
-      "id": "east-7-10",
+      "id": "east-2-7",
       "region": "East",
-      "round": "First Round",
-      "team1": { "id": "ucla", "name": "UCLA", "seed": 7 },
-      "team2": { "id": "ucf", "name": "UCF", "seed": 10 },
-      "recommendedPick": "ucla",
-      "category": "Standard Matchup",
-      "confidence": "Medium",
-      "confidencePercentage": 68,
-      "tacticalAdvantage": "UCLA defeated UCF 75-71. Despite missing leading scorer Tyler Bilodeau, Eric Dailey Jr. stepped up with 20 points. Intellipick correctly picked the Bruins to advance despite the tight historical margins of a 7-vs-10 matchup."
-    },
-    {
-      "id": "east-2-15",
-      "region": "East",
-      "round": "First Round",
-      "team1": { "id": "uconn", "name": "UConn", "seed": 2 },
-      "team2": { "id": "furman", "name": "Furman", "seed": 15 },
+      "round": "Second Round",
+      "team1": {
+        "id": "uconn",
+        "name": "UConn",
+        "seed": 2
+      },
+      "team2": {
+        "id": "ucla",
+        "name": "UCLA",
+        "seed": 7
+      },
       "recommendedPick": "uconn",
       "category": "Standard Matchup",
-      "confidence": "Very High",
-      "confidencePercentage": 96,
-      "tacticalAdvantage": "UConn defeated Furman 82-71. Tarris Reed Jr. carried the Huskies with an absurd 31 points and 27 rebounds. Intellipick correctly identified UConn's overwhelming size and depth under Dan Hurley securing the win."
-    },
-    {
-      "id": "south-1-16",
-      "region": "South",
-      "round": "First Round",
-      "team1": { "id": "florida", "name": "Florida", "seed": 1 },
-      "team2": { "id": "prairie-view-am", "name": "Prairie View A&M", "seed": 16 },
-      "recommendedPick": "florida",
-      "category": "Standard Matchup",
-      "confidence": "Very High",
-      "confidencePercentage": 97,
-      "tacticalAdvantage": "Florida defeated Prairie View A&M 114-55, marking the second-largest margin in tournament history. Intellipick correctly anticipated an immense blowout by the No. 4 overall KenPom team."
-    },
-    {
-      "id": "south-8-9",
-      "region": "South",
-      "round": "First Round",
-      "team1": { "id": "clemson", "name": "Clemson", "seed": 8 },
-      "team2": { "id": "iowa", "name": "Iowa", "seed": 9 },
-      "recommendedPick": "iowa",
-      "category": "Standard Matchup",
-      "confidence": "Medium",
-      "confidencePercentage": 66,
-      "tacticalAdvantage": "Iowa defeated Clemson 67-61, securing a +13 rebounding margin. Intellipick accurately identified Iowa as the high-confidence metric play capitalizing on Clemson's injuries."
-    },
-    {
-      "id": "south-5-12",
-      "region": "South",
-      "round": "First Round",
-      "team1": { "id": "vanderbilt", "name": "Vanderbilt", "seed": 5 },
-      "team2": { "id": "mcneese", "name": "McNeese", "seed": 12 },
-      "recommendedPick": "vanderbilt",
-      "category": "Poisoned Value Trap (Avoid Upset)",
       "confidence": "High",
-      "confidencePercentage": 81,
-      "tacticalAdvantage": "Vanderbilt defeated McNeese 78-68, safely avoiding the 12-over-5 trap exactly as Intellipick projected based on Vanderbilt's severe underseeding."
+      "confidencePercentage": 82,
+      "tacticalAdvantage": "UConn is a dynastic machine with top-tier two-way efficiency. While UCLA's Tyler Bilodeau provides steady scoring, Intellipick notes UConn ranks significantly higher across all major metrics. DraftKings oddsmakers consistently project UConn as a heavy favorite against any team outside the top 10 due to their overwhelming perimeter length and depth under Dan Hurley."
     },
     {
-      "id": "south-4-13",
-      "region": "South",
-      "round": "First Round",
-      "team1": { "id": "nebraska", "name": "Nebraska", "seed": 4 },
-      "team2": { "id": "troy", "name": "Troy", "seed": 13 },
-      "recommendedPick": "nebraska",
-      "category": "Value Underdog / Spread Play",
-      "confidence": "High",
-      "confidencePercentage": 80,
-      "tacticalAdvantage": "Nebraska defeated Troy 76-47 for its first NCAA Tournament win ever. Intellipick correctly picked Nebraska to advance, though Troy failed to cover the value spread as projected."
-    },
-    {
-      "id": "south-6-11",
-      "region": "South",
-      "round": "First Round",
-      "team1": { "id": "north-carolina", "name": "North Carolina", "seed": 6 },
-      "team2": { "id": "vcu", "name": "VCU", "seed": 11 },
-      "recommendedPick": "vcu",
-      "category": "High-Conviction Upset",
-      "confidence": "Very High",
-      "confidencePercentage": 88,
-      "tacticalAdvantage": "VCU defeated North Carolina 82-78 in overtime, erasing a 19-point deficit. Intellipick correctly flagged UNC's late-season regression and identified this as the strongest First-Round leverage upset."
-    },
-    {
-      "id": "south-3-14",
-      "region": "South",
-      "round": "First Round",
-      "team1": { "id": "illinois", "name": "Illinois", "seed": 3 },
-      "team2": { "id": "penn", "name": "Penn", "seed": 14 },
-      "recommendedPick": "illinois",
-      "category": "Standard Matchup",
-      "confidence": "High",
-      "confidencePercentage": 87,
-      "tacticalAdvantage": "Illinois defeated Penn 105-70, breaking a program tournament scoring record. Intellipick accurately forecasted Illinois' No. 7 KenPom offense easily destroying Penn."
-    },
-    {
-      "id": "south-7-10",
-      "region": "South",
-      "round": "First Round",
-      "team1": { "id": "saint-marys", "name": "Saint Mary's", "seed": 7 },
-      "team2": { "id": "texas-am", "name": "Texas A&M", "seed": 10 },
-      "recommendedPick": "saint-marys",
-      "category": "Standard Matchup",
-      "confidence": "Medium",
-      "confidencePercentage": 66,
-      "tacticalAdvantage": "Texas A&M defeated Saint Mary's 63-50. The Intellipick projection favoring Saint Mary's mathematical edge was incorrect, as Texas A&M completely dictated the physical defensive tempo."
-    },
-    {
-      "id": "south-2-15",
-      "region": "South",
-      "round": "First Round",
-      "team1": { "id": "houston", "name": "Houston", "seed": 2 },
-      "team2": { "id": "idaho", "name": "Idaho", "seed": 15 },
-      "recommendedPick": "houston",
-      "category": "Standard Matchup",
-      "confidence": "Very High",
-      "confidencePercentage": 96,
-      "tacticalAdvantage": "Houston defeated Idaho 78-47, holding Idaho to 28.6% shooting. Intellipick correctly projected Houston covering the massive spread backed by their No. 5 KenPom ranking."
-    },
-    {
-      "id": "west-1-16",
+      "id": "west-1-9",
       "region": "West",
-      "round": "First Round",
-      "team1": { "id": "arizona", "name": "Arizona", "seed": 1 },
-      "team2": { "id": "liu", "name": "LIU", "seed": 16 },
+      "round": "Second Round",
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "utah-state",
+        "name": "Utah State",
+        "seed": 9
+      },
       "recommendedPick": "arizona",
       "category": "Standard Matchup",
       "confidence": "Very High",
-      "confidencePercentage": 99,
-      "tacticalAdvantage": "Arizona defeated LIU 92-58, building a 27-point halftime lead. Intellipick accurately projected a massive blowout for the Wildcats based on their top-five KenPom efficiency."
+      "confidencePercentage": 92,
+      "tacticalAdvantage": "Arizona ranks in the top five of both offensive and defensive efficiency metrics on KenPom and entered the tournament with 23 straight wins. The Athletic’s bracket models and Intellipick universally predict Arizona's sheer size advantage in the paint and relentless tempo will overpower Utah State's experienced but undersized backcourt."
     },
     {
-      "id": "west-8-9",
+      "id": "west-4-12",
       "region": "West",
-      "round": "First Round",
-      "team1": { "id": "villanova", "name": "Villanova", "seed": 8 },
-      "team2": { "id": "utah-state", "name": "Utah State", "seed": 9 },
-      "recommendedPick": "utah-state",
-      "category": "Statistical Favorite",
-      "confidence": "Medium",
-      "confidencePercentage": 68,
-      "tacticalAdvantage": "Utah State defeated Villanova 86-76, driven by Mason Falslev's 22 points. Intellipick correctly targeted Utah State as the strong analytical value play against a Villanova team reliant on three-point variance."
-    },
-    {
-      "id": "west-5-12",
-      "region": "West",
-      "round": "First Round",
-      "team1": { "id": "wisconsin", "name": "Wisconsin", "seed": 5 },
-      "team2": { "id": "high-point", "name": "High Point", "seed": 12 },
-      "recommendedPick": "wisconsin",
+      "round": "Second Round",
+      "team1": {
+        "id": "arkansas",
+        "name": "Arkansas",
+        "seed": 4
+      },
+      "team2": {
+        "id": "high-point",
+        "name": "High Point",
+        "seed": 12
+      },
+      "recommendedPick": "arkansas",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 72,
-      "tacticalAdvantage": "High Point defeated Wisconsin 83-82 on a late fast-break layup. While the Intellipick prediction favored Wisconsin's Big Ten pedigree, High Point's momentum and late-game execution forced the 12-over-5 upset."
+      "confidencePercentage": 82,
+      "tacticalAdvantage": "Arkansas holds a narrow 37-33 lead at halftime. Intellipick projected Darius Acuff Jr. and the Razorbacks' transition game to safely overpower the Panthers, but High Point is once again proving to be a dangerous Cinderella threat."
     },
     {
-      "id": "west-4-13",
+      "id": "west-3-11",
       "region": "West",
-      "round": "First Round",
-      "team
+      "round": "Second Round",
+      "team1": {
+        "id": "gonzaga",
+        "name": "Gonzaga",
+        "seed": 3
+      },
+      "team2": {
+        "id": "texas",
+        "name": "Texas",
+        "seed": 11
+      },
+      "recommendedPick": "gonzaga",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Texas pulled off a 74-68 upset over Gonzaga. While Intellipick correctly favored Gonzaga's efficiency on paper, Texas rode First Four momentum and timely shooting from Jordan Pope to close out the Bulldogs in Portland."
+    },
+    {
+      "id": "west-2-7",
+      "region": "West",
+      "round": "Second Round",
+      "team1": {
+        "id": "purdue",
+        "name": "Purdue",
+        "seed": 2
+      },
+      "team2": {
+        "id": "miami-fla",
+        "name": "Miami (Fla.)",
+        "seed": 7
+      },
+      "recommendedPick": "purdue",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 84,
+      "tacticalAdvantage": "Purdue sits at No. 8 in KenPom and possesses a massive interior size advantage. Miami (No. 31 KenPom) relies heavily on guard play, but Intellipick and Torvik models explicitly favor Purdue's historical ability to generate free-throw attempts and dominate the offensive glass against undersized ACC opponents."
+    },
+    {
+      "id": "midwest-1-9",
+      "region": "Midwest",
+      "round": "Second Round",
+      "team1": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "team2": {
+        "id": "saint-louis",
+        "name": "Saint Louis",
+        "seed": 9
+      },
+      "recommendedPick": "michigan",
+      "category": "Standard Matchup / Spread Play",
+      "confidence": "High",
+      "confidencePercentage": 78,
+      "tacticalAdvantage": "Michigan dominated Saint Louis 95-72 to hit the Intellipick prediction. Aday Mara and Yaxel Lendeborg anchored an overwhelming interior advantage, punctuated by multiple highlight-reel dunks that showcased the severe talent disparity."
+    },
+    {
+      "id": "midwest-4-5",
+      "region": "Midwest",
+      "round": "Second Round",
+      "team1": {
+        "id": "alabama",
+        "name": "Alabama",
+        "seed": 4
+      },
+      "team2": {
+        "id": "texas-tech",
+        "name": "Texas Tech",
+        "seed": 5
+      },
+      "recommendedPick": "alabama",
+      "category": "Standard Matchup",
+      "confidence": "Medium",
+      "confidencePercentage": 65,
+      "tacticalAdvantage": "Expect a high-scoring track meet. Texas Tech shot the lights out (55% from three) in R64, but Alabama possesses the No. 1 scoring offense in the country. Intellipick favors the Crimson Tide's overwhelming pace and depth to simply outscore the Red Raiders."
+    },
+    {
+      "id": "midwest-3-6",
+      "region": "Midwest",
+      "round": "Second Round",
+      "team1": {
+        "id": "virginia",
+        "name": "Virginia",
+        "seed": 3
+      },
+      "team2": {
+        "id": "tennessee",
+        "name": "Tennessee",
+        "seed": 6
+      },
+      "recommendedPick": "tennessee",
+      "category": "Upset",
+      "confidence": "High",
+      "confidencePercentage": 70,
+      "tacticalAdvantage": "KenPom specifically flags this as a highly probable Second Round upset. Tennessee (No. 16 KenPom) holds an edge over Virginia (No. 13 KenPom) in offensive rebounding and dynamic scoring. Intellipick consensus points out that Virginia is statistically the weakest 3-seed in the field, making Tennessee's top-15 defense and the scoring punch of NBA prospect Nate Ament the decisive factors."
+    },
+    {
+      "id": "midwest-2-7",
+      "region": "Midwest",
+      "round": "Second Round",
+      "team1": {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "seed": 2
+      },
+      "team2": {
+        "id": "kentucky",
+        "name": "Kentucky",
+        "seed": 7
+      },
+      "recommendedPick": "iowa-state",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 74,
+      "tacticalAdvantage": "Kentucky survived an emotional overtime thriller against Santa Clara, but faces a massive step up in defensive pressure. Intellipick identifies Iowa State's elite turnover-forced rate (4th nationally) as the primary catalyst to disrupt Kentucky's half-court sets and secure the win."
+    },
+    {
+      "id": "south-1-9",
+      "region": "South",
+      "round": "Second Round",
+      "team1": {
+        "id": "florida",
+        "name": "Florida",
+        "seed": 1
+      },
+      "team2": {
+        "id": "iowa",
+        "name": "Iowa",
+        "seed": 9
+      },
+      "recommendedPick": "florida",
+      "category": "Standard Matchup",
+      "confidence": "Very High",
+      "confidencePercentage": 94,
+      "tacticalAdvantage": "Florida is the defending national champion and ranks No. 4 in KenPom. Iowa's defense is statistically unequipped to handle Florida's transition speed or interior athleticism. Bracketologists and Intellipick unanimously project Florida to cruise through this matchup due to a glaring talent disparity."
+    },
+    {
+      "id": "south-4-5",
+      "region": "South",
+      "round": "Second Round",
+      "team1": {
+        "id": "nebraska",
+        "name": "Nebraska",
+        "seed": 4
+      },
+      "team2": {
+        "id": "vanderbilt",
+        "name": "Vanderbilt",
+        "seed": 5
+      },
+      "recommendedPick": "vanderbilt",
+      "category": "Upset",
+      "confidence": "High",
+      "confidencePercentage": 74,
+      "tacticalAdvantage": "Currently a tight defensive battle, Vanderbilt trails Nebraska 41-36 late in the second half. Intellipick's model heavily favored Vanderbilt's free-throw shooting and frontcourt, but they will need a clutch rally to hit this mathematical upset pick."
+    },
+    {
+      "id": "south-3-11",
+      "region": "South",
+      "round": "Second Round",
+      "team1": {
+        "id": "illinois",
+        "name": "Illinois",
+        "seed": 3
+      },
+      "team2": {
+        "id": "vcu",
+        "name": "VCU",
+        "seed": 11
+      },
+      "recommendedPick": "illinois",
+      "category": "Standard Matchup",
+      "confidence": "High",
+      "confidencePercentage": 82,
+      "tacticalAdvantage": "Illinois cruised to a 76-55 victory. The Illini utilized their overwhelming size and shooting advantage to pull away early, exactly as Intellipick projected against a VCU squad lacking the requisite offensive firepower."
+    },
+    {
+      "id": "south-2-10",
+      "region": "South",
+      "round": "Second Round",
+      "team1": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
+      "team2": {
+        "id": "texas-am",
+        "name": "Texas A&M",
+        "seed": 10
+      },
+      "recommendedPick": "houston",
+      "category": "Standard Matchup
