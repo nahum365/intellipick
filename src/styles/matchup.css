@@ -309,7 +309,6 @@
   border-top: 1px solid var(--border-light);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 4px;
 }
 
@@ -322,6 +321,11 @@
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text);
+  flex: 1;
+}
+
+.matchup-card__odds-bar .matchup-card__odds-pct:last-child {
+  text-align: right;
 }
 
 .matchup-card__odds-pct--up {
