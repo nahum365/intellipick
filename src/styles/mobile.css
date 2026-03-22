@@ -210,13 +210,12 @@
     cursor: pointer;
   }
 
-  /* --- Insights bar: two-row mobile layout --- */
+  /* --- Insights bar: three-row mobile layout (stats / status / footer) --- */
   .insights-bar {
     grid-column: 1;
     grid-row: 4;
     padding: 8px 12px;
     padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-    gap: 6px;
   }
 
   .insights-bar__main {
@@ -230,12 +229,14 @@
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
+    margin-right: 0;
   }
 
   .status-boxes {
     gap: 6px;
     flex-wrap: wrap;
     justify-content: center;
+    margin-left: 0;
   }
 
   .status-box__detail {

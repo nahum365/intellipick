@@ -106,18 +106,18 @@ export function updateInsightsBar(bar) {
 
   bar.innerHTML = '';
 
-  // Main row: stats + status boxes
+  // Single row: stats | footer | status boxes (wraps on narrow screens)
   const main = document.createElement('div');
   main.className = 'insights-bar__main';
   main.appendChild(left);
-  main.appendChild(buildStatusBoxes());
-  bar.appendChild(main);
 
-  // Footer row: centered attribution
   const footer = document.createElement('div');
   footer.className = 'insights-bar__footer';
   footer.innerHTML = 'Made with Gemini and Claude by <a href="https://github.com/nahum365" class="insights-bar__footer-link" target="_blank" rel="noopener">nahum365</a> &nbsp;&middot;&nbsp; <a href="https://github.com/nahum365/intellipick" class="insights-bar__footer-link" target="_blank" rel="noopener">GitHub \u2197</a>';
-  bar.appendChild(footer);
+  main.appendChild(footer);
+
+  main.appendChild(buildStatusBoxes());
+  bar.appendChild(main);
 }
 
 function timeAgo(ts) {
