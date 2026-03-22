@@ -263,6 +263,9 @@ function rerender() {
   if (newMain) {
     newMain.scrollTop = savedScrolls.mainY || 0;
   }
+
+  // Re-attach dashboard if it was somehow removed during re-render
+  showDashboard();
 }
 
 /**

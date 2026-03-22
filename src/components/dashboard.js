@@ -17,6 +17,9 @@ const ROUND_LABELS = {
   CHAMP: 'National Championship',
 };
 
+// Module-level reference so showDashboard() can be called idempotently
+let _overlay = null;
+
 function laterRoundId(region, round, position) {
   return `${region.toLowerCase()}-r${round}-${position}`;
 }
@@ -126,7 +129,6 @@ function generateNarrative(stats, roundKey) {
   const roundLabel = ROUND_LABELS[roundKey] || roundKey;
   const parts = [];
 
-  // Tournament stage
   if (stats.live > 0) {
     parts.push(`The <strong>${roundLabel}</strong> is live right now — ${stats.live} game${stats.live !== 1 ? 's' : ''} in progress.`);
   } else if (stats.pending > 0) {
@@ -135,7 +137,6 @@ function generateNarrative(stats, roundKey) {
     parts.push(`The <strong>${roundLabel}</strong> is complete.`);
   }
 
-  // Performance
   if (stats.decided > 0) {
     const pct = stats.winPct;
     const tone = pct >= 70 ? 'running hot' : pct >= 50 ? 'holding steady' : 'having a rough go';
@@ -144,7 +145,6 @@ function generateNarrative(stats, roundKey) {
     parts.push(`IntelliPick has picks ready for every matchup — games haven't tipped off yet.`);
   }
 
-  // Upset tracker
   if (stats.upsets > 0) {
     if (stats.upsetDecided > 0) {
       parts.push(`Of ${stats.upsets} upset calls, <strong>${stats.upsetHits} have hit</strong> and ${stats.upsetMisses} have missed.`);
@@ -160,7 +160,6 @@ function getInterestingMatchups() {
   const seen = new Set();
   const result = [];
 
-  // Helper to push unique matchups
   function push(m) {
     if (!m || seen.has(m.id)) return;
     seen.add(m.id);
@@ -170,20 +169,20 @@ function getInterestingMatchups() {
   const activeKey = getActiveRoundKey();
   const activeMatchups = getAllMatchupsForRound(activeKey);
 
-  // Priority 1: live/halftime games from active round
+  // Priority 1: live/halftime games
   for (const m of activeMatchups) {
     const score = getScoreForMatchup(m.id);
     if (score && (score.status === 'live' || score.status === 'halftime')) push(m);
   }
 
-  // Priority 2: upset picks with high confidence from active round
+  // Priority 2: high-confidence upset picks
   const upsets = getUpsetAlerts();
   const upsetIds = new Set(upsets.filter(u => u.confidencePercentage >= 65).map(u => u.matchupId));
   for (const m of activeMatchups) {
     if (upsetIds.has(m.id)) push(m);
   }
 
-  // Priority 3: any high-confidence upcoming games from active round, sorted by confidence desc
+  // Priority 3: remaining, sorted by confidence desc
   const remaining = activeMatchups
     .filter(m => !seen.has(m.id))
     .sort((a, b) => (b.confidencePercentage || 0) - (a.confidencePercentage || 0));
@@ -192,25 +191,20 @@ function getInterestingMatchups() {
   return result.slice(0, 8);
 }
 
-export function isDashboardDismissed() {
-  return !!sessionStorage.getItem(SESSION_KEY);
-}
-
-export function showDashboard() {
-  if (isDashboardDismissed()) return;
-
-  if (!document.body) return;
-
+function buildOverlay() {
   const overlay = document.createElement('div');
   overlay.className = 'dashboard-overlay';
 
   function dismiss() {
     sessionStorage.setItem(SESSION_KEY, '1');
     overlay.classList.remove('dashboard-overlay--visible');
-    overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
+    setTimeout(() => {
+      overlay.remove();
+      _overlay = null;
+    }, 300);
   }
 
-  // --- Header ---
+  // Header
   const header = document.createElement('div');
   header.className = 'dashboard__header';
 
@@ -227,7 +221,7 @@ export function showDashboard() {
 
   overlay.appendChild(header);
 
-  // --- Body ---
+  // Body
   const body = document.createElement('div');
   body.className = 'dashboard__body';
 
@@ -332,19 +326,16 @@ export function showDashboard() {
       teams.innerHTML = `<strong>${u.team.seed}</strong> ${u.team.name} over <strong>${u.opponent.seed}</strong> ${u.opponent.name}`;
       row.appendChild(teams);
 
-      // Round label
       const roundSpan = document.createElement('span');
       roundSpan.className = 'dashboard__upset-row__round';
       roundSpan.textContent = u.round === 'First Round' ? 'R64' : u.round === 'Second Round' ? 'R32' : u.round;
       row.appendChild(roundSpan);
 
-      // Confidence
       const conf = document.createElement('span');
       conf.className = 'dashboard__upset-row__conf';
       conf.textContent = `${u.confidencePercentage}%`;
       row.appendChild(conf);
 
-      // Outcome if final
       const matchup = getR64Matchup(u.matchupId);
       const score = getScoreForMatchup(u.matchupId);
       if (score && score.status === 'final' && matchup) {
@@ -367,12 +358,37 @@ export function showDashboard() {
   }
 
   overlay.appendChild(body);
-  document.body.appendChild(overlay);
+  return overlay;
+}
 
-  // Trigger fade-in after paint
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      overlay.classList.add('dashboard-overlay--visible');
-    });
-  });
+export function isDashboardDismissed() {
+  return !!sessionStorage.getItem(SESSION_KEY);
+}
+
+/**
+ * Show the dashboard overlay. Idempotent — safe to call on every re-render.
+ * If already visible and attached, does nothing. If detached (e.g. wiped by
+ * a re-render), re-attaches the existing element without rebuilding it.
+ */
+export function showDashboard() {
+  if (isDashboardDismissed()) return;
+  if (!document.body) return;
+
+  // Already in the DOM — nothing to do
+  if (_overlay && _overlay.isConnected) return;
+
+  // Build fresh overlay if we don't have one yet
+  if (!_overlay) {
+    _overlay = buildOverlay();
+  }
+
+  // (Re-)attach to body
+  document.body.appendChild(_overlay);
+
+  // Fade in only if not already visible
+  if (!_overlay.classList.contains('dashboard-overlay--visible')) {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (_overlay) _overlay.classList.add('dashboard-overlay--visible');
+    }));
+  }
 }
