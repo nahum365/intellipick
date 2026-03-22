@@ -4,8 +4,16 @@
       "id": "east-1-16",
       "region": "East",
       "round": "First Round",
-      "team1": { "id": "duke", "name": "Duke", "seed": 1 },
-      "team2": { "id": "siena", "name": "Siena", "seed": 16 },
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "siena",
+        "name": "Siena",
+        "seed": 16
+      },
       "recommendedPick": "duke",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -16,8 +24,16 @@
       "id": "east-8-9",
       "region": "East",
       "round": "First Round",
-      "team1": { "id": "ohio-state", "name": "Ohio State", "seed": 8 },
-      "team2": { "id": "tcu", "name": "TCU", "seed": 9 },
+      "team1": {
+        "id": "ohio-state",
+        "name": "Ohio State",
+        "seed": 8
+      },
+      "team2": {
+        "id": "tcu",
+        "name": "TCU",
+        "seed": 9
+      },
       "recommendedPick": "tcu",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -28,8 +44,16 @@
       "id": "east-5-12",
       "region": "East",
       "round": "First Round",
-      "team1": { "id": "st-johns", "name": "St. John's", "seed": 5 },
-      "team2": { "id": "northern-iowa", "name": "Northern Iowa", "seed": 12 },
+      "team1": {
+        "id": "st-johns",
+        "name": "St. John's",
+        "seed": 5
+      },
+      "team2": {
+        "id": "northern-iowa",
+        "name": "Northern Iowa",
+        "seed": 12
+      },
       "recommendedPick": "st-johns",
       "category": "Poisoned Value Trap (Avoid Upset)",
       "confidence": "High",
@@ -40,8 +64,16 @@
       "id": "east-4-13",
       "region": "East",
       "round": "First Round",
-      "team1": { "id": "kansas", "name": "Kansas", "seed": 4 },
-      "team2": { "id": "california-baptist", "name": "California Baptist", "seed": 13 },
+      "team1": {
+        "id": "kansas",
+        "name": "Kansas",
+        "seed": 4
+      },
+      "team2": {
+        "id": "california-baptist",
+        "name": "California Baptist",
+        "seed": 13
+      },
       "recommendedPick": "kansas",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -52,8 +84,16 @@
       "id": "east-6-11",
       "region": "East",
       "round": "First Round",
-      "team1": { "id": "louisville", "name": "Louisville", "seed": 6 },
-      "team2": { "id": "south-florida", "name": "South Florida", "seed": 11 },
+      "team1": {
+        "id": "louisville",
+        "name": "Louisville",
+        "seed": 6
+      },
+      "team2": {
+        "id": "south-florida",
+        "name": "South Florida",
+        "seed": 11
+      },
       "recommendedPick": "south-florida",
       "category": "High-Conviction Upset",
       "confidence": "High",
@@ -64,8 +104,16 @@
       "id": "east-3-14",
       "region": "East",
       "round": "First Round",
-      "team1": { "id": "michigan-state", "name": "Michigan State", "seed": 3 },
-      "team2": { "id": "north-dakota-state", "name": "North Dakota State", "seed": 14 },
+      "team1": {
+        "id": "michigan-state",
+        "name": "Michigan State",
+        "seed": 3
+      },
+      "team2": {
+        "id": "north-dakota-state",
+        "name": "North Dakota State",
+        "seed": 14
+      },
       "recommendedPick": "michigan-state",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -76,8 +124,16 @@
       "id": "east-7-10",
       "region": "East",
       "round": "First Round",
-      "team1": { "id": "ucla", "name": "UCLA", "seed": 7 },
-      "team2": { "id": "ucf", "name": "UCF", "seed": 10 },
+      "team1": {
+        "id": "ucla",
+        "name": "UCLA",
+        "seed": 7
+      },
+      "team2": {
+        "id": "ucf",
+        "name": "UCF",
+        "seed": 10
+      },
       "recommendedPick": "ucla",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -88,8 +144,16 @@
       "id": "east-2-15",
       "region": "East",
       "round": "First Round",
-      "team1": { "id": "uconn", "name": "UConn", "seed": 2 },
-      "team2": { "id": "furman", "name": "Furman", "seed": 15 },
+      "team1": {
+        "id": "uconn",
+        "name": "UConn",
+        "seed": 2
+      },
+      "team2": {
+        "id": "furman",
+        "name": "Furman",
+        "seed": 15
+      },
       "recommendedPick": "uconn",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -100,8 +164,16 @@
       "id": "west-1-16",
       "region": "West",
       "round": "First Round",
-      "team1": { "id": "arizona", "name": "Arizona", "seed": 1 },
-      "team2": { "id": "liu", "name": "LIU", "seed": 16 },
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "liu",
+        "name": "LIU",
+        "seed": 16
+      },
       "recommendedPick": "arizona",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -112,8 +184,16 @@
       "id": "west-8-9",
       "region": "West",
       "round": "First Round",
-      "team1": { "id": "villanova", "name": "Villanova", "seed": 8 },
-      "team2": { "id": "utah-state", "name": "Utah State", "seed": 9 },
+      "team1": {
+        "id": "villanova",
+        "name": "Villanova",
+        "seed": 8
+      },
+      "team2": {
+        "id": "utah-state",
+        "name": "Utah State",
+        "seed": 9
+      },
       "recommendedPick": "utah-state",
       "category": "Statistical Favorite",
       "confidence": "Medium",
@@ -124,8 +204,16 @@
       "id": "west-5-12",
       "region": "West",
       "round": "First Round",
-      "team1": { "id": "wisconsin", "name": "Wisconsin", "seed": 5 },
-      "team2": { "id": "high-point", "name": "High Point", "seed": 12 },
+      "team1": {
+        "id": "wisconsin",
+        "name": "Wisconsin",
+        "seed": 5
+      },
+      "team2": {
+        "id": "high-point",
+        "name": "High Point",
+        "seed": 12
+      },
       "recommendedPick": "wisconsin",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -136,8 +224,16 @@
       "id": "west-4-13",
       "region": "West",
       "round": "First Round",
-      "team1": { "id": "arkansas", "name": "Arkansas", "seed": 4 },
-      "team2": { "id": "hawaii", "name": "Hawai'i", "seed": 13 },
+      "team1": {
+        "id": "arkansas",
+        "name": "Arkansas",
+        "seed": 4
+      },
+      "team2": {
+        "id": "hawaii",
+        "name": "Hawai'i",
+        "seed": 13
+      },
       "recommendedPick": "arkansas",
       "category": "Sharp Money Target / Spread Play",
       "confidence": "High",
@@ -148,8 +244,16 @@
       "id": "west-6-11",
       "region": "West",
       "round": "First Round",
-      "team1": { "id": "byu", "name": "BYU", "seed": 6 },
-      "team2": { "id": "texas", "name": "Texas", "seed": 11 },
+      "team1": {
+        "id": "byu",
+        "name": "BYU",
+        "seed": 6
+      },
+      "team2": {
+        "id": "texas",
+        "name": "Texas",
+        "seed": 11
+      },
       "recommendedPick": "texas",
       "category": "High-Conviction Upset",
       "confidence": "High",
@@ -160,8 +264,16 @@
       "id": "west-3-14",
       "region": "West",
       "round": "First Round",
-      "team1": { "id": "gonzaga", "name": "Gonzaga", "seed": 3 },
-      "team2": { "id": "kennesaw-state", "name": "Kennesaw State", "seed": 14 },
+      "team1": {
+        "id": "gonzaga",
+        "name": "Gonzaga",
+        "seed": 3
+      },
+      "team2": {
+        "id": "kennesaw-state",
+        "name": "Kennesaw State",
+        "seed": 14
+      },
       "recommendedPick": "gonzaga",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -172,8 +284,16 @@
       "id": "west-7-10",
       "region": "West",
       "round": "First Round",
-      "team1": { "id": "miami-fl", "name": "Miami (Fla.)", "seed": 7 },
-      "team2": { "id": "missouri", "name": "Missouri", "seed": 10 },
+      "team1": {
+        "id": "miami-fl",
+        "name": "Miami (Fla.)",
+        "seed": 7
+      },
+      "team2": {
+        "id": "missouri",
+        "name": "Missouri",
+        "seed": 10
+      },
       "recommendedPick": "miami-fl",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -184,8 +304,16 @@
       "id": "west-2-15",
       "region": "West",
       "round": "First Round",
-      "team1": { "id": "purdue", "name": "Purdue", "seed": 2 },
-      "team2": { "id": "queens", "name": "Queens", "seed": 15 },
+      "team1": {
+        "id": "purdue",
+        "name": "Purdue",
+        "seed": 2
+      },
+      "team2": {
+        "id": "queens",
+        "name": "Queens",
+        "seed": 15
+      },
       "recommendedPick": "purdue",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -196,8 +324,16 @@
       "id": "midwest-1-16",
       "region": "Midwest",
       "round": "First Round",
-      "team1": { "id": "michigan", "name": "Michigan", "seed": 1 },
-      "team2": { "id": "howard", "name": "Howard", "seed": 16 },
+      "team1": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "team2": {
+        "id": "howard",
+        "name": "Howard",
+        "seed": 16
+      },
       "recommendedPick": "michigan",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -208,8 +344,16 @@
       "id": "midwest-8-9",
       "region": "Midwest",
       "round": "First Round",
-      "team1": { "id": "georgia", "name": "Georgia", "seed": 8 },
-      "team2": { "id": "saint-louis", "name": "Saint Louis", "seed": 9 },
+      "team1": {
+        "id": "georgia",
+        "name": "Georgia",
+        "seed": 8
+      },
+      "team2": {
+        "id": "saint-louis",
+        "name": "Saint Louis",
+        "seed": 9
+      },
       "recommendedPick": "georgia",
       "category": "Statistical Favorite / Sharp Money",
       "confidence": "Medium",
@@ -220,8 +364,16 @@
       "id": "midwest-5-12",
       "region": "Midwest",
       "round": "First Round",
-      "team1": { "id": "texas-tech", "name": "Texas Tech", "seed": 5 },
-      "team2": { "id": "akron", "name": "Akron", "seed": 12 },
+      "team1": {
+        "id": "texas-tech",
+        "name": "Texas Tech",
+        "seed": 5
+      },
+      "team2": {
+        "id": "akron",
+        "name": "Akron",
+        "seed": 12
+      },
       "recommendedPick": "akron",
       "category": "High-Conviction Upset",
       "confidence": "Medium",
@@ -232,8 +384,16 @@
       "id": "midwest-4-13",
       "region": "Midwest",
       "round": "First Round",
-      "team1": { "id": "alabama", "name": "Alabama", "seed": 4 },
-      "team2": { "id": "hofstra", "name": "Hofstra", "seed": 13 },
+      "team1": {
+        "id": "alabama",
+        "name": "Alabama",
+        "seed": 4
+      },
+      "team2": {
+        "id": "hofstra",
+        "name": "Hofstra",
+        "seed": 13
+      },
       "recommendedPick": "alabama",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -244,8 +404,16 @@
       "id": "midwest-6-11",
       "region": "Midwest",
       "round": "First Round",
-      "team1": { "id": "tennessee", "name": "Tennessee", "seed": 6 },
-      "team2": { "id": "miami-oh", "name": "Miami (OH)", "seed": 11 },
+      "team1": {
+        "id": "tennessee",
+        "name": "Tennessee",
+        "seed": 6
+      },
+      "team2": {
+        "id": "miami-oh",
+        "name": "Miami (OH)",
+        "seed": 11
+      },
       "recommendedPick": "tennessee",
       "category": "Poisoned Value Trap (Avoid Upset)",
       "confidence": "High",
@@ -256,8 +424,16 @@
       "id": "midwest-3-14",
       "region": "Midwest",
       "round": "First Round",
-      "team1": { "id": "virginia", "name": "Virginia", "seed": 3 },
-      "team2": { "id": "wright-state", "name": "Wright State", "seed": 14 },
+      "team1": {
+        "id": "virginia",
+        "name": "Virginia",
+        "seed": 3
+      },
+      "team2": {
+        "id": "wright-state",
+        "name": "Wright State",
+        "seed": 14
+      },
       "recommendedPick": "virginia",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -268,8 +444,16 @@
       "id": "midwest-7-10",
       "region": "Midwest",
       "round": "First Round",
-      "team1": { "id": "kentucky", "name": "Kentucky", "seed": 7 },
-      "team2": { "id": "santa-clara", "name": "Santa Clara", "seed": 10 },
+      "team1": {
+        "id": "kentucky",
+        "name": "Kentucky",
+        "seed": 7
+      },
+      "team2": {
+        "id": "santa-clara",
+        "name": "Santa Clara",
+        "seed": 10
+      },
       "recommendedPick": "santa-clara",
       "category": "Statistical Favorite",
       "confidence": "Medium",
@@ -280,8 +464,16 @@
       "id": "midwest-2-15",
       "region": "Midwest",
       "round": "First Round",
-      "team1": { "id": "iowa-state", "name": "Iowa State", "seed": 2 },
-      "team2": { "id": "tennessee-state", "name": "Tennessee State", "seed": 15 },
+      "team1": {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "seed": 2
+      },
+      "team2": {
+        "id": "tennessee-state",
+        "name": "Tennessee State",
+        "seed": 15
+      },
       "recommendedPick": "iowa-state",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -292,8 +484,16 @@
       "id": "south-1-16",
       "region": "South",
       "round": "First Round",
-      "team1": { "id": "florida", "name": "Florida", "seed": 1 },
-      "team2": { "id": "prairie-view-am", "name": "Prairie View A&M", "seed": 16 },
+      "team1": {
+        "id": "florida",
+        "name": "Florida",
+        "seed": 1
+      },
+      "team2": {
+        "id": "prairie-view-am",
+        "name": "Prairie View A&M",
+        "seed": 16
+      },
       "recommendedPick": "florida",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -304,8 +504,16 @@
       "id": "south-8-9",
       "region": "South",
       "round": "First Round",
-      "team1": { "id": "clemson", "name": "Clemson", "seed": 8 },
-      "team2": { "id": "iowa", "name": "Iowa", "seed": 9 },
+      "team1": {
+        "id": "clemson",
+        "name": "Clemson",
+        "seed": 8
+      },
+      "team2": {
+        "id": "iowa",
+        "name": "Iowa",
+        "seed": 9
+      },
       "recommendedPick": "iowa",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -316,8 +524,16 @@
       "id": "south-5-12",
       "region": "South",
       "round": "First Round",
-      "team1": { "id": "vanderbilt", "name": "Vanderbilt", "seed": 5 },
-      "team2": { "id": "mcneese", "name": "McNeese", "seed": 12 },
+      "team1": {
+        "id": "vanderbilt",
+        "name": "Vanderbilt",
+        "seed": 5
+      },
+      "team2": {
+        "id": "mcneese",
+        "name": "McNeese",
+        "seed": 12
+      },
       "recommendedPick": "vanderbilt",
       "category": "Poisoned Value Trap (Avoid Upset)",
       "confidence": "High",
@@ -328,8 +544,16 @@
       "id": "south-4-13",
       "region": "South",
       "round": "First Round",
-      "team1": { "id": "nebraska", "name": "Nebraska", "seed": 4 },
-      "team2": { "id": "troy", "name": "Troy", "seed": 13 },
+      "team1": {
+        "id": "nebraska",
+        "name": "Nebraska",
+        "seed": 4
+      },
+      "team2": {
+        "id": "troy",
+        "name": "Troy",
+        "seed": 13
+      },
       "recommendedPick": "nebraska",
       "category": "Value Underdog / Spread Play",
       "confidence": "High",
@@ -340,8 +564,16 @@
       "id": "south-6-11",
       "region": "South",
       "round": "First Round",
-      "team1": { "id": "north-carolina", "name": "North Carolina", "seed": 6 },
-      "team2": { "id": "vcu", "name": "VCU", "seed": 11 },
+      "team1": {
+        "id": "north-carolina",
+        "name": "North Carolina",
+        "seed": 6
+      },
+      "team2": {
+        "id": "vcu",
+        "name": "VCU",
+        "seed": 11
+      },
       "recommendedPick": "vcu",
       "category": "High-Conviction Upset",
       "confidence": "Very High",
@@ -352,8 +584,16 @@
       "id": "south-3-14",
       "region": "South",
       "round": "First Round",
-      "team1": { "id": "illinois", "name": "Illinois", "seed": 3 },
-      "team2": { "id": "penn", "name": "Penn", "seed": 14 },
+      "team1": {
+        "id": "illinois",
+        "name": "Illinois",
+        "seed": 3
+      },
+      "team2": {
+        "id": "penn",
+        "name": "Penn",
+        "seed": 14
+      },
       "recommendedPick": "illinois",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -364,8 +604,16 @@
       "id": "south-7-10",
       "region": "South",
       "round": "First Round",
-      "team1": { "id": "saint-marys", "name": "Saint Mary's", "seed": 7 },
-      "team2": { "id": "texas-am", "name": "Texas A&M", "seed": 10 },
+      "team1": {
+        "id": "saint-marys",
+        "name": "Saint Mary's",
+        "seed": 7
+      },
+      "team2": {
+        "id": "texas-am",
+        "name": "Texas A&M",
+        "seed": 10
+      },
       "recommendedPick": "saint-marys",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -376,8 +624,16 @@
       "id": "south-2-15",
       "region": "South",
       "round": "First Round",
-      "team1": { "id": "houston", "name": "Houston", "seed": 2 },
-      "team2": { "id": "idaho", "name": "Idaho", "seed": 15 },
+      "team1": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
+      "team2": {
+        "id": "idaho",
+        "name": "Idaho",
+        "seed": 15
+      },
       "recommendedPick": "houston",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -388,8 +644,16 @@
       "id": "east-1-9",
       "region": "East",
       "round": "Second Round",
-      "team1": { "id": "duke", "name": "Duke", "seed": 1 },
-      "team2": { "id": "tcu", "name": "TCU", "seed": 9 },
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "tcu",
+        "name": "TCU",
+        "seed": 9
+      },
       "recommendedPick": "duke",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -400,8 +664,16 @@
       "id": "east-4-5",
       "region": "East",
       "round": "Second Round",
-      "team1": { "id": "kansas", "name": "Kansas", "seed": 4 },
-      "team2": { "id": "st-johns", "name": "St. John's", "seed": 5 },
+      "team1": {
+        "id": "kansas",
+        "name": "Kansas",
+        "seed": 4
+      },
+      "team2": {
+        "id": "st-johns",
+        "name": "St. John's",
+        "seed": 5
+      },
       "recommendedPick": "st-johns",
       "category": "Upset",
       "confidence": "High",
@@ -409,23 +681,39 @@
       "tacticalAdvantage": "DraftKings explicitly flags this as a primary upset watch, laying St. John's at a competitive -3.5 spread. Analytics highlight St. John's massive rebounding advantage as the perfect antidote to a Kansas squad leaning entirely on freshman Darryn Peterson."
     },
     {
-      "id": "east-3-11",
+      "id": "east-3-6",
       "region": "East",
       "round": "Second Round",
-      "team1": { "id": "michigan-state", "name": "Michigan State", "seed": 3 },
-      "team2": { "id": "south-florida", "name": "South Florida", "seed": 11 },
+      "team1": {
+        "id": "michigan-state",
+        "name": "Michigan State",
+        "seed": 3
+      },
+      "team2": {
+        "id": "louisville",
+        "name": "Louisville",
+        "seed": 6
+      },
       "recommendedPick": "michigan-state",
       "category": "Standard Matchup",
       "confidence": "High",
-      "confidencePercentage": 75,
-      "tacticalAdvantage": "Replacing the obsolete matchup following South Florida's first-round upset, Michigan State opens as a strong favorite against the Bulls. Betting markets project Tom Izzo's disciplined half-court execution and rebounding advantage will successfully slow down South Florida's blistering pace to secure a Sweet 16 berth."
+      "confidencePercentage": 80,
+      "tacticalAdvantage": "Michigan State opens as a strong favorite against Louisville following the Cardinals' narrow escape against South Florida in the first round. Bettors are heavily backing Tom Izzo's disciplined half-court execution and rebounding advantage to systematically slow down Louisville's attack to secure a Sweet 16 berth."
     },
     {
       "id": "east-2-7",
       "region": "East",
       "round": "Second Round",
-      "team1": { "id": "uconn", "name": "UConn", "seed": 2 },
-      "team2": { "id": "ucla", "name": "UCLA", "seed": 7 },
+      "team1": {
+        "id": "uconn",
+        "name": "UConn",
+        "seed": 2
+      },
+      "team2": {
+        "id": "ucla",
+        "name": "UCLA",
+        "seed": 7
+      },
       "recommendedPick": "uconn",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -436,8 +724,16 @@
       "id": "west-1-9",
       "region": "West",
       "round": "Second Round",
-      "team1": { "id": "arizona", "name": "Arizona", "seed": 1 },
-      "team2": { "id": "utah-state", "name": "Utah State", "seed": 9 },
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "utah-state",
+        "name": "Utah State",
+        "seed": 9
+      },
       "recommendedPick": "arizona",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -448,8 +744,16 @@
       "id": "west-4-12",
       "region": "West",
       "round": "Second Round",
-      "team1": { "id": "arkansas", "name": "Arkansas", "seed": 4 },
-      "team2": { "id": "high-point", "name": "High Point", "seed": 12 },
+      "team1": {
+        "id": "arkansas",
+        "name": "Arkansas",
+        "seed": 4
+      },
+      "team2": {
+        "id": "high-point",
+        "name": "High Point",
+        "seed": 12
+      },
       "recommendedPick": "arkansas",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -460,8 +764,16 @@
       "id": "west-3-11",
       "region": "West",
       "round": "Second Round",
-      "team1": { "id": "gonzaga", "name": "Gonzaga", "seed": 3 },
-      "team2": { "id": "texas", "name": "Texas", "seed": 11 },
+      "team1": {
+        "id": "gonzaga",
+        "name": "Gonzaga",
+        "seed": 3
+      },
+      "team2": {
+        "id": "texas",
+        "name": "Texas",
+        "seed": 11
+      },
       "recommendedPick": "gonzaga",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -472,8 +784,16 @@
       "id": "west-2-7",
       "region": "West",
       "round": "Second Round",
-      "team1": { "id": "purdue", "name": "Purdue", "seed": 2 },
-      "team2": { "id": "miami-fl", "name": "Miami (Fla.)", "seed": 7 },
+      "team1": {
+        "id": "purdue",
+        "name": "Purdue",
+        "seed": 2
+      },
+      "team2": {
+        "id": "miami-fl",
+        "name": "Miami (Fla.)",
+        "seed": 7
+      },
       "recommendedPick": "purdue",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -484,8 +804,16 @@
       "id": "midwest-1-9",
       "region": "Midwest",
       "round": "Second Round",
-      "team1": { "id": "michigan", "name": "Michigan", "seed": 1 },
-      "team2": { "id": "saint-louis", "name": "Saint Louis", "seed": 9 },
+      "team1": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "team2": {
+        "id": "saint-louis",
+        "name": "Saint Louis",
+        "seed": 9
+      },
       "recommendedPick": "michigan",
       "category": "Standard Matchup / Spread Play",
       "confidence": "High",
@@ -496,8 +824,16 @@
       "id": "midwest-4-5",
       "region": "Midwest",
       "round": "Second Round",
-      "team1": { "id": "alabama", "name": "Alabama", "seed": 4 },
-      "team2": { "id": "texas-tech", "name": "Texas Tech", "seed": 5 },
+      "team1": {
+        "id": "alabama",
+        "name": "Alabama",
+        "seed": 4
+      },
+      "team2": {
+        "id": "texas-tech",
+        "name": "Texas Tech",
+        "seed": 5
+      },
       "recommendedPick": "alabama",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -508,8 +844,16 @@
       "id": "midwest-3-6",
       "region": "Midwest",
       "round": "Second Round",
-      "team1": { "id": "virginia", "name": "Virginia", "seed": 3 },
-      "team2": { "id": "tennessee", "name": "Tennessee", "seed": 6 },
+      "team1": {
+        "id": "virginia",
+        "name": "Virginia",
+        "seed": 3
+      },
+      "team2": {
+        "id": "tennessee",
+        "name": "Tennessee",
+        "seed": 6
+      },
       "recommendedPick": "tennessee",
       "category": "Upset",
       "confidence": "High",
@@ -520,8 +864,16 @@
       "id": "midwest-2-7",
       "region": "Midwest",
       "round": "Second Round",
-      "team1": { "id": "iowa-state", "name": "Iowa State", "seed": 2 },
-      "team2": { "id": "kentucky", "name": "Kentucky", "seed": 7 },
+      "team1": {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "seed": 2
+      },
+      "team2": {
+        "id": "kentucky",
+        "name": "Kentucky",
+        "seed": 7
+      },
       "recommendedPick": "iowa-state",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -532,8 +884,16 @@
       "id": "south-1-9",
       "region": "South",
       "round": "Second Round",
-      "team1": { "id": "florida", "name": "Florida", "seed": 1 },
-      "team2": { "id": "iowa", "name": "Iowa", "seed": 9 },
+      "team1": {
+        "id": "florida",
+        "name": "Florida",
+        "seed": 1
+      },
+      "team2": {
+        "id": "iowa",
+        "name": "Iowa",
+        "seed": 9
+      },
       "recommendedPick": "florida",
       "category": "Standard Matchup",
       "confidence": "Very High",
@@ -544,8 +904,16 @@
       "id": "south-4-5",
       "region": "South",
       "round": "Second Round",
-      "team1": { "id": "nebraska", "name": "Nebraska", "seed": 4 },
-      "team2": { "id": "vanderbilt", "name": "Vanderbilt", "seed": 5 },
+      "team1": {
+        "id": "nebraska",
+        "name": "Nebraska",
+        "seed": 4
+      },
+      "team2": {
+        "id": "vanderbilt",
+        "name": "Vanderbilt",
+        "seed": 5
+      },
       "recommendedPick": "vanderbilt",
       "category": "Upset",
       "confidence": "High",
@@ -556,8 +924,16 @@
       "id": "south-3-11",
       "region": "South",
       "round": "Second Round",
-      "team1": { "id": "illinois", "name": "Illinois", "seed": 3 },
-      "team2": { "id": "vcu", "name": "VCU", "seed": 11 },
+      "team1": {
+        "id": "illinois",
+        "name": "Illinois",
+        "seed": 3
+      },
+      "team2": {
+        "id": "vcu",
+        "name": "VCU",
+        "seed": 11
+      },
       "recommendedPick": "illinois",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -568,8 +944,16 @@
       "id": "south-2-10",
       "region": "South",
       "round": "Second Round",
-      "team1": { "id": "houston", "name": "Houston", "seed": 2 },
-      "team2": { "id": "texas-am", "name": "Texas A&M", "seed": 10 },
+      "team1": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
+      "team2": {
+        "id": "texas-am",
+        "name": "Texas A&M",
+        "seed": 10
+      },
       "recommendedPick": "houston",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -580,8 +964,16 @@
       "id": "east-1-5",
       "region": "East",
       "round": "Sweet 16",
-      "team1": { "id": "duke", "name": "Duke", "seed": 1 },
-      "team2": { "id": "st-johns", "name": "St. John's", "seed": 5 },
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "st-johns",
+        "name": "St. John's",
+        "seed": 5
+      },
       "recommendedPick": "duke",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -592,8 +984,16 @@
       "id": "east-2-3",
       "region": "East",
       "round": "Sweet 16",
-      "team1": { "id": "uconn", "name": "UConn", "seed": 2 },
-      "team2": { "id": "michigan-state", "name": "Michigan State", "seed": 3 },
+      "team1": {
+        "id": "uconn",
+        "name": "UConn",
+        "seed": 2
+      },
+      "team2": {
+        "id": "michigan-state",
+        "name": "Michigan State",
+        "seed": 3
+      },
       "recommendedPick": "uconn",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -604,8 +1004,16 @@
       "id": "west-1-4",
       "region": "West",
       "round": "Sweet 16",
-      "team1": { "id": "arizona", "name": "Arizona", "seed": 1 },
-      "team2": { "id": "arkansas", "name": "Arkansas", "seed": 4 },
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "arkansas",
+        "name": "Arkansas",
+        "seed": 4
+      },
       "recommendedPick": "arizona",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -616,8 +1024,16 @@
       "id": "west-2-11",
       "region": "West",
       "round": "Sweet 16",
-      "team1": { "id": "purdue", "name": "Purdue", "seed": 2 },
-      "team2": { "id": "texas", "name": "Texas", "seed": 11 },
+      "team1": {
+        "id": "purdue",
+        "name": "Purdue",
+        "seed": 2
+      },
+      "team2": {
+        "id": "texas",
+        "name": "Texas",
+        "seed": 11
+      },
       "recommendedPick": "purdue",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -628,8 +1044,16 @@
       "id": "midwest-1-4",
       "region": "Midwest",
       "round": "Sweet 16",
-      "team1": { "id": "michigan", "name": "Michigan", "seed": 1 },
-      "team2": { "id": "alabama", "name": "Alabama", "seed": 4 },
+      "team1": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "team2": {
+        "id": "alabama",
+        "name": "Alabama",
+        "seed": 4
+      },
       "recommendedPick": "michigan",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -640,8 +1064,16 @@
       "id": "midwest-2-6",
       "region": "Midwest",
       "round": "Sweet 16",
-      "team1": { "id": "iowa-state", "name": "Iowa State", "seed": 2 },
-      "team2": { "id": "tennessee", "name": "Tennessee", "seed": 6 },
+      "team1": {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "seed": 2
+      },
+      "team2": {
+        "id": "tennessee",
+        "name": "Tennessee",
+        "seed": 6
+      },
       "recommendedPick": "iowa-state",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -652,8 +1084,16 @@
       "id": "south-1-4",
       "region": "South",
       "round": "Sweet 16",
-      "team1": { "id": "florida", "name": "Florida", "seed": 1 },
-      "team2": { "id": "nebraska", "name": "Nebraska", "seed": 4 },
+      "team1": {
+        "id": "florida",
+        "name": "Florida",
+        "seed": 1
+      },
+      "team2": {
+        "id": "nebraska",
+        "name": "Nebraska",
+        "seed": 4
+      },
       "recommendedPick": "florida",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -664,8 +1104,16 @@
       "id": "south-2-3",
       "region": "South",
       "round": "Sweet 16",
-      "team1": { "id": "houston", "name": "Houston", "seed": 2 },
-      "team2": { "id": "illinois", "name": "Illinois", "seed": 3 },
+      "team1": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
+      "team2": {
+        "id": "illinois",
+        "name": "Illinois",
+        "seed": 3
+      },
       "recommendedPick": "houston",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -676,8 +1124,16 @@
       "id": "east-1-2",
       "region": "East",
       "round": "Elite Eight",
-      "team1": { "id": "duke", "name": "Duke", "seed": 1 },
-      "team2": { "id": "uconn", "name": "UConn", "seed": 2 },
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "uconn",
+        "name": "UConn",
+        "seed": 2
+      },
       "recommendedPick": "duke",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -688,8 +1144,16 @@
       "id": "west-1-2",
       "region": "West",
       "round": "Elite Eight",
-      "team1": { "id": "arizona", "name": "Arizona", "seed": 1 },
-      "team2": { "id": "purdue", "name": "Purdue", "seed": 2 },
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "purdue",
+        "name": "Purdue",
+        "seed": 2
+      },
       "recommendedPick": "arizona",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -700,8 +1164,16 @@
       "id": "midwest-1-2",
       "region": "Midwest",
       "round": "Elite Eight",
-      "team1": { "id": "michigan", "name": "Michigan", "seed": 1 },
-      "team2": { "id": "iowa-state", "name": "Iowa State", "seed": 2 },
+      "team1": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
+      "team2": {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "seed": 2
+      },
       "recommendedPick": "michigan",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -712,8 +1184,16 @@
       "id": "south-1-2",
       "region": "South",
       "round": "Elite Eight",
-      "team1": { "id": "florida", "name": "Florida", "seed": 1 },
-      "team2": { "id": "houston", "name": "Houston", "seed": 2 },
+      "team1": {
+        "id": "florida",
+        "name": "Florida",
+        "seed": 1
+      },
+      "team2": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
       "recommendedPick": "houston",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -724,8 +1204,16 @@
       "id": "ff-0",
       "region": "Final Four",
       "round": "Final Four",
-      "team1": { "id": "duke", "name": "Duke", "seed": 1 },
-      "team2": { "id": "houston", "name": "Houston", "seed": 2 },
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "houston",
+        "name": "Houston",
+        "seed": 2
+      },
       "recommendedPick": "duke",
       "category": "Standard Matchup",
       "confidence": "High",
@@ -736,8 +1224,16 @@
       "id": "ff-1",
       "region": "Final Four",
       "round": "Final Four",
-      "team1": { "id": "arizona", "name": "Arizona", "seed": 1 },
-      "team2": { "id": "michigan", "name": "Michigan", "seed": 1 },
+      "team1": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
+      "team2": {
+        "id": "michigan",
+        "name": "Michigan",
+        "seed": 1
+      },
       "recommendedPick": "arizona",
       "category": "Standard Matchup",
       "confidence": "Medium",
@@ -748,8 +1244,16 @@
       "id": "championship",
       "region": "Championship",
       "round": "National Championship",
-      "team1": { "id": "duke", "name": "Duke", "seed": 1 },
-      "team2": { "id": "arizona", "name": "Arizona", "seed": 1 },
+      "team1": {
+        "id": "duke",
+        "name": "Duke",
+        "seed": 1
+      },
+      "team2": {
+        "id": "arizona",
+        "name": "Arizona",
+        "seed": 1
+      },
       "recommendedPick": "duke",
       "category": "Standard Matchup",
       "confidence": "Medium",
