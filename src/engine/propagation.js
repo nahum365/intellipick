@@ -339,18 +339,17 @@ export function getGeneratedMatchup(matchupId) {
     team2Expected = true;
   }
 
-  // Ghost picks: actual winner known but differs from IntelliPick's prediction.
-  // Use getPredictedMatchup (pure prediction, ignoring results) to compare.
+  // Ghost picks: IntelliPick's prediction differs from reality.
+  // Shows when: (a) actual winner known but differs, or (b) slot is TBD
+  // but IntelliPick predicted a team would be here.
   let team1GhostPick = null;
   let team2GhostPick = null;
-  if (!team1Expected || !team2Expected) {
-    const predicted = getPredictedMatchup(matchupId);
-    if (!team1Expected && team1 && predicted.team1 && team1.id !== predicted.team1.id) {
-      team1GhostPick = { id: predicted.team1.id, name: predicted.team1.name, seed: predicted.team1.seed };
-    }
-    if (!team2Expected && team2 && predicted.team2 && team2.id !== predicted.team2.id) {
-      team2GhostPick = { id: predicted.team2.id, name: predicted.team2.name, seed: predicted.team2.seed };
-    }
+  const predicted = getPredictedMatchup(matchupId);
+  if (predicted.team1 && (!team1 || (!team1Expected && team1.id !== predicted.team1.id))) {
+    team1GhostPick = { id: predicted.team1.id, name: predicted.team1.name, seed: predicted.team1.seed };
+  }
+  if (predicted.team2 && (!team2 || (!team2Expected && team2.id !== predicted.team2.id))) {
+    team2GhostPick = { id: predicted.team2.id, name: predicted.team2.name, seed: predicted.team2.seed };
   }
 
   // Check if there's prediction data for this specific matchup in the JSON
