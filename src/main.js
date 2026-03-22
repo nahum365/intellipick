@@ -264,8 +264,6 @@ function rerender() {
     newMain.scrollTop = savedScrolls.mainY || 0;
   }
 
-  // Re-attach dashboard if it was somehow removed during re-render
-  showDashboard();
 }
 
 /**
@@ -344,9 +342,6 @@ function updateStatusOnly() {
 
 // Initial render
 renderApp();
-
-// Show dashboard on first visit (skipped if already dismissed this session)
-showDashboard();
 
 // Start live score polling
 startPolling();
