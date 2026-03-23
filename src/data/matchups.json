@@ -471,7 +471,7 @@
       },
       "team2": {
         "id": "tennessee-state",
-        "name": "Tennessee State",
+        "name": "Tennessee-state",
         "seed": 15
       },
       "recommendedPick": "iowa-state",
@@ -898,7 +898,7 @@
       "category": "Standard Matchup",
       "confidence": "Very High",
       "confidencePercentage": 94,
-      "tacticalAdvantage": "Florida is laying a massive -10.5 spread against Iowa. After winning their opener by 59 points, the defending champs are generating immense handle on BetMGM, with pundits uniformly agreeing Iowa lacks the transition speed to keep up."
+      "tacticalAdvantage": "Florida is laying a massive -10.5 spread against Iowa. After winning their opener by 59 points, the defending champs are generating immense handle on BetMGM, with pundits uniformly agreeing Iowa lacks the transition speed to keep up. Despite this pre-game confidence, the prediction was shattered as Iowa pulled off a monumental 73-72 upset over the defending national champions. After squandering a 12-point second-half lead, the Hawkeyes rallied in the final minute, stunning the Gators when Alvaro Folgueiras nailed a game-winning 3-pointer with 4.5 seconds remaining. Social media erupted as Florida became the first No. 1 seed eliminated from the 2026 tournament, completely destroying massive moneyline parlays."
     },
     {
       "id": "south-4-5",
@@ -918,7 +918,7 @@
       "category": "Upset",
       "confidence": "High",
       "confidencePercentage": 74,
-      "tacticalAdvantage": "This game holds incredible leverage for the South region. Vanderbilt's No. 12 overall KenPom rating makes them an analytical favorite against a Nebraska team riding pure emotion; sharp bettors are aggressively backing Vandy's physical frontcourt. Update: Nebraska defied the analytics, riding a late surge to officially defeat Vanderbilt 74-72 in a massive Second Round thriller."
+      "tacticalAdvantage": "This game holds incredible leverage for the South region. Vanderbilt's No. 12 overall KenPom rating makes them an analytical favorite against a Nebraska team riding pure emotion; sharp bettors are aggressively backing Vandy's physical frontcourt. In the end, Nebraska defied the analytics, riding a late surge to officially defeat Vanderbilt 74-72 in a massive Second Round thriller."
     },
     {
       "id": "south-3-11",
@@ -1081,24 +1081,24 @@
       "tacticalAdvantage": "Iowa State is positioned as a -4.5 favorite. Sports Illustrated highlights their nation-leading 21.9% defensive turnover rate, predicting it will completely disrupt Tennessee's half-court sets."
     },
     {
-      "id": "south-1-4",
+      "id": "south-4-9",
       "region": "South",
       "round": "Sweet 16",
       "team1": {
-        "id": "florida",
-        "name": "Florida",
-        "seed": 1
-      },
-      "team2": {
         "id": "nebraska",
         "name": "Nebraska",
         "seed": 4
       },
-      "recommendedPick": "florida",
+      "team2": {
+        "id": "iowa",
+        "name": "Iowa",
+        "seed": 9
+      },
+      "recommendedPick": "nebraska",
       "category": "Standard Matchup",
       "confidence": "Medium",
-      "confidencePercentage": 70,
-      "tacticalAdvantage": "Nebraska enters with massive momentum after officially upsetting Vanderbilt 74-72, but Florida represents a significant step up in weight class. Market consensus across major sportsbooks heavily favors the defending champions to advance based on their overwhelming transition speed and depth."
+      "confidencePercentage": 62,
+      "tacticalAdvantage": "With the defending champions eliminated, this unexpected Sweet 16 matchup features two surging programs. Iowa arrives riding the massive momentum of Alvaro Folgueiras' buzzer-beater against Florida, while Nebraska enters off a gritty second-round win. Betting markets slightly lean toward the Cornhuskers, citing their dynamic 3-point shooting as the key metric to outpace Iowa's methodical half-court sets and secure an Elite Eight appearance."
     },
     {
       "id": "south-2-3",
@@ -1181,24 +1181,24 @@
       "tacticalAdvantage": "Michigan is the consensus -130 favorite to win the Midwest. Analysts point to Michigan's 50.7% field-goal rate and massive size advantage as the data-driven factors required to bypass Iowa State's pressure."
     },
     {
-      "id": "south-1-2",
+      "id": "south-2-4",
       "region": "South",
       "round": "Elite Eight",
       "team1": {
-        "id": "florida",
-        "name": "Florida",
-        "seed": 1
-      },
-      "team2": {
         "id": "houston",
         "name": "Houston",
         "seed": 2
       },
+      "team2": {
+        "id": "nebraska",
+        "name": "Nebraska",
+        "seed": 4
+      },
       "recommendedPick": "houston",
       "category": "Standard Matchup",
-      "confidence": "Medium",
-      "confidencePercentage": 60,
-      "tacticalAdvantage": "Despite Florida holding shorter title odds, sharp money heavily backs Houston (+1100). Analysts predict Houston's physically suffocating guards will generate the low-scoring, brutal victory needed to end Florida's repeat campaign."
+      "confidence": "High",
+      "confidencePercentage": 75,
+      "tacticalAdvantage": "Nebraska's Cinderella push meets an elite roadblock in Houston's top-ranked defense. With the bracket entirely reshaped by upsets, sharp bettors are hammering Houston's futures. Analysts predict the Cougars' suffocating backcourt pressure will completely neutralize Nebraska's perimeter reliance, allowing Houston to dictate a grueling pace and punch their ticket to the Final Four."
     },
     {
       "id": "ff-0",
