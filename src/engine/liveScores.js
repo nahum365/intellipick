@@ -226,7 +226,9 @@ function getMatchupTeamOrder(matchupId) {
 }
 
 function processEvents(events) {
-  scoreMap.clear();
+  // Do NOT clear the scoreMap here — completed games from earlier dates are cached
+  // in completedDates and won't be re-fetched, so their scores must persist across polls.
+  // We simply overwrite entries for events we do receive.
 
   let matched = 0, unmatched = 0;
 
