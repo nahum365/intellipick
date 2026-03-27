@@ -108,6 +108,16 @@ ESPN_TO_TEAM_ID['tsu'] = 'tennessee-state';
 ESPN_TO_TEAM_ID['cal bap'] = 'california-baptist';
 // texas-am
 ESPN_TO_TEAM_ID['texas a&m'] = 'texas-am';
+// hawaii: ESPN may not use the ʻokina character
+ESPN_TO_TEAM_ID['hawaii'] = 'hawaii';
+ESPN_TO_TEAM_ID['hawai'] = 'hawaii';
+// queens: ESPN may qualify with state
+ESPN_TO_TEAM_ID['queens (nc)'] = 'queens';
+ESPN_TO_TEAM_ID['queens nc'] = 'queens';
+ESPN_TO_TEAM_ID['queens ny'] = 'queens';
+// iowa-state / utah-state plain abbreviations
+ESPN_TO_TEAM_ID['iowa st'] = 'iowa-state';
+ESPN_TO_TEAM_ID['utah st'] = 'utah-state';
 
 // Score cache: matchupId -> normalized score object
 const scoreMap = new Map();
@@ -361,39 +371,72 @@ function getTournamentDatesToFetch() {
   return dates;
 }
 
-async function fetchScoresInner() {
-  const dates = getTournamentDatesToFetch();
+function buildDateKey(d) {
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+}
 
-  const fetches = dates.map(date =>
-    fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${date}&limit=200`)
+async function fetchScoresInner() {
+  const BASE = 'https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard';
+
+  const dates = getTournamentDatesToFetch();
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const rangeStart = buildDateKey(TOURNAMENT_START);
+  const rangeEnd = buildDateKey(tomorrow);
+
+  // Strategy 1: per-date queries — reliable for recent dates
+  const dateFetches = dates.map(date =>
+    fetch(`${BASE}?dates=${date}&limit=200`)
       .then(r => r.ok ? r.json() : null)
       .catch(() => null)
   );
-  const results = await Promise.all(fetches);
+
+  // Strategy 2: date-range query — may return older completed games in one shot
+  const rangeFetch = fetch(`${BASE}?dates=${rangeStart}-${rangeEnd}&limit=500`)
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null);
+
+  // Strategy 3: postseason (groups=50, seasontype=3) — returns all tournament
+  // events regardless of date, most reliable for historical bracket data
+  const postseasonFetch = fetch(`${BASE}?groups=50&seasontype=3&limit=500`)
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null);
+
+  const [rangeResult, postseasonResult, ...dateResults] = await Promise.all([
+    rangeFetch, postseasonFetch, ...dateFetches,
+  ]);
 
   const seenIds = new Set();
   const allEvents = [];
-  for (let i = 0; i < results.length; i++) {
-    const data = results[i];
-    if (!data) {
-      console.warn(`[ESPN] No data for date ${dates[i]} (fetch failed or non-ok)`);
-      continue;
-    }
-    const events = data.events || [];
-    console.log(`[ESPN] Date ${dates[i]}: ${events.length} events`);
-    for (const event of events) {
+
+  function addEvents(events, label) {
+    let added = 0;
+    for (const event of (events || [])) {
       if (!seenIds.has(event.id)) {
         seenIds.add(event.id);
         allEvents.push(event);
+        added++;
       }
     }
+    console.log(`[ESPN] ${label}: ${(events || []).length} events (${added} new)`);
   }
 
-  if (allEvents.length === 0 && results.every(r => r === null)) {
-    throw new Error('All ESPN requests failed');
+  if (postseasonResult) addEvents(postseasonResult.events, 'postseason query');
+  else console.warn('[ESPN] Postseason query failed or returned null');
+
+  if (rangeResult) addEvents(rangeResult.events, `range ${rangeStart}-${rangeEnd}`);
+  else console.warn('[ESPN] Range query failed or returned null');
+
+  for (let i = 0; i < dateResults.length; i++) {
+    if (dateResults[i]) addEvents(dateResults[i].events, `date ${dates[i]}`);
+    else console.warn(`[ESPN] Date ${dates[i]} query failed`);
   }
 
-  console.log(`[ESPN] Total: ${allEvents.length} events from ${dates.length} date queries`);
+  if (allEvents.length === 0) {
+    throw new Error('All ESPN requests returned no events');
+  }
+
+  console.log(`[ESPN] Total unique events: ${allEvents.length}`);
   processEvents(allEvents);
 
   return allEvents.length;
