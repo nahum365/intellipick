@@ -85,6 +85,8 @@ ESPN_TO_TEAM_ID['ca baptist'] = 'california-baptist';
 
 // Score cache: matchupId -> normalized score object
 const scoreMap = new Map();
+// Dates confirmed to have all games final — skip on re-poll
+const completedDates = new Set();
 // Listeners notified after each fetch
 const listeners = [];
 let pollIntervalId = null;
@@ -307,24 +309,28 @@ function notifyListeners(detail) {
   }
 }
 
-// Generate tournament dates to query: past 6 days + today + tomorrow.
+// First day of the 2026 NCAA Tournament
+const TOURNAMENT_START = new Date(2026, 2, 20); // March 20, 2026
+
+// Generate tournament dates to query: tournament start through tomorrow.
+// Always anchored to the tournament start so early-round results are never dropped.
+// Dates whose games are all final are skipped (completedDates cache).
 // Individual-day queries are more reliable than ESPN's date-range format.
 function getTournamentDatesToFetch() {
-  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
   const dates = [];
-  // Past 6 days through tomorrow
-  for (let i = -6; i <= 1; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() + i);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    // Only include dates in tournament window (mid-March through early April)
-    const mmdd = d.getMonth() * 100 + d.getDate(); // e.g., 316 for March 16
-    if ((d.getMonth() === 2 && d.getDate() >= 14) || // March 14+
-        (d.getMonth() === 3 && d.getDate() <= 12)) {  // April 1–12
-      dates.push(`${year}${month}${day}`);
+  const cursor = new Date(TOURNAMENT_START);
+  while (cursor <= tomorrow) {
+    const mm = cursor.getMonth();
+    const dd = cursor.getDate();
+    // Stay within tournament window (mid-March → early April)
+    if ((mm === 2 && dd >= 14) || (mm === 3 && dd <= 12)) {
+      const key = `${cursor.getFullYear()}${String(mm + 1).padStart(2, '0')}${String(dd).padStart(2, '0')}`;
+      if (!completedDates.has(key)) dates.push(key);
     }
+    cursor.setDate(cursor.getDate() + 1);
   }
   return dates;
 }
@@ -357,6 +363,21 @@ async function fetchScoresInner() {
 
   console.log(`[ESPN] Fetched ${allEvents.length} total events from ${dates.length} date queries`);
   processEvents(allEvents);
+
+  // Cache any date where every returned game is already final so we skip it next poll
+  for (const date of dates) {
+    const eventsForDate = allEvents.filter(e => {
+      const d = e.date ? e.date.slice(0, 10).replace(/-/g, '') : null;
+      return d === date;
+    });
+    if (eventsForDate.length > 0 && eventsForDate.every(e => {
+      const s = e.status?.type?.name || '';
+      return s === 'STATUS_FINAL' || e.status?.type?.completed === true;
+    })) {
+      completedDates.add(date);
+    }
+  }
+
   return allEvents.length;
 }
 
