@@ -85,8 +85,6 @@ ESPN_TO_TEAM_ID['ca baptist'] = 'california-baptist';
 
 // Score cache: matchupId -> normalized score object
 const scoreMap = new Map();
-// Dates confirmed to have all games final — skip on re-poll
-const completedDates = new Set();
 // Listeners notified after each fetch
 const listeners = [];
 let pollIntervalId = null;
@@ -299,7 +297,7 @@ function processEvents(events) {
     matched++;
   }
 
-  console.log(`[ESPN] processEvents: ${matched} matched, ${unmatched} unmatched out of ${events.length} events`);
+  console.log(`[ESPN] processEvents: ${matched} matched, ${unmatched} unmatched out of ${events.length} events — scoreMap size: ${scoreMap.size}`);
 }
 
 
@@ -330,7 +328,7 @@ function getTournamentDatesToFetch() {
     // Stay within tournament window (mid-March → early April)
     if ((mm === 2 && dd >= 14) || (mm === 3 && dd <= 12)) {
       const key = `${cursor.getFullYear()}${String(mm + 1).padStart(2, '0')}${String(dd).padStart(2, '0')}`;
-      if (!completedDates.has(key)) dates.push(key);
+      dates.push(key);
     }
     cursor.setDate(cursor.getDate() + 1);
   }
@@ -349,9 +347,15 @@ async function fetchScoresInner() {
 
   const seenIds = new Set();
   const allEvents = [];
-  for (const data of results) {
-    if (!data) continue;
-    for (const event of (data.events || [])) {
+  for (let i = 0; i < results.length; i++) {
+    const data = results[i];
+    if (!data) {
+      console.warn(`[ESPN] No data for date ${dates[i]} (fetch failed or non-ok)`);
+      continue;
+    }
+    const events = data.events || [];
+    console.log(`[ESPN] Date ${dates[i]}: ${events.length} events`);
+    for (const event of events) {
       if (!seenIds.has(event.id)) {
         seenIds.add(event.id);
         allEvents.push(event);
@@ -363,22 +367,8 @@ async function fetchScoresInner() {
     throw new Error('All ESPN requests failed');
   }
 
-  console.log(`[ESPN] Fetched ${allEvents.length} total events from ${dates.length} date queries`);
+  console.log(`[ESPN] Total: ${allEvents.length} events from ${dates.length} date queries`);
   processEvents(allEvents);
-
-  // Cache any date where every returned game is already final so we skip it next poll
-  for (const date of dates) {
-    const eventsForDate = allEvents.filter(e => {
-      const d = e.date ? e.date.slice(0, 10).replace(/-/g, '') : null;
-      return d === date;
-    });
-    if (eventsForDate.length > 0 && eventsForDate.every(e => {
-      const s = e.status?.type?.name || '';
-      return s === 'STATUS_FINAL' || e.status?.type?.completed === true;
-    })) {
-      completedDates.add(date);
-    }
-  }
 
   return allEvents.length;
 }
