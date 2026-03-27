@@ -82,6 +82,32 @@ ESPN_TO_TEAM_ID['miami (ohio)'] = 'miami-oh';
 ESPN_TO_TEAM_ID['miami-oh'] = 'miami-oh';
 ESPN_TO_TEAM_ID['cbu'] = 'california-baptist';
 ESPN_TO_TEAM_ID['ca baptist'] = 'california-baptist';
+// saint-marys: ESPN may use "St. Mary's" or "St Mary's"
+ESPN_TO_TEAM_ID["st. mary's"] = 'saint-marys';
+ESPN_TO_TEAM_ID["st mary's"] = 'saint-marys';
+ESPN_TO_TEAM_ID["st. mary's (ca)"] = 'saint-marys';
+// saint-louis: ESPN may use "St. Louis" or "SLU"
+ESPN_TO_TEAM_ID['st. louis'] = 'saint-louis';
+ESPN_TO_TEAM_ID['slu'] = 'saint-louis';
+// liu: ESPN may use "LIU Brooklyn" or "Long Island"
+ESPN_TO_TEAM_ID['liu brooklyn'] = 'liu';
+ESPN_TO_TEAM_ID['long island'] = 'liu';
+// north-dakota-state: ESPN may use "NDSU" or "N Dak St"
+ESPN_TO_TEAM_ID['ndsu'] = 'north-dakota-state';
+ESPN_TO_TEAM_ID['n dak st'] = 'north-dakota-state';
+ESPN_TO_TEAM_ID['n. dakota st'] = 'north-dakota-state';
+// prairie-view-am: ESPN may use "PV A&M" or "Prairie View A&M"
+ESPN_TO_TEAM_ID['prairie view a&m'] = 'prairie-view-am';
+ESPN_TO_TEAM_ID['pv a&m'] = 'prairie-view-am';
+// kennesaw-state: ESPN may use "KSU" or "Ken. State"
+ESPN_TO_TEAM_ID['ken. state'] = 'kennesaw-state';
+ESPN_TO_TEAM_ID['ken state'] = 'kennesaw-state';
+// tennessee-state: may use "TSU"
+ESPN_TO_TEAM_ID['tsu'] = 'tennessee-state';
+// california-baptist more aliases
+ESPN_TO_TEAM_ID['cal bap'] = 'california-baptist';
+// texas-am
+ESPN_TO_TEAM_ID['texas a&m'] = 'texas-am';
 
 // Score cache: matchupId -> normalized score object
 const scoreMap = new Map();
@@ -339,7 +365,7 @@ async function fetchScoresInner() {
   const dates = getTournamentDatesToFetch();
 
   const fetches = dates.map(date =>
-    fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${date}&groups=50&limit=100`)
+    fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${date}&limit=200`)
       .then(r => r.ok ? r.json() : null)
       .catch(() => null)
   );
