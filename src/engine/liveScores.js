@@ -1,73 +1,83 @@
-import matchupsData from '../data/matchups.json';
-import { getR64Matchup, getGeneratedMatchup, getRegionR64Matchups, REGIONS } from './propagation.js';
-import { startPolymarket, stopPolymarket, onPolymarketUpdate, getPolymarketStatus } from './polymarket.js';
+import matchupsData from "../data/matchups.json";
+import {
+  getR64Matchup,
+  getGeneratedMatchup,
+  getRegionR64Matchups,
+  REGIONS,
+} from "./propagation.js";
+import {
+  startPolymarket,
+  stopPolymarket,
+  onPolymarketUpdate,
+  getPolymarketStatus,
+} from "./polymarket.js";
 
 // Map internal team IDs to ESPN shortDisplayName values
 const TEAM_ID_TO_ESPN = {
-  'duke': 'Duke',
-  'siena': 'Siena',
-  'ohio-state': 'Ohio State',
-  'tcu': 'TCU',
-  'st-johns': "St. John's",
-  'northern-iowa': 'N Iowa',
-  'kansas': 'Kansas',
-  'california-baptist': 'Cal Baptist',
-  'louisville': 'Louisville',
-  'south-florida': 'South Florida',
-  'michigan-state': 'Michigan St',
-  'north-dakota-state': 'N Dakota St',
-  'ucla': 'UCLA',
-  'ucf': 'UCF',
-  'uconn': 'UConn',
-  'furman': 'Furman',
-  'arizona': 'Arizona',
-  'liu': 'LIU',
-  'villanova': 'Villanova',
-  'utah-state': 'Utah State',
-  'wisconsin': 'Wisconsin',
-  'high-point': 'High Point',
-  'arkansas': 'Arkansas',
-  'hawaii': "Hawai'i",
-  'byu': 'BYU',
-  'texas': 'Texas',
-  'gonzaga': 'Gonzaga',
-  'kennesaw-state': 'Kennesaw St',
-  'miami-fl': 'Miami',
-  'missouri': 'Missouri',
-  'purdue': 'Purdue',
-  'queens': 'Queens',
-  'michigan': 'Michigan',
-  'howard': 'Howard',
-  'georgia': 'Georgia',
-  'saint-louis': 'Saint Louis',
-  'texas-tech': 'Texas Tech',
-  'akron': 'Akron',
-  'alabama': 'Alabama',
-  'hofstra': 'Hofstra',
-  'tennessee': 'Tennessee',
-  'miami-oh': 'Miami (OH)',
-  'virginia': 'Virginia',
-  'wright-state': 'Wright State',
-  'kentucky': 'Kentucky',
-  'santa-clara': 'Santa Clara',
-  'iowa-state': 'Iowa State',
-  'tennessee-state': 'Tennessee St',
-  'florida': 'Florida',
-  'prairie-view-am': 'Prairie View',
-  'clemson': 'Clemson',
-  'iowa': 'Iowa',
-  'vanderbilt': 'Vanderbilt',
-  'mcneese': 'McNeese',
-  'nebraska': 'Nebraska',
-  'troy': 'Troy',
-  'north-carolina': 'North Carolina',
-  'vcu': 'VCU',
-  'illinois': 'Illinois',
-  'penn': 'Penn',
-  'saint-marys': "Saint Mary's",
-  'texas-am': 'Texas A&M',
-  'houston': 'Houston',
-  'idaho': 'Idaho',
+  duke: "Duke",
+  siena: "Siena",
+  "ohio-state": "Ohio State",
+  tcu: "TCU",
+  "st-johns": "St. John's",
+  "northern-iowa": "N Iowa",
+  kansas: "Kansas",
+  "california-baptist": "Cal Baptist",
+  louisville: "Louisville",
+  "south-florida": "South Florida",
+  "michigan-state": "Michigan St",
+  "north-dakota-state": "N Dakota St",
+  ucla: "UCLA",
+  ucf: "UCF",
+  uconn: "UConn",
+  furman: "Furman",
+  arizona: "Arizona",
+  liu: "LIU",
+  villanova: "Villanova",
+  "utah-state": "Utah State",
+  wisconsin: "Wisconsin",
+  "high-point": "High Point",
+  arkansas: "Arkansas",
+  hawaii: "Hawai'i",
+  byu: "BYU",
+  texas: "Texas",
+  gonzaga: "Gonzaga",
+  "kennesaw-state": "Kennesaw St",
+  "miami-fl": "Miami",
+  missouri: "Missouri",
+  purdue: "Purdue",
+  queens: "Queens",
+  michigan: "Michigan",
+  howard: "Howard",
+  georgia: "Georgia",
+  "saint-louis": "Saint Louis",
+  "texas-tech": "Texas Tech",
+  akron: "Akron",
+  alabama: "Alabama",
+  hofstra: "Hofstra",
+  tennessee: "Tennessee",
+  "miami-oh": "Miami (OH)",
+  virginia: "Virginia",
+  "wright-state": "Wright State",
+  kentucky: "Kentucky",
+  "santa-clara": "Santa Clara",
+  "iowa-state": "Iowa State",
+  "tennessee-state": "Tennessee St",
+  florida: "Florida",
+  "prairie-view-am": "Prairie View",
+  clemson: "Clemson",
+  iowa: "Iowa",
+  vanderbilt: "Vanderbilt",
+  mcneese: "McNeese",
+  nebraska: "Nebraska",
+  troy: "Troy",
+  "north-carolina": "North Carolina",
+  vcu: "VCU",
+  illinois: "Illinois",
+  penn: "Penn",
+  "saint-marys": "Saint Mary's",
+  "texas-am": "Texas A&M",
+  houston: "Houston",
+  idaho: "Idaho",
 };
 
 // Build reverse map: ESPN short name (lowercase) -> internal team ID
@@ -76,48 +86,48 @@ for (const [id, espnName] of Object.entries(TEAM_ID_TO_ESPN)) {
   ESPN_TO_TEAM_ID[espnName.toLowerCase()] = id;
 }
 // Extra aliases for ESPN name variants that don't match the canonical map
-ESPN_TO_TEAM_ID['miami oh'] = 'miami-oh';
-ESPN_TO_TEAM_ID['m-oh'] = 'miami-oh';
-ESPN_TO_TEAM_ID['miami (ohio)'] = 'miami-oh';
-ESPN_TO_TEAM_ID['miami-oh'] = 'miami-oh';
-ESPN_TO_TEAM_ID['cbu'] = 'california-baptist';
-ESPN_TO_TEAM_ID['ca baptist'] = 'california-baptist';
+ESPN_TO_TEAM_ID["miami oh"] = "miami-oh";
+ESPN_TO_TEAM_ID["m-oh"] = "miami-oh";
+ESPN_TO_TEAM_ID["miami (ohio)"] = "miami-oh";
+ESPN_TO_TEAM_ID["miami-oh"] = "miami-oh";
+ESPN_TO_TEAM_ID["cbu"] = "california-baptist";
+ESPN_TO_TEAM_ID["ca baptist"] = "california-baptist";
 // saint-marys: ESPN may use "St. Mary's" or "St Mary's"
-ESPN_TO_TEAM_ID["st. mary's"] = 'saint-marys';
-ESPN_TO_TEAM_ID["st mary's"] = 'saint-marys';
-ESPN_TO_TEAM_ID["st. mary's (ca)"] = 'saint-marys';
+ESPN_TO_TEAM_ID["st. mary's"] = "saint-marys";
+ESPN_TO_TEAM_ID["st mary's"] = "saint-marys";
+ESPN_TO_TEAM_ID["st. mary's (ca)"] = "saint-marys";
 // saint-louis: ESPN may use "St. Louis" or "SLU"
-ESPN_TO_TEAM_ID['st. louis'] = 'saint-louis';
-ESPN_TO_TEAM_ID['slu'] = 'saint-louis';
+ESPN_TO_TEAM_ID["st. louis"] = "saint-louis";
+ESPN_TO_TEAM_ID["slu"] = "saint-louis";
 // liu: ESPN may use "LIU Brooklyn" or "Long Island"
-ESPN_TO_TEAM_ID['liu brooklyn'] = 'liu';
-ESPN_TO_TEAM_ID['long island'] = 'liu';
+ESPN_TO_TEAM_ID["liu brooklyn"] = "liu";
+ESPN_TO_TEAM_ID["long island"] = "liu";
 // north-dakota-state: ESPN may use "NDSU" or "N Dak St"
-ESPN_TO_TEAM_ID['ndsu'] = 'north-dakota-state';
-ESPN_TO_TEAM_ID['n dak st'] = 'north-dakota-state';
-ESPN_TO_TEAM_ID['n. dakota st'] = 'north-dakota-state';
+ESPN_TO_TEAM_ID["ndsu"] = "north-dakota-state";
+ESPN_TO_TEAM_ID["n dak st"] = "north-dakota-state";
+ESPN_TO_TEAM_ID["n. dakota st"] = "north-dakota-state";
 // prairie-view-am: ESPN may use "PV A&M" or "Prairie View A&M"
-ESPN_TO_TEAM_ID['prairie view a&m'] = 'prairie-view-am';
-ESPN_TO_TEAM_ID['pv a&m'] = 'prairie-view-am';
+ESPN_TO_TEAM_ID["prairie view a&m"] = "prairie-view-am";
+ESPN_TO_TEAM_ID["pv a&m"] = "prairie-view-am";
 // kennesaw-state: ESPN may use "KSU" or "Ken. State"
-ESPN_TO_TEAM_ID['ken. state'] = 'kennesaw-state';
-ESPN_TO_TEAM_ID['ken state'] = 'kennesaw-state';
+ESPN_TO_TEAM_ID["ken. state"] = "kennesaw-state";
+ESPN_TO_TEAM_ID["ken state"] = "kennesaw-state";
 // tennessee-state: may use "TSU"
-ESPN_TO_TEAM_ID['tsu'] = 'tennessee-state';
+ESPN_TO_TEAM_ID["tsu"] = "tennessee-state";
 // california-baptist more aliases
-ESPN_TO_TEAM_ID['cal bap'] = 'california-baptist';
+ESPN_TO_TEAM_ID["cal bap"] = "california-baptist";
 // texas-am
-ESPN_TO_TEAM_ID['texas a&m'] = 'texas-am';
+ESPN_TO_TEAM_ID["texas a&m"] = "texas-am";
 // hawaii: ESPN may not use the ʻokina character
-ESPN_TO_TEAM_ID['hawaii'] = 'hawaii';
-ESPN_TO_TEAM_ID['hawai'] = 'hawaii';
+ESPN_TO_TEAM_ID["hawaii"] = "hawaii";
+ESPN_TO_TEAM_ID["hawai"] = "hawaii";
 // queens: ESPN may qualify with state
-ESPN_TO_TEAM_ID['queens (nc)'] = 'queens';
-ESPN_TO_TEAM_ID['queens nc'] = 'queens';
-ESPN_TO_TEAM_ID['queens ny'] = 'queens';
+ESPN_TO_TEAM_ID["queens (nc)"] = "queens";
+ESPN_TO_TEAM_ID["queens nc"] = "queens";
+ESPN_TO_TEAM_ID["queens ny"] = "queens";
 // iowa-state / utah-state plain abbreviations
-ESPN_TO_TEAM_ID['iowa st'] = 'iowa-state';
-ESPN_TO_TEAM_ID['utah st'] = 'utah-state';
+ESPN_TO_TEAM_ID["iowa st"] = "iowa-state";
+ESPN_TO_TEAM_ID["utah st"] = "utah-state";
 
 // Score cache: matchupId -> normalized score object
 const scoreMap = new Map();
@@ -134,23 +144,24 @@ const fetchStatus = {
   espnRetryCount: 0,
   espnRetryMax: 5,
   espnRetryInterval: 10000,
-  espnNextRetryAt: null,    // timestamp of next retry
-  espnExhausted: false,     // true when all retries used up
+  espnNextRetryAt: null, // timestamp of next retry
+  espnExhausted: false, // true when all retries used up
 };
 let espnRetryTimer = null;
 let espnCountdownInterval = null;
 
 function normalizeStatus(espnStatus) {
-  if (!espnStatus || !espnStatus.type) return 'scheduled';
+  if (!espnStatus || !espnStatus.type) return "scheduled";
   const name = espnStatus.type.name || espnStatus.type.state;
-  if (name === 'STATUS_FINAL' || espnStatus.type.completed) return 'final';
-  if (name === 'STATUS_HALFTIME') return 'halftime';
-  if (name === 'STATUS_IN_PROGRESS') return 'live';
-  if (name === 'STATUS_SCHEDULED' || name === 'STATUS_PREGAME') return 'scheduled';
+  if (name === "STATUS_FINAL" || espnStatus.type.completed) return "final";
+  if (name === "STATUS_HALFTIME") return "halftime";
+  if (name === "STATUS_IN_PROGRESS") return "live";
+  if (name === "STATUS_SCHEDULED" || name === "STATUS_PREGAME")
+    return "scheduled";
   // Fallback based on state
-  if (espnStatus.type.state === 'in') return 'live';
-  if (espnStatus.type.state === 'post') return 'final';
-  return 'scheduled';
+  if (espnStatus.type.state === "in") return "live";
+  if (espnStatus.type.state === "post") return "final";
+  return "scheduled";
 }
 
 function findTeamId(espnCompetitor) {
@@ -173,7 +184,10 @@ function findTeamId(espnCompetitor) {
 
   // Strip parentheticals like "(FL)", "(OH)", "(Fla.)" and retry
   for (const n of rawNames) {
-    const stripped = n.replace(/\s*\([^)]*\)/g, '').trim().toLowerCase();
+    const stripped = n
+      .replace(/\s*\([^)]*\)/g, "")
+      .trim()
+      .toLowerCase();
     if (stripped) {
       const id = ESPN_TO_TEAM_ID[stripped];
       if (id) return id;
@@ -181,16 +195,20 @@ function findTeamId(espnCompetitor) {
   }
 
   // Prefix matching: does ESPN's displayName start with any of our known names?
-  const displayLower = (team.displayName || '').toLowerCase();
+  const displayLower = (team.displayName || "").toLowerCase();
   for (const [espnLower, teamId] of Object.entries(ESPN_TO_TEAM_ID)) {
-    if (espnLower.length >= 4 && displayLower.startsWith(espnLower)) return teamId;
+    if (espnLower.length >= 4 && displayLower.startsWith(espnLower))
+      return teamId;
   }
 
   // Substring matching as last resort (only for longer names to avoid false positives)
   for (const [espnLower, teamId] of Object.entries(ESPN_TO_TEAM_ID)) {
     if (espnLower.length >= 6) {
       for (const n of rawNames) {
-        if (n.toLowerCase().includes(espnLower) || espnLower.includes(n.toLowerCase())) {
+        if (
+          n.toLowerCase().includes(espnLower) ||
+          espnLower.includes(n.toLowerCase())
+        ) {
           return teamId;
         }
       }
@@ -239,7 +257,7 @@ function findMatchupIdForTeams(teamId1, teamId2) {
   }
 
   // Check Final Four and Championship
-  for (const id of ['ff-0', 'ff-1', 'championship']) {
+  for (const id of ["ff-0", "ff-1", "championship"]) {
     const gen = getGeneratedMatchup(id);
     if (gen && gen.team1 && gen.team2) {
       const ids = [gen.team1.id, gen.team2.id];
@@ -264,7 +282,8 @@ function processEvents(events) {
   // in completedDates and won't be re-fetched, so their scores must persist across polls.
   // We simply overwrite entries for events we do receive.
 
-  let matched = 0, unmatched = 0;
+  let matched = 0,
+    unmatched = 0;
 
   for (const event of events) {
     const comp = event.competitions?.[0];
@@ -276,9 +295,17 @@ function processEvents(events) {
     const teamIdA = findTeamId(competitors[0]);
     const teamIdB = findTeamId(competitors[1]);
     if (!teamIdA || !teamIdB) {
-      const nameA = competitors[0].team?.shortDisplayName || competitors[0].team?.displayName || '?';
-      const nameB = competitors[1].team?.shortDisplayName || competitors[1].team?.displayName || '?';
-      console.log(`[ESPN] No team ID match: "${nameA}" (${teamIdA || 'unknown'}) vs "${nameB}" (${teamIdB || 'unknown'})`);
+      const nameA =
+        competitors[0].team?.shortDisplayName ||
+        competitors[0].team?.displayName ||
+        "?";
+      const nameB =
+        competitors[1].team?.shortDisplayName ||
+        competitors[1].team?.displayName ||
+        "?";
+      console.log(
+        `[ESPN] No team ID match: "${nameA}" (${teamIdA || "unknown"}) vs "${nameB}" (${teamIdB || "unknown"})`,
+      );
       unmatched++;
       continue;
     }
@@ -292,15 +319,15 @@ function processEvents(events) {
 
     // Determine which ESPN competitor maps to team1/team2 in our matchup
     const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
-    const compForTeam1 = competitors.find(c => findTeamId(c) === team1Id);
-    const compForTeam2 = competitors.find(c => findTeamId(c) === team2Id);
+    const compForTeam1 = competitors.find((c) => findTeamId(c) === team1Id);
+    const compForTeam2 = competitors.find((c) => findTeamId(c) === team2Id);
 
     const status = normalizeStatus(event.status);
-    const team1Score = parseInt(compForTeam1?.score ?? '0', 10);
-    const team2Score = parseInt(compForTeam2?.score ?? '0', 10);
+    const team1Score = parseInt(compForTeam1?.score ?? "0", 10);
+    const team2Score = parseInt(compForTeam2?.score ?? "0", 10);
 
     const period = event.status?.period || 0;
-    const clock = event.status?.displayClock || '';
+    const clock = event.status?.displayClock || "";
     const gameDate = event.date || comp.date || null;
 
     // Extract US broadcast channel(s) from ESPN
@@ -312,13 +339,14 @@ function processEvents(events) {
     }
     // Fall back to the simpler broadcasts array if geoBroadcasts is empty
     if (broadcasts.length === 0) {
-      for (const b of (comp.broadcasts || [])) {
-        for (const n of (b.names || [])) {
+      for (const b of comp.broadcasts || []) {
+        for (const n of b.names || []) {
           if (n) broadcasts.push(n);
         }
       }
     }
-    const broadcastChannel = broadcasts.length > 0 ? broadcasts.join(' / ') : null;
+    const broadcastChannel =
+      broadcasts.length > 0 ? broadcasts.join(" / ") : null;
 
     scoreMap.set(matchupId, {
       status,
@@ -329,24 +357,27 @@ function processEvents(events) {
       gameDate,
       broadcastChannel,
     });
-    console.log(`[ESPN] Matched ${teamIdA} vs ${teamIdB} -> ${matchupId} (${status}, ${team1Score}-${team2Score})`);
+    console.log(
+      `[ESPN] Matched ${teamIdA} vs ${teamIdB} -> ${matchupId} (${status}, ${team1Score}-${team2Score})`,
+    );
     matched++;
   }
 
-  console.log(`[ESPN] processEvents: ${matched} matched, ${unmatched} unmatched out of ${events.length} events — scoreMap size: ${scoreMap.size}`);
+  console.log(
+    `[ESPN] processEvents: ${matched} matched, ${unmatched} unmatched out of ${events.length} events — scoreMap size: ${scoreMap.size}`,
+  );
 }
-
-
-
 
 function notifyListeners(detail) {
   for (const cb of listeners) {
-    try { cb(detail); } catch {}
+    try {
+      cb(detail);
+    } catch {}
   }
 }
 
 // First day of the 2026 NCAA Tournament
-const TOURNAMENT_START = new Date(2026, 2, 20); // March 20, 2026
+const TOURNAMENT_START = new Date(2026, 2, 19); // March 19, 2026
 
 // Generate tournament dates to query: tournament start through tomorrow.
 // Always anchored to the tournament start so early-round results are never dropped.
@@ -363,7 +394,7 @@ function getTournamentDatesToFetch() {
     const dd = cursor.getDate();
     // Stay within tournament window (mid-March → early April)
     if ((mm === 2 && dd >= 14) || (mm === 3 && dd <= 12)) {
-      const key = `${cursor.getFullYear()}${String(mm + 1).padStart(2, '0')}${String(dd).padStart(2, '0')}`;
+      const key = `${cursor.getFullYear()}${String(mm + 1).padStart(2, "0")}${String(dd).padStart(2, "0")}`;
       dates.push(key);
     }
     cursor.setDate(cursor.getDate() + 1);
@@ -372,11 +403,12 @@ function getTournamentDatesToFetch() {
 }
 
 function buildDateKey(d) {
-  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
 }
 
 async function fetchScoresInner() {
-  const BASE = 'https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard';
+  const BASE =
+    "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard";
 
   const dates = getTournamentDatesToFetch();
   const tomorrow = new Date();
@@ -385,25 +417,27 @@ async function fetchScoresInner() {
   const rangeEnd = buildDateKey(tomorrow);
 
   // Strategy 1: per-date queries — reliable for recent dates
-  const dateFetches = dates.map(date =>
+  const dateFetches = dates.map((date) =>
     fetch(`${BASE}?dates=${date}&limit=200`)
-      .then(r => r.ok ? r.json() : null)
-      .catch(() => null)
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null),
   );
 
   // Strategy 2: date-range query — may return older completed games in one shot
   const rangeFetch = fetch(`${BASE}?dates=${rangeStart}-${rangeEnd}&limit=500`)
-    .then(r => r.ok ? r.json() : null)
+    .then((r) => (r.ok ? r.json() : null))
     .catch(() => null);
 
   // Strategy 3: postseason (groups=50, seasontype=3) — returns all tournament
   // events regardless of date, most reliable for historical bracket data
   const postseasonFetch = fetch(`${BASE}?groups=50&seasontype=3&limit=500`)
-    .then(r => r.ok ? r.json() : null)
+    .then((r) => (r.ok ? r.json() : null))
     .catch(() => null);
 
   const [rangeResult, postseasonResult, ...dateResults] = await Promise.all([
-    rangeFetch, postseasonFetch, ...dateFetches,
+    rangeFetch,
+    postseasonFetch,
+    ...dateFetches,
   ]);
 
   const seenIds = new Set();
@@ -411,21 +445,24 @@ async function fetchScoresInner() {
 
   function addEvents(events, label) {
     let added = 0;
-    for (const event of (events || [])) {
+    for (const event of events || []) {
       if (!seenIds.has(event.id)) {
         seenIds.add(event.id);
         allEvents.push(event);
         added++;
       }
     }
-    console.log(`[ESPN] ${label}: ${(events || []).length} events (${added} new)`);
+    console.log(
+      `[ESPN] ${label}: ${(events || []).length} events (${added} new)`,
+    );
   }
 
-  if (postseasonResult) addEvents(postseasonResult.events, 'postseason query');
-  else console.warn('[ESPN] Postseason query failed or returned null');
+  if (postseasonResult) addEvents(postseasonResult.events, "postseason query");
+  else console.warn("[ESPN] Postseason query failed or returned null");
 
-  if (rangeResult) addEvents(rangeResult.events, `range ${rangeStart}-${rangeEnd}`);
-  else console.warn('[ESPN] Range query failed or returned null');
+  if (rangeResult)
+    addEvents(rangeResult.events, `range ${rangeStart}-${rangeEnd}`);
+  else console.warn("[ESPN] Range query failed or returned null");
 
   for (let i = 0; i < dateResults.length; i++) {
     if (dateResults[i]) addEvents(dateResults[i].events, `date ${dates[i]}`);
@@ -433,7 +470,7 @@ async function fetchScoresInner() {
   }
 
   if (allEvents.length === 0) {
-    throw new Error('All ESPN requests returned no events');
+    throw new Error("All ESPN requests returned no events");
   }
 
   console.log(`[ESPN] Total unique events: ${allEvents.length}`);
@@ -453,25 +490,28 @@ function scheduleEspnRetry() {
   if (fetchStatus.espnRetryCount >= fetchStatus.espnRetryMax) {
     fetchStatus.espnExhausted = true;
     fetchStatus.espnNextRetryAt = null;
-    notifyListeners({ type: 'status' });
+    notifyListeners({ type: "status" });
     return;
   }
   fetchStatus.espnNextRetryAt = Date.now() + fetchStatus.espnRetryInterval;
   // Tick every second to update countdown display
-  espnCountdownInterval = setInterval(() => notifyListeners({ type: 'status' }), 1000);
+  espnCountdownInterval = setInterval(
+    () => notifyListeners({ type: "status" }),
+    1000,
+  );
   espnRetryTimer = setTimeout(() => {
     clearInterval(espnCountdownInterval);
     espnCountdownInterval = null;
     fetchScores();
   }, fetchStatus.espnRetryInterval);
-  notifyListeners({ type: 'status' });
+  notifyListeners({ type: "status" });
 }
 
 async function fetchScores() {
   fetchStatus.espnLoading = true;
   fetchStatus.espnFailed = false;
   clearEspnRetry();
-  notifyListeners({ type: 'status' });
+  notifyListeners({ type: "status" });
 
   try {
     await fetchScoresInner();
@@ -482,7 +522,7 @@ async function fetchScores() {
     fetchStatus.espnExhausted = false;
     fetchStatus.espnNextRetryAt = null;
   } catch (err) {
-    console.warn('[ESPN] Fetch error:', err);
+    console.warn("[ESPN] Fetch error:", err);
     fetchStatus.espnFailed = true;
     fetchStatus.espnHasStaleData = fetchStatus.espnLastLoaded !== null;
     fetchStatus.espnRetryCount++;
@@ -500,12 +540,13 @@ export function startPolling() {
   pollIntervalId = setInterval(fetchScores, 30000);
 
   // Start Polymarket integration (series_id=10470 + CLOB WebSocket)
-  startPolymarket().catch(err => console.warn('[Polymarket] Init error:', err));
+  startPolymarket().catch((err) =>
+    console.warn("[Polymarket] Init error:", err),
+  );
 
   // Pass polymarket update details through so the UI can do targeted updates
   onPolymarketUpdate((detail) => notifyListeners(detail));
 }
-
 
 export function stopPolling() {
   if (pollIntervalId) {
@@ -525,7 +566,7 @@ export function getScoreForMatchup(matchupId) {
  */
 export function getWinner(matchupId) {
   const score = scoreMap.get(matchupId);
-  if (!score || score.status !== 'final') return null;
+  if (!score || score.status !== "final") return null;
 
   // Look up the matchup to get team objects
   const r64 = getR64Matchup(matchupId);
