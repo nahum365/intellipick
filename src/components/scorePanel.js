@@ -42,6 +42,7 @@ function computeIntelliPickPerformance() {
     results.total++;
 
     const liveScore = getScoreForMatchup(m.id);
+    console.log(liveScore);
     if (!liveScore) {
       results.pending++;
       continue;
