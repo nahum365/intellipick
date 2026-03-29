@@ -422,20 +422,13 @@ async function fetchScoresInner() {
       .catch(() => null),
   );
 
-  // Strategy 2: date-range query — may return older completed games in one shot
-  // Only fetch up to today since ESPN doesn't have data for future dates
-  const rangeFetch = fetch(`${BASE}?dates=${rangeStart}-${rangeEnd}&limit=500`)
-    .then((r) => (r.ok ? r.json() : null))
-    .catch(() => null);
-
-  // Strategy 3: postseason (groups=50, seasontype=3) — returns all tournament
+  // Strategy 2: postseason (groups=50, seasontype=3) — returns all tournament
   // events regardless of date, most reliable for historical bracket data
   const postseasonFetch = fetch(`${BASE}?groups=50&seasontype=3&limit=500`)
     .then((r) => (r.ok ? r.json() : null))
     .catch(() => null);
 
-  const [rangeResult, postseasonResult, ...dateResults] = await Promise.all([
-    rangeFetch,
+  const [postseasonResult, ...dateResults] = await Promise.all([
     postseasonFetch,
     ...dateFetches,
   ]);
@@ -459,13 +452,6 @@ async function fetchScoresInner() {
 
   if (postseasonResult) addEvents(postseasonResult.events, "postseason query");
   else console.warn("[ESPN] Postseason query failed or returned null");
-
-  if (rangeResult)
-    addEvents(
-      rangeResult.events,
-      `range ${rangeStart}-${rangeEnd} (up to today)`,
-    );
-  else console.warn("[ESPN] Range query failed or returned null");
 
   for (let i = 0; i < dateResults.length; i++) {
     if (dateResults[i]) addEvents(dateResults[i].events, `date ${dates[i]}`);
