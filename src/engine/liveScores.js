@@ -314,6 +314,94 @@ function findMatchupIdForTeams(teamId1, teamId2) {
     }
   }
 
+  // For later-round matchups, also check if these teams are winners from feeder rounds
+  // This handles cases where ESPN reports a game but our bracket hasn't populated team names yet
+  const directFeederMatch = findDirectFeederMatch(teamId1, teamId2);
+  if (directFeederMatch) return directFeederMatch;
+
+  return null;
+}
+
+/**
+ * Find a matchup by checking all possible feeder round combinations.
+ * This is the fallback for later-round matchups where teams aren't pre-populated.
+ */
+function findDirectFeederMatch(teamId1, teamId2) {
+  // Check R32 matchups (winners of adjacent R64 games in same region)
+  for (const region of REGIONS) {
+    const r = region.toLowerCase();
+    const r64s = getRegionR64Matchups(r);
+    for (let i = 0; i < r64s.length - 1; i += 2) {
+      const winner1 = getWinner(r64s[i]);
+      const winner2 = getWinner(r64s[i + 1]);
+      if (winner1 && winner2) {
+        const ids = [winner1.id, winner2.id];
+        if (ids.includes(teamId1) && ids.includes(teamId2)) {
+          return `${r}-r2-${Math.floor(i / 2)}`;
+        }
+      }
+    }
+  }
+
+  // Check S16 matchups (winners of adjacent R32 games in same region)
+  for (const region of REGIONS) {
+    const r = region.toLowerCase();
+    for (let pos = 0; pos < 2; pos++) {
+      const r32Id1 = `${r}-r2-${pos * 2}`;
+      const r32Id2 = `${r}-r2-${pos * 2 + 1}`;
+      const winner1 = getWinner(r32Id1);
+      const winner2 = getWinner(r32Id2);
+      if (winner1 && winner2) {
+        const ids = [winner1.id, winner2.id];
+        if (ids.includes(teamId1) && ids.includes(teamId2)) {
+          return `${r}-r3-${pos}`;
+        }
+      }
+    }
+  }
+
+  // Check Elite Eight matchups (winners of S16 games in same region)
+  for (const region of REGIONS) {
+    const r = region.toLowerCase();
+    const s16Id1 = `${r}-r3-0`;
+    const s16Id2 = `${r}-r3-1`;
+    const winner1 = getWinner(s16Id1);
+    const winner2 = getWinner(s16Id2);
+    if (winner1 && winner2) {
+      const ids = [winner1.id, winner2.id];
+      if (ids.includes(teamId1) && ids.includes(teamId2)) {
+        return `${r}-r4-0`;
+      }
+    }
+  }
+
+  // Check Final Four matchups (winners of E8 games from paired regions)
+  const ffMatchups = [
+    ["east", "south"], // ff-0: East winner vs South winner
+    ["west", "midwest"], // ff-1: West winner vs Midwest winner
+  ];
+  for (let ffIdx = 0; ffIdx < ffMatchups.length; ffIdx++) {
+    const [regionA, regionB] = ffMatchups[ffIdx];
+    const e8Winner1 = getWinner(`${regionA}-r4-0`);
+    const e8Winner2 = getWinner(`${regionB}-r4-0`);
+    if (e8Winner1 && e8Winner2) {
+      const ids = [e8Winner1.id, e8Winner2.id];
+      if (ids.includes(teamId1) && ids.includes(teamId2)) {
+        return `ff-${ffIdx}`;
+      }
+    }
+  }
+
+  // Check Championship matchup (winners of Final Four games)
+  const ff0Winner = getWinner("ff-0");
+  const ff1Winner = getWinner("ff-1");
+  if (ff0Winner && ff1Winner) {
+    const ids = [ff0Winner.id, ff1Winner.id];
+    if (ids.includes(teamId1) && ids.includes(teamId2)) {
+      return "championship";
+    }
+  }
+
   return null;
 }
 
