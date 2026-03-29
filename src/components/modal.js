@@ -1,7 +1,11 @@
-import teamsData from '../data/teams.json';
-import { getScoreForMatchup, onScoresUpdate } from '../engine/liveScores.js';
-import { getMarketData, getAssetPriceState, onPolymarketUpdate } from '../engine/polymarket.js';
-import { isMobile } from './tooltip.js';
+import teamsData from "../data/teams.json";
+import { getScoreForMatchup, onScoresUpdate } from "../engine/liveScores.js";
+import {
+  getMarketData,
+  getAssetPriceState,
+  onPolymarketUpdate,
+} from "../engine/polymarket.js";
+import { isMobile } from "./tooltip.js";
 
 let overlayEl = null;
 let currentMatchup = null;
@@ -10,26 +14,27 @@ let unsubScoreUpdate = null;
 let unsubPolymarket = null;
 
 function getTeamProfile(teamId) {
-  return teamsData.teams.find(t => t.id === teamId) || null;
+  return teamsData.teams.find((t) => t.id === teamId) || null;
 }
 
 // Canonical display name from teams.json, falling back to the matchup team name
 function teamDisplayName(team) {
-  if (!team) return 'TBD';
+  if (!team) return "TBD";
   const profile = getTeamProfile(team.id);
   return profile?.shortName || team.name || team.id;
 }
 
 function confidenceClass(confidence) {
-  if (!confidence) return 'medium';
-  const c = confidence.toLowerCase().replace(/\s+/g, '-');
-  if (c === 'very-high') return 'very-high';
-  if (c === 'high') return 'high';
-  return 'medium';
+  if (!confidence) return "medium";
+  const c = confidence.toLowerCase().replace(/\s+/g, "-");
+  if (c === "very-high") return "very-high";
+  if (c === "high") return "high";
+  return "medium";
 }
 
 function buildTeamPanel(team, profile, matchup) {
-  if (!team) return '<div class="modal__team-panel"><p style="color:var(--text-muted)">TBD</p></div>';
+  if (!team)
+    return '<div class="modal__team-panel"><p style="color:var(--text-muted)">TBD</p></div>';
 
   let html = `<div class="modal__team-panel" data-team-id="${team.id}">`;
 
@@ -45,9 +50,11 @@ function buildTeamPanel(team, profile, matchup) {
     if (profile.record) meta.push(profile.record);
     if (profile.conference) meta.push(profile.conference);
     if (profile.kenpomRank) meta.push(`KenPom #${profile.kenpomRank}`);
-    if (profile.barttovikRank) meta.push(`BartTorvik #${profile.barttovikRank}`);
+    if (profile.barttovikRank)
+      meta.push(`BartTorvik #${profile.barttovikRank}`);
   }
-  if (meta.length) html += `<div class="modal__team-meta">${meta.join(' \u00B7 ')}</div>`;
+  if (meta.length)
+    html += `<div class="modal__team-meta">${meta.join(" \u00B7 ")}</div>`;
 
   if (profile) {
     // Championship odds
@@ -82,13 +89,16 @@ function buildTeamPanel(team, profile, matchup) {
 
     // Key Players
     if (profile.keyPlayers && profile.keyPlayers.length > 0) {
-      let playersHtml = profile.keyPlayers.map(p => {
-        let ph = `<div class="modal__team-player"><span class="modal__team-player-name">${p.name}</span>`;
-        if (p.stats) ph += ` \u2014 ${p.stats}`;
-        if (p.note) ph += `<div class="modal__team-player-note">${p.note}</div>`;
-        ph += '</div>';
-        return ph;
-      }).join('');
+      let playersHtml = profile.keyPlayers
+        .map((p) => {
+          let ph = `<div class="modal__team-player"><span class="modal__team-player-name">${p.name}</span>`;
+          if (p.stats) ph += ` \u2014 ${p.stats}`;
+          if (p.note)
+            ph += `<div class="modal__team-player-note">${p.note}</div>`;
+          ph += "</div>";
+          return ph;
+        })
+        .join("");
       html += `<div class="modal__team-section">
         <div class="modal__team-section-title">Key Players</div>
         ${playersHtml}
@@ -97,13 +107,15 @@ function buildTeamPanel(team, profile, matchup) {
 
     // Injuries
     if (profile.injuries && profile.injuries.length > 0) {
-      let injHtml = profile.injuries.map(inj => {
-        const sc = inj.status === 'OUT' ? 'out' : 'doubtful';
-        return `<div class="modal__team-injury">
+      let injHtml = profile.injuries
+        .map((inj) => {
+          const sc = inj.status === "OUT" ? "out" : "doubtful";
+          return `<div class="modal__team-injury">
           <span class="modal__team-injury-status modal__team-injury-status--${sc}">${inj.status}</span>
           <span>${inj.player} \u2014 ${inj.detail}</span>
         </div>`;
-      }).join('');
+        })
+        .join("");
       html += `<div class="modal__team-section">
         <div class="modal__team-section-title">Injuries</div>
         ${injHtml}
@@ -134,60 +146,82 @@ function buildTeamPanel(team, profile, matchup) {
 
     // Badges
     const badges = [];
-    if (profile.deepRunWatch) badges.push('<span class="modal__badge modal__badge--deep-run">DEEP RUN WATCH</span>');
-    if (profile.fadeAlert) badges.push('<span class="modal__badge modal__badge--fade">FADE ALERT</span>');
+    if (profile.deepRunWatch)
+      badges.push(
+        '<span class="modal__badge modal__badge--deep-run">DEEP RUN WATCH</span>',
+      );
+    if (profile.fadeAlert)
+      badges.push(
+        '<span class="modal__badge modal__badge--fade">FADE ALERT</span>',
+      );
     if (badges.length) {
-      html += `<div class="modal__team-section"><div class="modal__badge-row">${badges.join('')}</div></div>`;
+      html += `<div class="modal__team-section"><div class="modal__badge-row">${badges.join("")}</div></div>`;
     }
   } else {
-    html += '<div class="modal__team-section"><div class="modal__team-section-text" style="color:var(--text-muted)">No detailed profile available.</div></div>';
+    html +=
+      '<div class="modal__team-section"><div class="modal__team-section-text" style="color:var(--text-muted)">No detailed profile available.</div></div>';
   }
 
-  html += '</div>';
+  html += "</div>";
   return html;
 }
 
 function buildScoreboardHtml(matchup, liveScore) {
-  if (!liveScore) return '';
+  if (!liveScore) return "";
 
   // Don't show scoreboard for scheduled games (Polymarket panel handles pre-game odds)
-  if (liveScore.status === 'scheduled') return '';
+  if (liveScore.status === "scheduled") return "";
 
   let statusLabel, statusClass;
-  if (liveScore.status === 'live') {
-    const periodLabel = liveScore.period > 2 ? 'OT' : liveScore.period === 1 ? '1st Half' : '2nd Half';
+  if (liveScore.status === "live") {
+    const periodLabel =
+      liveScore.period > 2
+        ? "OT"
+        : liveScore.period === 1
+          ? "1st Half"
+          : "2nd Half";
     statusLabel = `${liveScore.clock} - ${periodLabel}`;
-    statusClass = 'live';
-  } else if (liveScore.status === 'halftime') {
-    statusLabel = 'Halftime';
-    statusClass = 'halftime';
+    statusClass = "live";
+  } else if (liveScore.status === "halftime") {
+    statusLabel = "Halftime";
+    statusClass = "halftime";
   } else {
-    statusLabel = 'Final';
-    statusClass = 'final';
+    statusLabel = "Final";
+    statusClass = "final";
   }
 
   const t1Leading = liveScore.team1Score > liveScore.team2Score;
   const t2Leading = liveScore.team2Score > liveScore.team1Score;
   const t1Name = teamDisplayName(matchup.team1);
   const t2Name = teamDisplayName(matchup.team2);
-  const t1Seed = matchup.team1?.seed || '';
-  const t2Seed = matchup.team2?.seed || '';
+  const t1Seed = matchup.team1?.seed || "";
+  const t2Seed = matchup.team2?.seed || "";
 
-  let predictionHtml = '';
+  let predictionHtml = "";
   if (matchup.recommendedPick) {
     const recIsTeam1 = matchup.recommendedPick === matchup.team1?.id;
     const recScore = recIsTeam1 ? liveScore.team1Score : liveScore.team2Score;
     const oppScore = recIsTeam1 ? liveScore.team2Score : liveScore.team1Score;
     const recName = recIsTeam1 ? t1Name : t2Name;
 
-    if (liveScore.status === 'final') {
+    if (liveScore.status === "final") {
       const correct = recScore > oppScore;
-      predictionHtml = `<div class="modal__prediction-result modal__prediction-result--${correct ? 'correct' : 'incorrect'}">
-        IntelliPick picked ${recName} — ${correct ? 'Correct!' : 'Incorrect'}
+      predictionHtml = `<div class="modal__prediction-result modal__prediction-result--${correct ? "correct" : "incorrect"}">
+        IntelliPick picked ${recName} — ${correct ? "Correct!" : "Incorrect"}
       </div>`;
     } else {
-      const status = recScore > oppScore ? 'winning' : recScore < oppScore ? 'losing' : 'tied';
-      const label = recScore > oppScore ? 'currently winning' : recScore < oppScore ? 'currently losing' : 'currently tied';
+      const status =
+        recScore > oppScore
+          ? "winning"
+          : recScore < oppScore
+            ? "losing"
+            : "tied";
+      const label =
+        recScore > oppScore
+          ? "currently winning"
+          : recScore < oppScore
+            ? "currently losing"
+            : "currently tied";
       predictionHtml = `<div class="modal__prediction-result modal__prediction-result--${status}">
         IntelliPick's pick (${recName}) is ${label}
       </div>`;
@@ -196,21 +230,21 @@ function buildScoreboardHtml(matchup, liveScore) {
 
   const channelHtml = liveScore.broadcastChannel
     ? `<div class="modal__scoreboard-channel">${liveScore.broadcastChannel}</div>`
-    : '';
+    : "";
 
   return `<div class="modal__scoreboard">
     <div class="modal__scoreboard-status modal__scoreboard-status--${statusClass}">
-      ${statusClass === 'live' ? '<span class="modal__live-dot"></span>' : ''}
+      ${statusClass === "live" ? '<span class="modal__live-dot"></span>' : ""}
       ${statusLabel}
       ${channelHtml}
     </div>
     <div class="modal__scoreboard-scores">
-      <div class="modal__scoreboard-team ${t1Leading ? 'modal__scoreboard-team--leading' : ''}">
+      <div class="modal__scoreboard-team ${t1Leading ? "modal__scoreboard-team--leading" : ""}">
         <span class="modal__scoreboard-seed">${t1Seed}</span>
         <span class="modal__scoreboard-name">${t1Name}</span>
         <span class="modal__scoreboard-pts">${liveScore.team1Score}</span>
       </div>
-      <div class="modal__scoreboard-team ${t2Leading ? 'modal__scoreboard-team--leading' : ''}">
+      <div class="modal__scoreboard-team ${t2Leading ? "modal__scoreboard-team--leading" : ""}">
         <span class="modal__scoreboard-seed">${t2Seed}</span>
         <span class="modal__scoreboard-name">${t2Name}</span>
         <span class="modal__scoreboard-pts">${liveScore.team2Score}</span>
@@ -221,19 +255,22 @@ function buildScoreboardHtml(matchup, liveScore) {
 }
 
 function buildAssetDebugRow(label, assetId) {
-  if (!assetId) return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">--</span></div>`;
+  if (!assetId)
+    return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">--</span></div>`;
   const p = getAssetPriceState(assetId);
-  if (!p) return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">no data</span></div>`;
-  const bid = p.bestBid > 0 ? p.bestBid.toFixed(4) : '--';
-  const ask = p.bestAsk > 0 ? p.bestAsk.toFixed(4) : '--';
-  const ltp = p.lastTradePrice > 0 ? p.lastTradePrice.toFixed(4) : '--';
-  const spread = (p.bestBid > 0 && p.bestAsk > 0) ? (p.bestAsk - p.bestBid).toFixed(4) : '--';
+  if (!p)
+    return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">no data</span></div>`;
+  const bid = p.bestBid > 0 ? p.bestBid.toFixed(4) : "--";
+  const ask = p.bestAsk > 0 ? p.bestAsk.toFixed(4) : "--";
+  const ltp = p.lastTradePrice > 0 ? p.lastTradePrice.toFixed(4) : "--";
+  const spread =
+    p.bestBid > 0 && p.bestAsk > 0 ? (p.bestAsk - p.bestBid).toFixed(4) : "--";
   return `<div class="pm-debug__row"><span class="pm-debug__label">${label}</span><span class="pm-debug__value">bid ${bid} / ask ${ask} (spread ${spread}) · ltp ${ltp}</span></div>`;
 }
 
 function buildPolymarketPanel(matchup) {
   const mkt = getMarketData(matchup.id);
-  if (!mkt) return '';
+  if (!mkt) return "";
 
   const t1Name = teamDisplayName(matchup.team1);
   const t2Name = teamDisplayName(matchup.team2);
@@ -244,30 +281,52 @@ function buildPolymarketPanel(matchup) {
   // Delta arrows + tick flash
   const d1 = mkt.team1ProbDelta || 0;
   const d2 = mkt.team2ProbDelta || 0;
-  const recentTick = mkt.lastChangeTime && (Date.now() - mkt.lastChangeTime < 2000);
-  const arrow1 = d1 > 0.005 ? '<span class="pm-delta pm-delta--up">\u25B2</span>' : d1 < -0.005 ? '<span class="pm-delta pm-delta--down">\u25BC</span>' : '';
-  const arrow2 = d2 > 0.005 ? '<span class="pm-delta pm-delta--up">\u25B2</span>' : d2 < -0.005 ? '<span class="pm-delta pm-delta--down">\u25BC</span>' : '';
-  const tick1 = recentTick && Math.abs(d1) > 0.001 ? (d1 > 0 ? ' tick-up' : ' tick-down') : '';
-  const tick2 = recentTick && Math.abs(d2) > 0.001 ? (d2 > 0 ? ' tick-up' : ' tick-down') : '';
+  const recentTick =
+    mkt.lastChangeTime && Date.now() - mkt.lastChangeTime < 2000;
+  const arrow1 =
+    d1 > 0.005
+      ? '<span class="pm-delta pm-delta--up">\u25B2</span>'
+      : d1 < -0.005
+        ? '<span class="pm-delta pm-delta--down">\u25BC</span>'
+        : "";
+  const arrow2 =
+    d2 > 0.005
+      ? '<span class="pm-delta pm-delta--up">\u25B2</span>'
+      : d2 < -0.005
+        ? '<span class="pm-delta pm-delta--down">\u25BC</span>'
+        : "";
+  const tick1 =
+    recentTick && Math.abs(d1) > 0.001
+      ? d1 > 0
+        ? " tick-up"
+        : " tick-down"
+      : "";
+  const tick2 =
+    recentTick && Math.abs(d2) > 0.001
+      ? d2 > 0
+        ? " tick-up"
+        : " tick-down"
+      : "";
 
   // Volume / liquidity formatting
   const fmtK = (n) => {
-    if (!n || n <= 0) return '--';
-    if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
-    if (n >= 1000) return '$' + (n / 1000).toFixed(1) + 'K';
-    return '$' + Math.round(n);
+    if (!n || n <= 0) return "--";
+    if (n >= 1000000) return "$" + (n / 1000000).toFixed(1) + "M";
+    if (n >= 1000) return "$" + (n / 1000).toFixed(1) + "K";
+    return "$" + Math.round(n);
   };
 
   // Implied probability as cents (matches Polymarket's display)
-  const price1 = t1Pct + '\u00A2';
-  const price2 = t2Pct + '\u00A2';
+  const price1 = t1Pct + "\u00A2";
+  const price2 = t2Pct + "\u00A2";
 
   // Live badge in header (score display is handled by the dedicated scoreboard section above)
   const isLive = getScoreForMatchup(matchup.id);
-  const isLiveStatus = isLive && (isLive.status === 'live' || isLive.status === 'halftime');
+  const isLiveStatus =
+    isLive && (isLive.status === "live" || isLive.status === "halftime");
 
   // Sentiment
-  let sentimentHtml = '';
+  let sentimentHtml = "";
   if (mkt.sentiment) {
     sentimentHtml = `
       <div class="pm-sentiment">
@@ -280,19 +339,19 @@ function buildPolymarketPanel(matchup) {
     <div class="pm-panel__header">
       <span class="pm-panel__logo">\u26A1</span>
       <span class="pm-panel__title">Polymarket Live Odds</span>
-      ${isLiveStatus ? '<span class="pm-panel__live-badge">LIVE</span>' : ''}
+      ${isLiveStatus ? '<span class="pm-panel__live-badge">LIVE</span>' : ""}
     </div>
 
     <div class="pm-odds">
-      <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? 'pm-odds__side--fav' : ''}">
+      <div class="pm-odds__side pm-odds__side--t1 ${t1Fav ? "pm-odds__side--fav" : ""}">
         <div class="pm-odds__team-name">${t1Name}</div>
         <div class="pm-odds__pct"><span class="pm-odds__num${tick1}">${t1Pct}%</span>${arrow1}</div>
-        <div class="pm-odds__detail">${mkt.moneyline1 || '--'} · ${price1}</div>
+        <div class="pm-odds__detail">${mkt.moneyline1 || "--"} · ${price1}</div>
       </div>
-      <div class="pm-odds__side pm-odds__side--t2 ${!t1Fav ? 'pm-odds__side--fav' : ''}">
+      <div class="pm-odds__side pm-odds__side--t2 ${!t1Fav ? "pm-odds__side--fav" : ""}">
         <div class="pm-odds__team-name">${t2Name}</div>
         <div class="pm-odds__pct"><span class="pm-odds__num${tick2}">${t2Pct}%</span>${arrow2}</div>
-        <div class="pm-odds__detail">${mkt.moneyline2 || '--'} · ${price2}</div>
+        <div class="pm-odds__detail">${mkt.moneyline2 || "--"} · ${price2}</div>
       </div>
     </div>
     <div class="pm-prob-bar">
@@ -318,16 +377,16 @@ function buildPolymarketPanel(matchup) {
         Market Details \u25BE
       </div>
       <div class="pm-debug__body">
-        ${mkt.eventTitle ? `<div class="pm-debug__row"><span class="pm-debug__label">Event</span><span class="pm-debug__value">${mkt.eventTitle}</span></div>` : ''}
-        ${mkt.marketQuestion ? `<div class="pm-debug__row"><span class="pm-debug__label">Question</span><span class="pm-debug__value">${mkt.marketQuestion}</span></div>` : ''}
-        <div class="pm-debug__row"><span class="pm-debug__label">Market Type</span><span class="pm-debug__value">${mkt.sportsMarketType || 'unknown'}</span></div>
-        ${mkt.outcomes ? `<div class="pm-debug__row"><span class="pm-debug__label">Outcomes</span><span class="pm-debug__value">${mkt.outcomes.join(' / ')}</span></div>` : ''}
-        <div class="pm-debug__row"><span class="pm-debug__label">Gamma Prices</span><span class="pm-debug__value">${mkt.team1OutcomePrice?.toFixed(4) || '--'} / ${mkt.team2OutcomePrice?.toFixed(4) || '--'}</span></div>
-        ${buildAssetDebugRow('Team 1 CLOB', mkt.team1AssetId)}
-        ${buildAssetDebugRow('Team 2 CLOB', mkt.team2AssetId)}
-        <div class="pm-debug__row"><span class="pm-debug__label">Display Prob</span><span class="pm-debug__value">${mkt.team1Prob?.toFixed(4) || '--'} / ${mkt.team2Prob?.toFixed(4) || '--'}</span></div>
-        ${mkt.conditionId ? `<div class="pm-debug__row"><span class="pm-debug__label">Condition ID</span><span class="pm-debug__value pm-debug__value--mono">${mkt.conditionId.slice(0, 12)}...</span></div>` : ''}
-        ${mkt.slug ? `<div class="pm-debug__row"><a class="pm-debug__link" href="https://polymarket.com/event/${mkt.slug}" target="_blank" rel="noopener">View on Polymarket \u2197</a></div>` : ''}
+        ${mkt.eventTitle ? `<div class="pm-debug__row"><span class="pm-debug__label">Event</span><span class="pm-debug__value">${mkt.eventTitle}</span></div>` : ""}
+        ${mkt.marketQuestion ? `<div class="pm-debug__row"><span class="pm-debug__label">Question</span><span class="pm-debug__value">${mkt.marketQuestion}</span></div>` : ""}
+        <div class="pm-debug__row"><span class="pm-debug__label">Market Type</span><span class="pm-debug__value">${mkt.sportsMarketType || "unknown"}</span></div>
+        ${mkt.outcomes ? `<div class="pm-debug__row"><span class="pm-debug__label">Outcomes</span><span class="pm-debug__value">${mkt.outcomes.join(" / ")}</span></div>` : ""}
+        <div class="pm-debug__row"><span class="pm-debug__label">Gamma Prices</span><span class="pm-debug__value">${mkt.team1OutcomePrice?.toFixed(4) || "--"} / ${mkt.team2OutcomePrice?.toFixed(4) || "--"}</span></div>
+        ${buildAssetDebugRow("Team 1 CLOB", mkt.team1AssetId)}
+        ${buildAssetDebugRow("Team 2 CLOB", mkt.team2AssetId)}
+        <div class="pm-debug__row"><span class="pm-debug__label">Display Prob</span><span class="pm-debug__value">${mkt.team1Prob?.toFixed(4) || "--"} / ${mkt.team2Prob?.toFixed(4) || "--"}</span></div>
+        ${mkt.conditionId ? `<div class="pm-debug__row"><span class="pm-debug__label">Condition ID</span><span class="pm-debug__value pm-debug__value--mono">${mkt.conditionId.slice(0, 12)}...</span></div>` : ""}
+        ${mkt.slug ? `<div class="pm-debug__row"><a class="pm-debug__link" href="https://polymarket.com/event/${mkt.slug}" target="_blank" rel="noopener">View on Polymarket \u2197</a></div>` : ""}
       </div>
     </div>
   </div>`;
@@ -335,9 +394,9 @@ function buildPolymarketPanel(matchup) {
 
 function ensureOverlay() {
   if (overlayEl) return overlayEl;
-  overlayEl = document.createElement('div');
-  overlayEl.className = 'modal-overlay';
-  overlayEl.addEventListener('click', (e) => {
+  overlayEl = document.createElement("div");
+  overlayEl.className = "modal-overlay";
+  overlayEl.addEventListener("click", (e) => {
     if (e.target === overlayEl) closeModal();
   });
   document.body.appendChild(overlayEl);
@@ -353,9 +412,13 @@ export function openModal(matchup, options = {}) {
   // Subscribe to live score updates so the modal refreshes
   if (unsubScoreUpdate) unsubScoreUpdate();
   unsubScoreUpdate = onScoresUpdate(() => {
-    if (currentMatchup && overlayEl && overlayEl.classList.contains('modal-overlay--visible')) {
+    if (
+      currentMatchup &&
+      overlayEl &&
+      overlayEl.classList.contains("modal-overlay--visible")
+    ) {
       // Re-render the scoreboard section in-place
-      const scoreboardContainer = overlayEl.querySelector('.modal__scoreboard');
+      const scoreboardContainer = overlayEl.querySelector(".modal__scoreboard");
       if (scoreboardContainer) {
         const freshScore = getScoreForMatchup(currentMatchup.id);
         const newHtml = buildScoreboardHtml(currentMatchup, freshScore);
@@ -366,15 +429,16 @@ export function openModal(matchup, options = {}) {
         }
       }
       // Also update odds that might not have been present on first open
-      if (!overlayEl.querySelector('.modal__scoreboard')) {
+      if (!overlayEl.querySelector(".modal__scoreboard")) {
         const freshScore = getScoreForMatchup(currentMatchup.id);
         const newHtml = buildScoreboardHtml(currentMatchup, freshScore);
         if (newHtml) {
-          const recEl = overlayEl.querySelector('.modal__recommendation');
-          const tactEl = overlayEl.querySelector('.modal__tactical');
-          const insertBefore = tactEl || overlayEl.querySelector('.modal__teams');
+          const recEl = overlayEl.querySelector(".modal__recommendation");
+          const tactEl = overlayEl.querySelector(".modal__tactical");
+          const insertBefore =
+            tactEl || overlayEl.querySelector(".modal__teams");
           if (insertBefore) {
-            insertBefore.insertAdjacentHTML('beforebegin', newHtml);
+            insertBefore.insertAdjacentHTML("beforebegin", newHtml);
           }
         }
       }
@@ -387,14 +451,15 @@ export function openModal(matchup, options = {}) {
     if (!currentMatchup || !overlayEl || !overlayEl.classList.contains('modal-overlay--visible')) return;
     if (detail && detail.matchupId && detail.matchupId !== currentMatchup.id) return;
 
-    const pmContainer = overlayEl.querySelector('.pm-panel');
+    const pmContainer = overlayEl.querySelector(".pm-panel");
     if (!pmContainer) {
       // Insert PM panel if it wasn't there before
       const newPmHtml = buildPolymarketPanel(currentMatchup);
       if (newPmHtml) {
-        const tactEl = overlayEl.querySelector('.modal__tactical');
-        const insertBefore = tactEl || overlayEl.querySelector('.modal__teams');
-        if (insertBefore) insertBefore.insertAdjacentHTML('beforebegin', newPmHtml);
+        const tactEl = overlayEl.querySelector(".modal__tactical");
+        const insertBefore = tactEl || overlayEl.querySelector(".modal__teams");
+        if (insertBefore)
+          insertBefore.insertAdjacentHTML("beforebegin", newPmHtml);
       }
       return;
     }
@@ -409,7 +474,7 @@ export function openModal(matchup, options = {}) {
 
     const updatePctEl = (side, pct) => {
       if (!side) return;
-      const numEl = side.querySelector('.pm-odds__num');
+      const numEl = side.querySelector(".pm-odds__num");
       if (!numEl) return;
       const oldPct = parseInt(numEl.textContent, 10);
       if (oldPct === pct) return;
@@ -417,36 +482,46 @@ export function openModal(matchup, options = {}) {
       const up = pct > oldPct;
       const pctEl = numEl.parentElement;
 
-      numEl.textContent = pct + '%';
-      pctEl.querySelector('.pm-delta')?.remove();
-      pctEl.insertAdjacentHTML('beforeend',
-        up ? '<span class="pm-delta pm-delta--up">\u25B2</span>'
-           : '<span class="pm-delta pm-delta--down">\u25BC</span>');
+      numEl.textContent = pct + "%";
+      pctEl.querySelector(".pm-delta")?.remove();
+      pctEl.insertAdjacentHTML(
+        "beforeend",
+        up
+          ? '<span class="pm-delta pm-delta--up">\u25B2</span>'
+          : '<span class="pm-delta pm-delta--down">\u25BC</span>',
+      );
 
-      numEl.classList.remove('tick-up', 'tick-down');
+      numEl.classList.remove("tick-up", "tick-down");
       void numEl.offsetWidth;
-      numEl.classList.add(up ? 'tick-up' : 'tick-down');
+      numEl.classList.add(up ? "tick-up" : "tick-down");
       setTimeout(() => {
-        numEl.classList.remove('tick-up', 'tick-down');
-        pctEl.querySelector('.pm-delta')?.remove();
+        numEl.classList.remove("tick-up", "tick-down");
+        pctEl.querySelector(".pm-delta")?.remove();
       }, 1500);
     };
 
-    updatePctEl(pmContainer.querySelector('.pm-odds__side--t1'), t1Pct);
-    updatePctEl(pmContainer.querySelector('.pm-odds__side--t2'), t2Pct);
+    updatePctEl(pmContainer.querySelector(".pm-odds__side--t1"), t1Pct);
+    updatePctEl(pmContainer.querySelector(".pm-odds__side--t2"), t2Pct);
 
     // Prob bar
-    const bar1 = pmContainer.querySelector('.pm-prob-bar__fill--t1');
-    const bar2 = pmContainer.querySelector('.pm-prob-bar__fill--t2');
-    if (bar1) bar1.style.width = t1Pct + '%';
-    if (bar2) bar2.style.width = t2Pct + '%';
+    const bar1 = pmContainer.querySelector(".pm-prob-bar__fill--t1");
+    const bar2 = pmContainer.querySelector(".pm-prob-bar__fill--t2");
+    if (bar1) bar1.style.width = t1Pct + "%";
+    if (bar2) bar2.style.width = t2Pct + "%";
 
     // Favorite highlight
-    pmContainer.querySelector('.pm-odds__side--t1')?.classList.toggle('pm-odds__side--fav', t1Pct >= t2Pct);
-    pmContainer.querySelector('.pm-odds__side--t2')?.classList.toggle('pm-odds__side--fav', t2Pct > t1Pct);
+    pmContainer
+      .querySelector(".pm-odds__side--t1")
+      ?.classList.toggle("pm-odds__side--fav", t1Pct >= t2Pct);
+    pmContainer
+      .querySelector(".pm-odds__side--t2")
+      ?.classList.toggle("pm-odds__side--fav", t2Pct > t1Pct);
   });
 
-  const recTeam = matchup.recommendedPick === matchup.team1?.id ? matchup.team1 : matchup.team2;
+  const recTeam =
+    matchup.recommendedPick === matchup.team1?.id
+      ? matchup.team1
+      : matchup.team2;
   const confClass = confidenceClass(matchup.confidence);
 
   const profile1 = matchup.team1 ? getTeamProfile(matchup.team1.id) : null;
@@ -455,7 +530,7 @@ export function openModal(matchup, options = {}) {
   const t1DisplayName = teamDisplayName(matchup.team1);
   const t2DisplayName = teamDisplayName(matchup.team2);
 
-  let title = '';
+  let title = "";
   if (matchup.team1 && matchup.team2) {
     title = `(${matchup.team1.seed}) ${t1DisplayName} vs (${matchup.team2.seed}) ${t2DisplayName}`;
   }
@@ -465,25 +540,33 @@ export function openModal(matchup, options = {}) {
   const polymarketHtml = buildPolymarketPanel(matchup);
 
   const mobile = isMobile();
-  const closeIcon = mobile ? '\u2190' : '\u00D7';
-  const closeTitle = mobile ? 'Back' : 'Close';
+  const closeIcon = mobile ? "\u2190" : "\u00D7";
+  const closeTitle = mobile ? "Back" : "Close";
 
   overlay.innerHTML = `<div class="modal">
     <div class="modal__header">
       <button class="modal__close" title="${closeTitle}">${closeIcon}</button>
       <span class="modal__title">${title}</span>
     </div>
-    ${matchup.recommendedPick ? `<div class="modal__recommendation">
-      <span class="modal__rec-pick">\u2605 Pick: ${recTeam ? teamDisplayName(recTeam) : ''}</span>
-      ${matchup.confidence ? `<span class="modal__rec-badge modal__rec-badge--${confClass}">${matchup.confidence} (${matchup.confidencePercentage}%)</span>` : ''}
-      ${matchup.category ? `<span class="modal__rec-category">${matchup.category}</span>` : ''}
-    </div>` : ''}
+    ${
+      matchup.recommendedPick
+        ? `<div class="modal__recommendation">
+      <span class="modal__rec-pick">\u2605 Pick: ${recTeam ? teamDisplayName(recTeam) : ""}</span>
+      ${matchup.confidence ? `<span class="modal__rec-badge modal__rec-badge--${confClass}">${matchup.confidence} (${matchup.confidencePercentage}%)</span>` : ""}
+      ${matchup.category ? `<span class="modal__rec-category">${matchup.category}</span>` : ""}
+    </div>`
+        : ""
+    }
     ${scoreboardHtml}
     ${polymarketHtml}
-    ${matchup.tacticalAdvantage ? `<div class="modal__tactical">
+    ${
+      matchup.tacticalAdvantage
+        ? `<div class="modal__tactical">
       <div class="modal__tactical-title">Matchup Analysis</div>
       <div class="modal__tactical-text">${matchup.tacticalAdvantage}</div>
-    </div>` : ''}
+    </div>`
+        : ""
+    }
     <div class="modal__teams">
       ${buildTeamPanel(matchup.team1, profile1, matchup)}
       ${buildTeamPanel(matchup.team2, profile2, matchup)}
@@ -491,35 +574,40 @@ export function openModal(matchup, options = {}) {
   </div>`;
 
   // Close button
-  overlay.querySelector('.modal__close').addEventListener('click', closeModal);
+  overlay.querySelector(".modal__close").addEventListener("click", closeModal);
 
   // Show
   requestAnimationFrame(() => {
-    overlay.classList.add('modal-overlay--visible');
+    overlay.classList.add("modal-overlay--visible");
 
     // Scroll to the requested team panel
     if (scrollToTeamId) {
-      const panel = overlay.querySelector(`.modal__team-panel[data-team-id="${scrollToTeamId}"]`);
+      const panel = overlay.querySelector(
+        `.modal__team-panel[data-team-id="${scrollToTeamId}"]`,
+      );
       if (panel) {
-        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        panel.classList.add('modal__team-panel--highlighted');
-        setTimeout(() => panel.classList.remove('modal__team-panel--highlighted'), 1500);
+        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        panel.classList.add("modal__team-panel--highlighted");
+        setTimeout(
+          () => panel.classList.remove("modal__team-panel--highlighted"),
+          1500,
+        );
       }
     }
   });
 
   // Escape key
-  document.addEventListener('keydown', handleEscape);
+  document.addEventListener("keydown", handleEscape);
 }
 
 function handleEscape(e) {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === "Escape") closeModal();
 }
 
 export function closeModal() {
   if (overlayEl) {
-    overlayEl.classList.remove('modal-overlay--visible');
-    document.removeEventListener('keydown', handleEscape);
+    overlayEl.classList.remove("modal-overlay--visible");
+    document.removeEventListener("keydown", handleEscape);
   }
   currentMatchup = null;
   currentOptions = null;

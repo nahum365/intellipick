@@ -29,8 +29,8 @@ let gammaInterval = null;
 // Status tracking
 // ---------------------------------------------------------------------------
 const polyStatus = {
-  gammaState: 'idle',    // 'idle' | 'loading' | 'success' | 'failed'
-  clobState: 'idle',     // 'idle' | 'connected' | 'failed'
+  gammaState: "idle", // 'idle' | 'loading' | 'success' | 'failed'
+  clobState: "idle", // 'idle' | 'connected' | 'failed'
 };
 
 // ---------------------------------------------------------------------------
@@ -65,19 +65,20 @@ function flushDebouncedNotify() {
   }
   debouncedMatchups.clear();
   if (changed.length > 0) {
-    notifyListeners({ type: 'odds', matchupIds: changed });
+    notifyListeners({ type: "odds", matchupIds: changed });
   }
 }
 
 // ---------------------------------------------------------------------------
 // Gamma REST API — market discovery
 // ---------------------------------------------------------------------------
-const GAMMA_BASE = 'https://gamma-api.polymarket.com';
-const SERIES_ID = '10470'; // NCAA Men's Basketball
+const GAMMA_BASE = "https://gamma-api.polymarket.com";
+const SERIES_ID = "10470"; // NCAA Men's Basketball
 
 async function fetchGammaEvents() {
   const url = `${GAMMA_BASE}/events?series_id=${SERIES_ID}&active=true&closed=false&limit=100`;
-  const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
+  const proxyUrl =
+    "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(url);
   try {
     const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(60000) });
     if (r.ok) {
@@ -91,23 +92,28 @@ async function fetchGammaEvents() {
 function safeParse(str) {
   if (!str) return [];
   if (Array.isArray(str)) return str;
-  try { return JSON.parse(str); } catch { return []; }
+  try {
+    return JSON.parse(str);
+  } catch {
+    return [];
+  }
 }
 
 function processGammaEvents(events) {
   const allAssetIds = [];
 
   for (const event of events) {
-    const slug = event.slug || '';
+    const slug = event.slug || "";
     state.events.set(slug, event);
 
     const markets = event.markets || [];
     if (markets.length === 0) continue;
 
     // Prefer the moneyline market; fall back to first market if none tagged
-    const market = markets.find(m =>
-      (m.sportsMarketType || '').toLowerCase() === 'moneyline'
-    ) || markets[0];
+    const market =
+      markets.find(
+        (m) => (m.sportsMarketType || "").toLowerCase() === "moneyline",
+      ) || markets[0];
     const outcomes = safeParse(market.outcomes);
     const prices = safeParse(market.outcomePrices);
     const tokenIds = safeParse(market.clobTokenIds);
@@ -131,7 +137,13 @@ function processGammaEvents(events) {
     }
 
     // Try to match event to our bracket
-    const matchResult = matchEventToBracket(event, outcomes, tokenIds, prices, market);
+    const matchResult = matchEventToBracket(
+      event,
+      outcomes,
+      tokenIds,
+      prices,
+      market,
+    );
     if (matchResult) {
       state.slugToMatchup.set(slug, matchResult.matchupId);
       state.matchupToSlug.set(matchResult.matchupId, slug);
@@ -145,26 +157,31 @@ function processGammaEvents(events) {
 // ---------------------------------------------------------------------------
 // Team name matching (reuse logic from liveScores)
 // ---------------------------------------------------------------------------
-import { getR64Matchup, getGeneratedMatchup, getRegionR64Matchups, REGIONS } from './propagation.js';
+import {
+  getR64Matchup,
+  getGeneratedMatchup,
+  getRegionR64Matchups,
+  REGIONS,
+} from "./propagation.js";
 
 function normalizeForMatch(name) {
-  if (!name || typeof name !== 'string') return '';
+  if (!name || typeof name !== "string") return "";
   return name
-    .replace(/&amp;/gi, '&')
+    .replace(/&amp;/gi, "&")
     .toLowerCase()
-    .replace(/['']/g, '')
-    .replace(/\./g, '')
-    .replace(/\s+/g, ' ')
+    .replace(/['']/g, "")
+    .replace(/\./g, "")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
 // Build team name variants from teams data
-import teamsData from '../data/teams.json';
+import teamsData from "../data/teams.json";
 
 // Extra aliases for teams whose nickname differs from their full university name
 // (used when Polymarket spells out the full name instead of the nickname)
 const POLYMARKET_ALIASES = {
-  'uconn': ['connecticut', 'connecticut huskies'],
+  uconn: ["connecticut", "connecticut huskies"],
 };
 
 const TEAM_ID_TO_ESPN = {};
@@ -174,13 +191,16 @@ for (const t of teamsData.teams) {
   const names = new Set();
   names.add(normalizeForMatch(t.name));
   // Add slug form
-  names.add(t.id.replace(/-/g, ' '));
+  names.add(t.id.replace(/-/g, " "));
   // Short name without university suffixes
-  const short = t.name.replace(/ Blue Devils| Wildcats| Bulldogs| Tigers| Gators| Bears| Hoyas| Cavaliers| Volunteers| Crimson Tide| Boilermakers| Jayhawks| Longhorns| Spartans| Bruins| Huskies| Cardinals| Tar Heels| Fighting Illini| Buckeyes| Badgers| Hurricanes| Razorbacks| Mountaineers| Hawkeyes| Commodores| Cowboys| Aggies| Cougars| Gaels| Panthers| Red Raiders| Yellow Jackets| Friars| Bearcats| Cyclones/gi, '');
+  const short = t.name.replace(
+    / Blue Devils| Wildcats| Bulldogs| Tigers| Gators| Bears| Hoyas| Cavaliers| Volunteers| Crimson Tide| Boilermakers| Jayhawks| Longhorns| Spartans| Bruins| Huskies| Cardinals| Tar Heels| Fighting Illini| Buckeyes| Badgers| Hurricanes| Razorbacks| Mountaineers| Hawkeyes| Commodores| Cowboys| Aggies| Cougars| Gaels| Panthers| Red Raiders| Yellow Jackets| Friars| Bearcats| Cyclones/gi,
+    "",
+  );
   if (short.trim().length >= 3) names.add(normalizeForMatch(short));
   // Add any extra Polymarket-specific aliases
-  for (const alias of (POLYMARKET_ALIASES[t.id] || [])) names.add(alias);
-  TEAM_MATCH_NAMES[t.id] = [...names].filter(n => n.length >= 3);
+  for (const alias of POLYMARKET_ALIASES[t.id] || []) names.add(alias);
+  TEAM_MATCH_NAMES[t.id] = [...names].filter((n) => n.length >= 3);
 }
 
 function findMatchupIdForTeams(teamId1, teamId2) {
@@ -210,7 +230,7 @@ function findMatchupIdForTeams(teamId1, teamId2) {
     }
   }
   // Final Four / Championship
-  for (const id of ['ff-0', 'ff-1', 'championship']) {
+  for (const id of ["ff-0", "ff-1", "championship"]) {
     const gen = getGeneratedMatchup(id);
     if (gen && gen.team1 && gen.team2) {
       const gIds = [gen.team1.id, gen.team2.id];
@@ -229,7 +249,7 @@ function getMatchupTeamOrder(matchupId) {
 }
 
 function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
-  const title = event.title || '';
+  const title = event.title || "";
   const normalized = normalizeForMatch(title);
   if (!normalized) return null;
 
@@ -275,25 +295,31 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
   const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
 
   // Map outcomes to teams
-  let team1Prob = null, team2Prob = null;
-  let team1AssetId = null, team2AssetId = null;
+  let team1Prob = null,
+    team2Prob = null;
+  let team1AssetId = null,
+    team2AssetId = null;
 
   for (let i = 0; i < outcomes.length; i++) {
     const normOutcome = normalizeForMatch(outcomes[i]);
     const team1Names = TEAM_MATCH_NAMES[team1Id] || [];
     const team2Names = TEAM_MATCH_NAMES[team2Id] || [];
 
-    const matchesTeam1 = team1Names.some(v => normOutcome.includes(v) || v.includes(normOutcome));
-    const matchesTeam2 = team2Names.some(v => normOutcome.includes(v) || v.includes(normOutcome));
+    const matchesTeam1 = team1Names.some(
+      (v) => normOutcome.includes(v) || v.includes(normOutcome),
+    );
+    const matchesTeam2 = team2Names.some(
+      (v) => normOutcome.includes(v) || v.includes(normOutcome),
+    );
 
     if (matchesTeam1 && !matchesTeam2) {
       team1AssetId = tokenIds[i] || null;
       const entry = team1AssetId ? state.prices.get(team1AssetId) : null;
-      team1Prob = entry ? entry.prob : (parseFloat(prices[i]) || 0);
+      team1Prob = entry ? entry.prob : parseFloat(prices[i]) || 0;
     } else if (matchesTeam2 && !matchesTeam1) {
       team2AssetId = tokenIds[i] || null;
       const entry = team2AssetId ? state.prices.get(team2AssetId) : null;
-      team2Prob = entry ? entry.prob : (parseFloat(prices[i]) || 0);
+      team2Prob = entry ? entry.prob : parseFloat(prices[i]) || 0;
     }
   }
 
@@ -305,31 +331,49 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
 
   // Store asset->team mappings
   if (team1AssetId) {
-    state.assetToTeam.set(team1AssetId, { teamId: team1Id, matchupId, teamIndex: 1 });
+    state.assetToTeam.set(team1AssetId, {
+      teamId: team1Id,
+      matchupId,
+      teamIndex: 1,
+    });
   }
   if (team2AssetId) {
-    state.assetToTeam.set(team2AssetId, { teamId: team2Id, matchupId, teamIndex: 2 });
+    state.assetToTeam.set(team2AssetId, {
+      teamId: team2Id,
+      matchupId,
+      teamIndex: 2,
+    });
   }
 
   return {
     matchupId,
     slug: event.slug,
-    eventTitle: event.title || '',
-    marketQuestion: market.question || market.groupItemTitle || '',
-    conditionId: market.conditionId || '',
-    sportsMarketType: market.sportsMarketType || 'unknown',
+    eventTitle: event.title || "",
+    marketQuestion: market.question || market.groupItemTitle || "",
+    conditionId: market.conditionId || "",
+    sportsMarketType: market.sportsMarketType || "unknown",
     team1Id,
     team2Id,
     team1Prob,
     team2Prob,
     team1AssetId,
     team2AssetId,
-    team1OutcomePrice: parseFloat(prices[outcomes.indexOf(
-      outcomes.find((o, i) => tokenIds[i] === team1AssetId)
-    )]) || 0,
-    team2OutcomePrice: parseFloat(prices[outcomes.indexOf(
-      outcomes.find((o, i) => tokenIds[i] === team2AssetId)
-    )]) || 0,
+    team1OutcomePrice:
+      parseFloat(
+        prices[
+          outcomes.indexOf(
+            outcomes.find((o, i) => tokenIds[i] === team1AssetId),
+          )
+        ],
+      ) || 0,
+    team2OutcomePrice:
+      parseFloat(
+        prices[
+          outcomes.indexOf(
+            outcomes.find((o, i) => tokenIds[i] === team2AssetId),
+          )
+        ],
+      ) || 0,
     outcomes: [...outcomes],
     volume: parseFloat(market.volume) || 0,
     liquidity: parseFloat(market.liquidity) || 0,
@@ -343,18 +387,20 @@ function matchEventToBracket(event, outcomes, tokenIds, prices, market) {
 
 function probToAmericanOdds(prob) {
   if (prob == null || prob <= 0 || prob >= 1) return null;
-  if (prob >= 0.5) return String(Math.round(-100 * prob / (1 - prob)));
-  return '+' + Math.round(100 * (1 - prob) / prob);
+  if (prob >= 0.5) return String(Math.round((-100 * prob) / (1 - prob)));
+  return "+" + Math.round((100 * (1 - prob)) / prob);
 }
 
 // ---------------------------------------------------------------------------
 // CLOB WebSocket — live odds streaming
 // ---------------------------------------------------------------------------
-const CLOB_WS_URL = 'wss://ws-subscriptions-clob.polymarket.com/ws/market';
+const CLOB_WS_URL = "wss://ws-subscriptions-clob.polymarket.com/ws/market";
 
 function connectClobWs(assetIds) {
   if (clobWs) {
-    try { clobWs.close(); } catch {}
+    try {
+      clobWs.close();
+    } catch {}
   }
   clearInterval(clobPingInterval);
   clearTimeout(clobReconnectTimer);
@@ -364,17 +410,17 @@ function connectClobWs(assetIds) {
   try {
     clobWs = new WebSocket(CLOB_WS_URL);
   } catch {
-    scheduleReconnect('clob', assetIds);
+    scheduleReconnect("clob", assetIds);
     return;
   }
 
   clobWs.onopen = () => {
-    console.log('[Polymarket CLOB WS] Connected');
-    polyStatus.clobState = 'connected';
+    console.log("[Polymarket CLOB WS] Connected");
+    polyStatus.clobState = "connected";
     // Subscribe to all asset IDs
     const msg = JSON.stringify({
-      action: 'subscribe',
-      type: 'market',
+      action: "subscribe",
+      type: "market",
       assets_ids: assetIds,
     });
     clobWs.send(msg);
@@ -382,18 +428,21 @@ function connectClobWs(assetIds) {
     // Heartbeat: send PING every 10s
     clobPingInterval = setInterval(() => {
       if (clobWs && clobWs.readyState === WebSocket.OPEN) {
-        clobWs.send('PING');
+        clobWs.send("PING");
       }
     }, 10000);
   };
 
   clobWs.onmessage = (evt) => {
     const raw = evt.data;
-    if (raw === 'PONG' || raw === 'pong') return;
+    if (raw === "PONG" || raw === "pong") return;
 
     try {
       const msg = JSON.parse(raw);
-      if (msg.event_type === 'price_change' && Array.isArray(msg.price_changes)) {
+      if (
+        msg.event_type === "price_change" &&
+        Array.isArray(msg.price_changes)
+      ) {
         for (const change of msg.price_changes) {
           handleClobPriceChange(change);
         }
@@ -404,15 +453,15 @@ function connectClobWs(assetIds) {
   };
 
   clobWs.onclose = () => {
-    console.log('[Polymarket CLOB WS] Disconnected');
-    polyStatus.clobState = 'failed';
+    console.log("[Polymarket CLOB WS] Disconnected");
+    polyStatus.clobState = "failed";
     clearInterval(clobPingInterval);
-    scheduleReconnect('clob', assetIds);
+    scheduleReconnect("clob", assetIds);
   };
 
   clobWs.onerror = () => {
-    console.warn('[Polymarket CLOB WS] Error');
-    polyStatus.clobState = 'failed';
+    console.warn("[Polymarket CLOB WS] Error");
+    polyStatus.clobState = "failed";
   };
 }
 
@@ -432,7 +481,7 @@ function computeDisplayProb(entry) {
 
   if (hasBid && hasAsk) {
     const spread = bestAsk - bestBid;
-    if (spread <= 0.10) {
+    if (spread <= 0.1) {
       return (bestBid + bestAsk) / 2;
     }
     // Wide spread — not reliable enough
@@ -455,7 +504,15 @@ function handleClobPriceChange(change) {
   if (!change || !change.asset_id) return;
 
   const assetId = change.asset_id;
-  const existing = state.prices.get(assetId) || { prob: 0, gammaProb: 0, bestBid: 0, bestAsk: 0, lastTradePrice: 0, volume: 0, liquidity: 0 };
+  const existing = state.prices.get(assetId) || {
+    prob: 0,
+    gammaProb: 0,
+    bestBid: 0,
+    bestAsk: 0,
+    lastTradePrice: 0,
+    volume: 0,
+    liquidity: 0,
+  };
   const mapping = state.assetToTeam.get(assetId);
 
   // Update last trade price (kept for debug display, not used for prob)
@@ -468,9 +525,11 @@ function handleClobPriceChange(change) {
   const bid = parseFloat(change.best_bid);
   const ask = parseFloat(change.best_ask);
   if (bid > 0) existing.bestBid = bid;
-  else if (change.best_bid === '' || change.best_bid === '0') existing.bestBid = 0;
+  else if (change.best_bid === "" || change.best_bid === "0")
+    existing.bestBid = 0;
   if (ask > 0) existing.bestAsk = ask;
-  else if (change.best_ask === '' || change.best_ask === '0') existing.bestAsk = 0;
+  else if (change.best_ask === "" || change.best_ask === "0")
+    existing.bestAsk = 0;
 
   // Compute CLOB-derived prob (may be null if book is unusable)
   existing.clobProb = computeDisplayProb(existing);
@@ -486,8 +545,12 @@ function updateMarketDataFromWs(matchupId) {
   const data = state.marketData.get(matchupId);
   if (!data) return;
 
-  const t1Price = data.team1AssetId ? state.prices.get(data.team1AssetId) : null;
-  const t2Price = data.team2AssetId ? state.prices.get(data.team2AssetId) : null;
+  const t1Price = data.team1AssetId
+    ? state.prices.get(data.team1AssetId)
+    : null;
+  const t2Price = data.team2AssetId
+    ? state.prices.get(data.team2AssetId)
+    : null;
 
   const t1Clob = t1Price?.clobProb ?? null;
   const t2Clob = t2Price?.clobProb ?? null;
@@ -526,7 +589,10 @@ function updateMarketDataFromWs(matchupId) {
   data.team1ProbDelta = newT1 - prevT1;
   data.team2ProbDelta = newT2 - prevT2;
 
-  if (Math.abs(data.team1ProbDelta) > 0.001 || Math.abs(data.team2ProbDelta) > 0.001) {
+  if (
+    Math.abs(data.team1ProbDelta) > 0.001 ||
+    Math.abs(data.team2ProbDelta) > 0.001
+  ) {
     anyChange = true;
   }
 
@@ -542,7 +608,7 @@ function updateMarketDataFromWs(matchupId) {
 // Reconnection
 // ---------------------------------------------------------------------------
 function scheduleReconnect(type, assetIds) {
-  if (type === 'clob') {
+  if (type === "clob") {
     clearTimeout(clobReconnectTimer);
     clobReconnectTimer = setTimeout(() => connectClobWs(assetIds), 5000);
   }
@@ -553,7 +619,9 @@ function scheduleReconnect(type, assetIds) {
 // ---------------------------------------------------------------------------
 function notifyListeners(detail) {
   for (const cb of listeners) {
-    try { cb(detail); } catch {}
+    try {
+      cb(detail);
+    } catch {}
   }
 }
 
@@ -599,29 +667,31 @@ export function getAssetPriceState(assetId) {
 let lastAssetIds = [];
 
 async function doGammaFetch() {
-  polyStatus.gammaState = 'loading';
-  notifyListeners({ type: 'status' });
+  polyStatus.gammaState = "loading";
+  notifyListeners({ type: "status" });
 
   const events = await fetchGammaEvents();
   if (events.length === 0) {
     // Only mark failed if we never had a successful fetch
     if (state.marketData.size === 0) {
-      polyStatus.gammaState = 'failed';
+      polyStatus.gammaState = "failed";
     }
-    notifyListeners({ type: 'status' });
+    notifyListeners({ type: "status" });
     return [];
   }
 
-  polyStatus.gammaState = 'success';
+  polyStatus.gammaState = "success";
   const assetIds = processGammaEvents(events);
   lastAssetIds = assetIds;
-  console.log(`[Polymarket] Matched ${state.marketData.size} events to bracket. ${assetIds.length} asset IDs.`);
-  notifyListeners({ type: 'init' });
+  console.log(
+    `[Polymarket] Matched ${state.marketData.size} events to bracket. ${assetIds.length} asset IDs.`,
+  );
+  notifyListeners({ type: "init" });
   return assetIds;
 }
 
 export async function startPolymarket() {
-  console.log('[Polymarket] Starting integration...');
+  console.log("[Polymarket] Starting integration...");
 
   const assetIds = await doGammaFetch();
 
@@ -657,5 +727,9 @@ export function stopPolymarket() {
   clearInterval(gammaInterval);
   clearInterval(clobPingInterval);
   clearTimeout(clobReconnectTimer);
-  if (clobWs) { try { clobWs.close(); } catch {} }
+  if (clobWs) {
+    try {
+      clobWs.close();
+    } catch {}
+  }
 }
