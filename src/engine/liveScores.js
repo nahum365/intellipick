@@ -131,9 +131,50 @@ ESPN_TO_TEAM_ID["utah st"] = "utah-state";
 
 // Score cache: matchupId -> normalized score object
 const scoreMap = new Map();
+
+// Cache for final scores in localStorage
+const FINAL_SCORES_KEY = "intellipick_espn_final_scores";
+const COMPLETED_DATES_KEY = "intellipick_espn_completed_dates";
+
 // Listeners notified after each fetch
 const listeners = [];
 let pollIntervalId = null;
+
+// Load cached final scores on startup
+function loadCachedFinalScores() {
+  try {
+    const cached = localStorage.getItem(FINAL_SCORES_KEY);
+    if (cached) {
+      const scores = JSON.parse(cached);
+      for (const [matchupId, score] of Object.entries(scores)) {
+        scoreMap.set(matchupId, score);
+      }
+      console.log(
+        `[ESPN] Loaded ${scoreMap.size} cached final scores from localStorage`,
+      );
+    }
+  } catch (e) {
+    console.warn("[ESPN] Failed to load cached scores:", e);
+  }
+}
+
+// Save final scores to localStorage
+function saveCachedFinalScores() {
+  try {
+    const cacheable = new Map();
+    for (const [matchupId, score] of scoreMap.entries()) {
+      if (score.status === "final") {
+        cacheable.set(matchupId, score);
+      }
+    }
+    localStorage.setItem(
+      FINAL_SCORES_KEY,
+      JSON.stringify(Object.fromEntries(cacheable)),
+    );
+  } catch (e) {
+    console.warn("[ESPN] Failed to save cached scores:", e);
+  }
+}
 
 // Fetch status tracking
 const fetchStatus = {
@@ -162,6 +203,15 @@ function normalizeStatus(espnStatus) {
   if (espnStatus.type.state === "in") return "live";
   if (espnStatus.type.state === "post") return "final";
   return "scheduled";
+}
+
+// Check if a matchup has a cached final score
+function getCachedFinalScore(matchupId) {
+  const cached = scoreMap.get(matchupId);
+  if (cached && cached.status === "final") {
+    return cached;
+  }
+  return null;
 }
 
 function findTeamId(espnCompetitor) {
@@ -279,7 +329,7 @@ function getMatchupTeamOrder(matchupId) {
 
 function processEvents(events) {
   // Do NOT clear the scoreMap here — completed games from earlier dates are cached
-  // in completedDates and won't be re-fetched, so their scores must persist across polls.
+  // in localStorage and won't be re-fetched, so their scores must persist across polls.
   // We simply overwrite entries for events we do receive.
 
   let matched = 0,
@@ -317,6 +367,14 @@ function processEvents(events) {
       continue;
     }
 
+    // Skip if we already have a cached final score for this matchup
+    const cachedFinal = getCachedFinalScore(matchupId);
+    if (cachedFinal) {
+      console.log(`[ESPN] Skipping ${teamIdA} vs ${teamIdB} - has cached final: ${cachedFinal.team1Score}-${cachedFinal.team2Score}`);
+      matched++;
+      continue;
+    }
+
     // Determine which ESPN competitor maps to team1/team2 in our matchup
     const [team1Id, team2Id] = getMatchupTeamOrder(matchupId);
     const compForTeam1 = competitors.find((c) => findTeamId(c) === team1Id);
@@ -348,6 +406,7 @@ function processEvents(events) {
     const broadcastChannel =
       broadcasts.length > 0 ? broadcasts.join(" / ") : null;
 
+    // Store in scoreMap
     scoreMap.set(matchupId, {
       status,
       clock,
@@ -357,9 +416,15 @@ function processEvents(events) {
       gameDate,
       broadcastChannel,
     });
+
     console.log(
       `[ESPN] Matched ${teamIdA} vs ${teamIdB} -> ${matchupId} (${status}, ${team1Score}-${team2Score})`,
     );
+
+    // If final, save to cache and persist to localStorage
+    if (status === "final") {
+      saveCachedFinalScores();
+    }
     matched++;
   }
 
@@ -406,6 +471,38 @@ function buildDateKey(d) {
   return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
 }
 
+// Track which dates we've already completed fetching to avoid redundant queries
+const completedDates = new Set(
+  JSON.parse(localStorage.getItem(COMPLETED_DATES_KEY) || "[]"),
+);
+
+function markDateAsCompleted(dateKey) {
+  completedDates.add(dateKey);
+  try {
+    localStorage.setItem(
+      COMPLETED_DATES_KEY,
+      JSON.stringify(Array.from(completedDates)),
+    );
+  } catch (e) {
+    console.warn("[ESPN] Failed to save completed dates:", e);
+  }
+}
+
+function shouldFetchDate(dateKey) {
+  // Always fetch today's date
+  const today = buildDateKey(new Date());
+  if (dateKey === today) return true;
+  // Skip already-completed dates unless they have no cached scores yet
+  if (completedDates.has(dateKey)) {
+    // Check if we actually have data for this matchup
+    return false;
+  }
+  return true;
+}
+
+// Initialize on module load
+loadCachedFinalScores();
+
 async function fetchScoresInner() {
   const BASE =
     "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard";
@@ -416,10 +513,24 @@ async function fetchScoresInner() {
   const rangeEnd = buildDateKey(today);
 
   // Strategy 1: per-date queries — reliable for recent dates
-  const dateFetches = dates.map((date) =>
-    fetch(`${BASE}?dates=${date}&limit=200`)
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null),
+  const dateFetches = await Promise.all(
+    dates.map(async (date) => {
+      if (!shouldFetchDate(date)) {
+        console.log(`[ESPN] Skipping cached date ${date}`);
+        markDateAsCompleted(date);
+        return null;
+      }
+      try {
+        const response = await fetch(`${BASE}?dates=${date}&limit=200`);
+        if (response.ok) {
+          markDateAsCompleted(date);
+          return response.json();
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    }),
   );
 
   // Strategy 2: postseason (groups=50, seasontype=3) — returns all tournament
