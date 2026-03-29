@@ -134,7 +134,6 @@ const scoreMap = new Map();
 
 // Cache for final scores in localStorage
 const FINAL_SCORES_KEY = "intellipick_espn_final_scores";
-const COMPLETED_DATES_KEY = "intellipick_espn_completed_dates";
 
 // Listeners notified after each fetch
 const listeners = [];
@@ -370,7 +369,9 @@ function processEvents(events) {
     // Skip if we already have a cached final score for this matchup
     const cachedFinal = getCachedFinalScore(matchupId);
     if (cachedFinal) {
-      console.log(`[ESPN] Skipping ${teamIdA} vs ${teamIdB} - has cached final: ${cachedFinal.team1Score}-${cachedFinal.team2Score}`);
+      console.log(
+        `[ESPN] Skipping ${teamIdA} vs ${teamIdB} - has cached final: ${cachedFinal.team1Score}-${cachedFinal.team2Score}`,
+      );
       matched++;
       continue;
     }
@@ -446,7 +447,7 @@ const TOURNAMENT_START = new Date(2026, 2, 19); // March 19, 2026
 
 // Generate tournament dates to query: tournament start through tomorrow.
 // Always anchored to the tournament start so early-round results are never dropped.
-// Dates whose games are all final are skipped (completedDates cache).
+
 // Individual-day queries are more reliable than ESPN's date-range format.
 function getTournamentDatesToFetch() {
   const tomorrow = new Date();
@@ -471,35 +472,6 @@ function buildDateKey(d) {
   return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
 }
 
-// Track which dates we've already completed fetching to avoid redundant queries
-const completedDates = new Set(
-  JSON.parse(localStorage.getItem(COMPLETED_DATES_KEY) || "[]"),
-);
-
-function markDateAsCompleted(dateKey) {
-  completedDates.add(dateKey);
-  try {
-    localStorage.setItem(
-      COMPLETED_DATES_KEY,
-      JSON.stringify(Array.from(completedDates)),
-    );
-  } catch (e) {
-    console.warn("[ESPN] Failed to save completed dates:", e);
-  }
-}
-
-function shouldFetchDate(dateKey) {
-  // Always fetch today's date
-  const today = buildDateKey(new Date());
-  if (dateKey === today) return true;
-  // Skip already-completed dates unless they have no cached scores yet
-  if (completedDates.has(dateKey)) {
-    // Check if we actually have data for this matchup
-    return false;
-  }
-  return true;
-}
-
 // Initialize on module load
 loadCachedFinalScores();
 
@@ -515,15 +487,9 @@ async function fetchScoresInner() {
   // Strategy 1: per-date queries — reliable for recent dates
   const dateFetches = await Promise.all(
     dates.map(async (date) => {
-      if (!shouldFetchDate(date)) {
-        console.log(`[ESPN] Skipping cached date ${date}`);
-        markDateAsCompleted(date);
-        return null;
-      }
       try {
         const response = await fetch(`${BASE}?dates=${date}&limit=200`);
         if (response.ok) {
-          markDateAsCompleted(date);
           return response.json();
         }
         return null;
